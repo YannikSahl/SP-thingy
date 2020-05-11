@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{2920654B-FAA0-44E8-AFFA-FE2D4491F98D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBHandler", "DBHandler\DBHandler.csproj", "{97C6DC6F-D46A-48DF-9CE0-D7E0DFCD0EC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharePointHandler", "SharePointHandler\SharePointHandler.csproj", "{D742A262-E840-4BFC-9E91-4E72B333DFC4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2920654B-FAA0-44E8-AFFA-FE2D4491F98D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2920654B-FAA0-44E8-AFFA-FE2D4491F98D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2920654B-FAA0-44E8-AFFA-FE2D4491F98D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2920654B-FAA0-44E8-AFFA-FE2D4491F98D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97C6DC6F-D46A-48DF-9CE0-D7E0DFCD0EC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97C6DC6F-D46A-48DF-9CE0-D7E0DFCD0EC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97C6DC6F-D46A-48DF-9CE0-D7E0DFCD0EC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97C6DC6F-D46A-48DF-9CE0-D7E0DFCD0EC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D742A262-E840-4BFC-9E91-4E72B333DFC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D742A262-E840-4BFC-9E91-4E72B333DFC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D742A262-E840-4BFC-9E91-4E72B333DFC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D742A262-E840-4BFC-9E91-4E72B333DFC4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {211CD29C-8363-45A0-A800-E8959F4B7D5B}
+	EndGlobalSection
+EndGlobal
