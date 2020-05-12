@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2016
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBHandler", "DBHandler\DBHandler.csproj", "{97C6DC6F-D46A-48DF-9CE0-D7E0DFCD0EC7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharePointHandler", "SharePointHandler\SharePointHandler.csproj", "{D742A262-E840-4BFC-9E91-4E72B333DFC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{D33D0FE0-F0BA-4498-BB51-F9E18257A745}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{CA336CD7-B04C-4018-94B9-5655AC0D1CB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{D742A262-E840-4BFC-9E91-4E72B333DFC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D742A262-E840-4BFC-9E91-4E72B333DFC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D742A262-E840-4BFC-9E91-4E72B333DFC4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D33D0FE0-F0BA-4498-BB51-F9E18257A745}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D33D0FE0-F0BA-4498-BB51-F9E18257A745}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D33D0FE0-F0BA-4498-BB51-F9E18257A745}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D33D0FE0-F0BA-4498-BB51-F9E18257A745}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA336CD7-B04C-4018-94B9-5655AC0D1CB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA336CD7-B04C-4018-94B9-5655AC0D1CB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA336CD7-B04C-4018-94B9-5655AC0D1CB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA336CD7-B04C-4018-94B9-5655AC0D1CB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
