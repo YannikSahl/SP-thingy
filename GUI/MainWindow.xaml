@@ -44,9 +44,9 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <Button Margin="5" Grid.Row="0">Tabelle PP</Button>
-                    <Button Margin="5" Grid.Row="1">Tabelle PL</Button>
-                    <Button Margin="5" Grid.Row="2">Tabelle PH</Button>
+                    <DataGrid x:Name="PP_TABELLE" Margin="5" Grid.Row="0"/>
+                    <DataGrid x:Name="PL_TABELLE" Margin="5" Grid.Row="1"/>
+                    <DataGrid x:Name="PH_TABELLE" Margin="5" Grid.Row="2"/>
                 </Grid>
                 <GridSplitter Grid.Column="1" Grid.Row="0" Width="5" HorizontalAlignment="Stretch" />
                 <DockPanel Grid.Column="2" Grid.Row="0" Margin="5">
