@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Data.OleDb;
 
 
-enum StatusCode
+public enum StatusCode
 {
     CommandOK = 0,
     CommandFailed = 1,
@@ -33,7 +34,7 @@ namespace DBHandler
 
 
         // Open .accdb file
-        StatusCode openDBFile()
+        public StatusCode openDBFile()
         {
 
             string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=E:\\Benutzer\\Yannik\\NcDrive\\HTW\\Module\\4 (5) Softwareentwicklungsprojekt\\Team 5\\Gegeben\\Datenmodell;";
