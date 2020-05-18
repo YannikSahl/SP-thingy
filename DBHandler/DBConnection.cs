@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data.OleDb;
-
+using System.ComponentModel;
 
 public enum StatusCode
 {
@@ -17,6 +17,7 @@ namespace DBHandler
     {
 
         // Member variables
+        OleDbConnection dbConn;
         String downloadLocation;
         //SPH.SharePointHandler SPHandler;
 
@@ -37,8 +38,29 @@ namespace DBHandler
         public StatusCode openDBFile()
         {
 
-            string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=E:\\Benutzer\\Yannik\\NcDrive\\HTW\\Module\\4 (5) Softwareentwicklungsprojekt\\Team 5\\Gegeben\\Datenmodell;";
+            // Test
+            OleDbCommand command = new OleDbCommand("SELECT * FROM PH");
+            // string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=E:\\Benutzer\\Yannik\\NcDrive\\HTW\\Module\\4 (5) Softwareentwicklungsprojekt\\Team 5\\Gegeben\\Datenmodell;";
+            string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\Yannik\\Desktop\\Datenmodell.accdb;";
 
+            using (OleDbConnection connection = new OleDbConnection(connString))
+            {
+
+                command.Connection = connection;
+
+                try
+                {
+                    connection.Open();
+                    Console.WriteLine(command.ExecuteNonQuery());
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+            }
+                
+            OleDbConnection myConn = new OleDbConnection(connString);
 
             return StatusCode.CommandOK;
 
