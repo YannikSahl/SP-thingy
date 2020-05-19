@@ -8,23 +8,22 @@ using System.Threading.Tasks;
 using Microsoft.SharePoint.Client.WorkflowServices;
 using Microsoft.Online.SharePoint.TenantAdministration;
 using System.Globalization;
-using Microsoft.Online.SharePoint.TenantManagement;
 
-namespace SPHandler
+namespace SharePointTryOut
 {
-    public class Handler
+    class Program
     {
         static string rootSite = "https://htwberlinde.sharepoint.com";
         static string sourceSite = "https://htwberlinde.sharepoint.com/sites/SWE";
         static string sourceLibrary = "Documents";
-        static string destinationPath = "Pfad aus Settings";
+        static string destinationPath = "C:\\downloads";
         static string username;
         static SecureString password;
+        
 
-
-        static void SharePointTryOut()
+        static void Main(string[] args)
         {
-            username = Authentification.GetUserName();
+            username = Authentification.GetUserName();          
             password = Authentification.GetPassword();
             SharePointOnlineCredentials Credentials = new SharePointOnlineCredentials(username, password);
 
@@ -36,24 +35,24 @@ namespace SPHandler
             context.ExecuteQuery();
 
             CamlQuery query = new CamlQuery(); //retrieve all items
-            ListItemCollection ListItems = list.GetItems(query);
+            ListItemCollection ListItems = list.GetItems(query); 
             context.Load(ListItems);
             context.ExecuteQuery();
 
 
             foreach (ListItem item in ListItems)
-            {
-                //File Variables
-                string fileName = item["FileLeafRef"].ToString();
-                string fileUrl = item["FileRef"].ToString();
-                string fileMeta = item["Meta"].ToString();
-                string modified = item["Modified"].ToString();
-                string created = item["Created"].ToString();
-                string sourceItemPath = rootSite + fileUrl;
-                string destinationFolderPath = destinationPath + fileMeta;
-                string destinationItemPath = destinationFolderPath + fileName;
+            {             
+            //File Variables
+            string fileName = item["FileLeafRef"].ToString();
+            string fileUrl = item["FileRef"].ToString();
+            string fileMeta = item["Meta"].ToString();
+            string modified = item["Modified"].ToString();
+            string created = item["Created"].ToString();
+            string sourceItemPath = rootSite + fileUrl;
+            string destinationFolderPath = destinationPath + fileMeta;
+            string destinationItemPath = destinationFolderPath + fileName;
 
-                try
+                try 
                 {
                     System.Net.WebClient client = new System.Net.WebClient();
                     client.Credentials = new SharePointOnlineCredentials(username, password);
@@ -65,23 +64,25 @@ namespace SPHandler
                     //file.CreationTime = $created
 
                     Console.WriteLine("New document: " + destinationItemPath);
-
+                    
                 }
+
+            
                 catch
                 {
-                   throw new Exception("something went wrong");
+                    Console.WriteLine("Error occurred: " + destinationItemPath);
                 }
 
 
                 //OVERWRITE ITEMS CHECK
-                //if (item.LastWriteTime.ToString("d-M-yyyy hh:mm:ss") - ne modified.addhours(1).ToString("d-M-yyyy hh:mm:ss"))
+                //if (item.LastWriteTime.ToString("d-M-yyyy hh:mm:ss") - ne $modified.addhours(1).ToString("d-M-yyyy hh:mm:ss"))
                 //{
                 //    System.Net.WebClient client = new System.Net.WebClient;
                 //    client.Credentials = Credentials;
                 //    client.Headers.Add("X-FORMS_BASED_AUTH_ACCEPTED", "f");
                 //    client.DownloadFile(sourceItemPath, destinationItemPath);
                 //    client.Dispose();
-                //    file = Get - Item destinationItemPath;
+                //    file = Get - Item $destinationItemPath;
                 //    file.LastWriteTime = $modified;
 
                 //    Console.WriteLine("Overwritten document" + destinationItemPath);                
@@ -93,11 +94,21 @@ namespace SPHandler
             }
 
 
+
+
+
+
+
         }
+    }
+        
+
+       
+      
 
 
-
+       
 
         
-    }
+    
 }
