@@ -13,11 +13,11 @@ using System.Windows.Shapes;
 namespace GUI
 {
     /// <summary>
-    /// Interaction logic for Abfragen.xaml
+    /// Interaction logic for Settings.xaml
     /// </summary>
-    public partial class Abfragen : Window
+    public partial class Settings : Window
     {
-        public Abfragen()
+        public Settings()
         {
             InitializeComponent();
         }
