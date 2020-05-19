@@ -7,10 +7,8 @@ namespace DBHandlerTest
     {
         static void Main(string[] args)
         {
-
             DBConnection dbConn = new DBConnection("", "", "");
             dbConn.openDBFile();
-            
         }
     }
 }
