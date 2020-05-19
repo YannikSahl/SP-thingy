@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 using Microsoft.SharePoint.Client.WorkflowServices;
 using Microsoft.Online.SharePoint.TenantAdministration;
 using System.Globalization;
+using Microsoft.SharePoint.Client.Application;
 
 namespace SharePointTryOut
 {
     class Program
     {
-        static string rootSite = "https://htwberlinde.sharepoint.com";
-        static string sourceSite = "https://htwberlinde.sharepoint.com/sites/SWE";
+        const string rootSite = "https://htwberlinde.sharepoint.com";
+        const string sourceSite = "https://htwberlinde.sharepoint.com/sites/SWE";
         static string sourceLibrary = "Documents";
         static string destinationPath = "C:\\downloads";
         static string username;
@@ -23,10 +24,24 @@ namespace SharePointTryOut
 
         static void Main(string[] args)
         {
-            username = Authentification.GetUserName();          
-            password = Authentification.GetPassword();
-            SharePointOnlineCredentials Credentials = new SharePointOnlineCredentials(username, password);
+            username = Authentification.GetUserName();
+            password = Authentification.GetPassword(); //Authentification.StringToSecureString("");
 
+            //using (var cntxt = new ClientContext(sourceSite))
+            //{
+            //    cntxt.Credentials = new SharePointOnlineCredentials(username, password);
+            //    Web web = cntxt.Web;
+            //    cntxt.Load(web.Lists,
+            //        lists => lists.Include(list => list.Title,
+            //            list => list.Id));
+            //    cntxt.ExecuteQuery();
+            //    foreach (List ls in web.Lists)
+            //    {
+            //        Console.WriteLine("List title is: " + ls.Title);
+            //    }
+            //}
+
+            SharePointOnlineCredentials Credentials = new SharePointOnlineCredentials(username, password);
             ClientContext context = new ClientContext(sourceSite); //create context
             context.Credentials = Credentials;
 
@@ -35,7 +50,7 @@ namespace SharePointTryOut
             context.ExecuteQuery();
 
             CamlQuery query = new CamlQuery(); //retrieve all items
-            ListItemCollection ListItems = list.GetItems(query); 
+            ListItemCollection ListItems = list.GetItems(query);
             context.Load(ListItems);
             context.ExecuteQuery();
 

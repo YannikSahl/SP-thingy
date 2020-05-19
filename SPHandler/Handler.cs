@@ -14,8 +14,8 @@ namespace SPHandler
 {
     public class Handler
     {
-        static string rootSite = "https://htwberlinde.sharepoint.com";
-        static string sourceSite = "https://htwberlinde.sharepoint.com/sites/SWE";
+        const string rootSite = "https://htwberlinde.sharepoint.com";
+        const string sourceSite = "https://htwberlinde.sharepoint.com/sites/SWE";
         static string sourceLibrary = "Documents";
         static string destinationPath = "Pfad aus Settings";
         static string username;
