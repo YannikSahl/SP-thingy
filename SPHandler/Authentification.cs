@@ -60,5 +60,13 @@ namespace SPHandler
             }
             return strUserName;
         }
+
+        public static SecureString StringToSecureString(string pw)
+        {
+            var spw = new SecureString();
+            foreach (var c in pw)
+                spw.AppendChar(c);
+            return spw;
+        }
     }
 }

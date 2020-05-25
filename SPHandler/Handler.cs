@@ -18,8 +18,42 @@ namespace SPHandler
         const string sourceSite = "https://htwberlinde.sharepoint.com/sites/SWE";
         static string sourceLibrary = "Documents";
         static string destinationPath = "Pfad aus Settings";
-        static string username;
-        static SecureString password;
+        private static string username;
+        private static SecureString password;
+
+        public static void setUsername(string name)
+        {
+            username = name;
+        }
+
+        public static void setPassword(string pw)
+        {
+            password = Authentification.StringToSecureString(pw);
+        }
+
+        public static bool testConnection()
+        {
+            try
+            {
+                SharePointOnlineCredentials Credentials = new SharePointOnlineCredentials(username, password);
+
+                ClientContext context = new ClientContext(sourceSite); //create context
+                context.Credentials = Credentials;
+
+                List list = context.Web.Lists.GetByTitle(sourceLibrary); //retrieve list
+                context.Load(list);
+                context.ExecuteQuery();
+
+                CamlQuery query = new CamlQuery(); //retrieve all items
+                ListItemCollection ListItems = list.GetItems(query);
+                context.Load(ListItems);
+                context.ExecuteQuery();
+            }catch(Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
 
 
         static void SharePointTryOut()

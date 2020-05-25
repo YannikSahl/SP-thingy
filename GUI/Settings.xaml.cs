@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SPHandler;
 
 namespace GUI
 {
@@ -20,6 +21,21 @@ namespace GUI
         public Settings()
         {
             InitializeComponent();
+        }
+
+        public void saveAuth()
+        {
+            SPHandler.Handler.setUsername(sp_name.Text);
+            SPHandler.Handler.setPassword(sp_pw.Password);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            saveAuth();
+            if (SPHandler.Handler.testConnection())
+                sp_test.Background = new SolidColorBrush(Color.FromRgb(20, 200, 20));
+            else
+                sp_test.Background = new SolidColorBrush(Color.FromRgb(200,20,20));
         }
     }
 }
