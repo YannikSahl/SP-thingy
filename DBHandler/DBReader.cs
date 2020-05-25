@@ -17,14 +17,15 @@ namespace DBHandler
 
 
         // Methods
-        public StatusCode readSchema()
+        public void readSchema()
         {
 
         }
 
 
-        public StatusCode readMeta()
+        public void readMeta()
         {
+            /*
             try
             {
 
@@ -47,11 +48,13 @@ namespace DBHandler
             {
                 Console.WriteLine(ex.Message);
             }
+            */
+            
 
         }
 
 
-        public StatusCode readTable(String tableName)
+        public void readTable(String tableName)
         {
 
             try
@@ -60,19 +63,19 @@ namespace DBHandler
                 // Open file
                 dbConn.Open();
 
-                dbCommand.CommandText
+                //dbCommand.CommandText
 
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return StatusCode.ConnectionFailed;
+                //return StatusCode.ConnectionFailed;
             }
 
         }
 
-        public StatusCode readRowFromTable(String tableName, String[] conditions)
+        public void readRowFromTable(String tableName, String[] conditions)
         {
 
 

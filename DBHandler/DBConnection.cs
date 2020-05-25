@@ -21,14 +21,17 @@ namespace DBHandler
 
         // Member variables
         public OleDbConnection dbConn;
-        public OleDbDataAdapter dbAdapter;
-        public DataSet dbDataPH;
-        public DataSet dbDataPL;
-        public DataSet dbDataPP;
+        public OleDbDataAdapter dbAdapterPH;
+        public OleDbDataAdapter dbAdapterPL;
+        public OleDbDataAdapter dbAdapterPP;
+        public DataSet dbData;
 
         // Constructor
         public DBConnection(String fileLocation)
         {
+
+            // Initialize DataSet
+            dbData = new DataSet();
 
             // Create SPHandler to connect to sharepoint
             //this.SPHandler = new SPH.SharePointHandler(SharePointPath, apikey, downloadLocation);
@@ -37,13 +40,11 @@ namespace DBHandler
             string connectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileLocation;
             dbConn = new OleDbConnection(connectionString);
 
-            // Adapter
-            dbAdapter = new OleDbDataAdapter();
-            dbAdapter.SelectCommand = new OleDbCommand("", dbConn);
-
-            // Create OleDbCommandBuilder object, which generates SQL statements for single-table updates
-            OleDbCommandBuilder dbCommandBuilder = new OleDbCommandBuilder(dbAdapter);
-
+            // Create OleDbAdapters
+            dbAdapterPH = CreateDataAdapter("PH", dbConn);
+            dbAdapterPL = CreateDataAdapter("PL", dbConn);
+            dbAdapterPP = CreateDataAdapter("PP", dbConn);
+ 
         }
 
         // Destructor
@@ -58,9 +59,9 @@ namespace DBHandler
         {
 
             // Update databases
-            int rowsChanged_PH = dbAdapter.Update(dbDataPH, "PH");
-            int rowsChanged_PL = dbAdapter.Update(dbDataPL, "PL");
-            int rowsChanged_PP = dbAdapter.Update(dbDataPP, "PP");
+            int rowsChanged_PH = dbAdapterPH.Update(dbData, "PH");
+            int rowsChanged_PL = dbAdapterPL.Update(dbData, "PL");
+            int rowsChanged_PP = dbAdapterPH.Update(dbData, "PP");
 
             // Log info
             Console.WriteLine("Database Update: " + rowsChanged_PH + " rows affected in Table PH");
@@ -73,6 +74,7 @@ namespace DBHandler
         }
 
         // Source: https://docs.microsoft.com/en-us/dotnet/api/system.data.oledb.oledbdataadapter?view=dotnet-plat-ext-3.1
+        // Initializes DataAdapter
         public OleDbDataAdapter CreateDataAdapter(string tableName, OleDbConnection connection)
         {
 
@@ -82,6 +84,11 @@ namespace DBHandler
 
             // Include primary key information
             adapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+
+            // Fill DataSet
+            adapter.Fill(dbData, tableName);
+
+            /*
 
             // Create Insert commands
             adapter.InsertCommand = new OleDbCommand("INSERT INTO Customers (CustomerID, CompanyName) " + "VALUES (?, ?)");
@@ -104,6 +111,7 @@ namespace DBHandler
 
             // Create Delete Parameter
             adapter.DeleteCommand.Parameters.Add("@CustomerID", OleDbType.Char, 5, "CustomerID").SourceVersion = DataRowVersion.Original;
+            */
 
             // Return adapter
             return adapter;
