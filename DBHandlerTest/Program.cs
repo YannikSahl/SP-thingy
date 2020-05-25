@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using DBHandler;
 
 namespace DBHandlerTest
@@ -7,8 +8,24 @@ namespace DBHandlerTest
     {
         static void Main(string[] args)
         {
-            DBConnection dbConn = new DBConnection("", "", "");
-            dbConn.openDBFile();
+            String fileLocation = "C:\\Users\\Yannik\\Desktop\\Datenmodell.accdb";
+
+            // Create objects
+            DBReader dbRead = new DBReader(fileLocation);
+            DBWriter dbWrite = new DBWriter(fileLocation);
+
+            // Read info on tables
+
+            // Read all rows
+
+            // Write new row
+
+            // Read all rows
+
+
+            // Test
+            
+
         }
     }
 }

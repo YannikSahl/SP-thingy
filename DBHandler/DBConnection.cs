@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data.OleDb;
 using System.Data;
+using System.Data.Common;
 using System.ComponentModel;
+using System.Reflection.Metadata.Ecma335;
 
 public enum StatusCode
 {
@@ -18,76 +20,95 @@ namespace DBHandler
     {
 
         // Member variables
-        OleDbConnection dbConn;
-        String downloadLocation;
-        //SPH.SharePointHandler SPHandler;
+        public OleDbConnection dbConn;
+        public OleDbDataAdapter dbAdapter;
+        public DataSet dbDataPH;
+        public DataSet dbDataPL;
+        public DataSet dbDataPP;
 
         // Constructor
-        public DBConnection(String SharePointPath, String apikey, String downloadLocation)
+        public DBConnection(String fileLocation)
         {
-
-            // Save download location for further use
-            this.downloadLocation = downloadLocation;
 
             // Create SPHandler to connect to sharepoint
             //this.SPHandler = new SPH.SharePointHandler(SharePointPath, apikey, downloadLocation);
 
+            // Open file
+            string connectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileLocation;
+            dbConn = new OleDbConnection(connectionString);
+
+            // Adapter
+            dbAdapter = new OleDbDataAdapter();
+            dbAdapter.SelectCommand = new OleDbCommand("", dbConn);
+
+            // Create OleDbCommandBuilder object, which generates SQL statements for single-table updates
+            OleDbCommandBuilder dbCommandBuilder = new OleDbCommandBuilder(dbAdapter);
+
         }
 
+        // Destructor
+        ~DBConnection()
+        {
+            dbConn.Close();
+            dbConn.Dispose();
+        }
 
-        // Open .accdb file
-        public StatusCode openDBFile()
+        // Update databases (e.g. to be used on "save changed" click)
+        public StatusCode updateDatabases()
         {
 
-            // string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=E:\\Benutzer\\Yannik\\NcDrive\\HTW\\Module\\4 (5) Softwareentwicklungsprojekt\\Team 5\\Gegeben\\Datenmodell;";
-            string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\Yannik\\Desktop\\Datenmodell.accdb;";
+            // Update databases
+            int rowsChanged_PH = dbAdapter.Update(dbDataPH, "PH");
+            int rowsChanged_PL = dbAdapter.Update(dbDataPL, "PL");
+            int rowsChanged_PP = dbAdapter.Update(dbDataPP, "PP");
 
-            using (OleDbConnection connection = new OleDbConnection(connString))
-            {
-                
+            // Log info
+            Console.WriteLine("Database Update: " + rowsChanged_PH + " rows affected in Table PH");
+            Console.WriteLine("Database Update: " + rowsChanged_PL + " rows affected in Table PL");
+            Console.WriteLine("Database Update: " + rowsChanged_PP + " rows affected in Table PP");
 
-                // Select
-                OleDbCommand commandSelect = new OleDbCommand("SELECT PAD, HStat FROM PH WHERE HStat = '1';", connection);
-                commandSelect = new OleDbCommand("SELECT PAD, HStat FROM PH;", connection);
-                commandSelect.Parameters.Add("HSys", OleDbType.VarChar, 15);
-
-                // Insert
-                OleDbCommand commandInsert = new OleDbCommand("SELECT PAD, HStat FROM PH WHERE HStat = '1';", connection);
-
-                // Delete
-                OleDbCommand commandDelete = new OleDbCommand("SELECT PAD, HStat FROM PH WHERE HStat = '1';", connection);
-
-                try
-                {
-
-                    connection.Open();
-
-                    // Print schema info
-                    DataTable table = connection.GetSchema();
-
-                    // Execute commands
-                    OleDbDataReader reader = commandSelect.ExecuteReader(); //Console.WriteLine(commandSelect.ExecuteNonQuery());
-                    Console.WriteLine("Field count: " + reader.FieldCount);
-
-                    // Read output
-                    while (reader.Read())
-                    {
-                        Console.WriteLine(reader[0].ToString());
-                    }
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-
-            }
-                
-            OleDbConnection myConn = new OleDbConnection(connString);
-
-            return StatusCode.CommandOK;
+            // Return status code
+            return (rowsChanged_PH > 0 || rowsChanged_PL > 0 || rowsChanged_PP > 0) ? StatusCode.CommandOK : StatusCode.CommandFailed;
 
         }
 
+        // Source: https://docs.microsoft.com/en-us/dotnet/api/system.data.oledb.oledbdataadapter?view=dotnet-plat-ext-3.1
+        public OleDbDataAdapter CreateDataAdapter(string tableName, OleDbConnection connection)
+        {
+
+            // Create OleDbAdapter
+            string selectCommand = "SELECT * FROM " + tableName;
+            OleDbDataAdapter adapter = new OleDbDataAdapter(selectCommand, connection);
+
+            // Include primary key information
+            adapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+
+            // Create Insert commands
+            adapter.InsertCommand = new OleDbCommand("INSERT INTO Customers (CustomerID, CompanyName) " + "VALUES (?, ?)");
+
+            // Create Update commands
+            adapter.UpdateCommand = new OleDbCommand("UPDATE Customers SET CustomerID = ?, CompanyName = ? " + "WHERE CustomerID = ?");
+
+            // Create Delete commands
+            adapter.DeleteCommand = new OleDbCommand("DELETE FROM Customers WHERE CustomerID = ?");
+
+
+            // Create Insert parameter
+            adapter.InsertCommand.Parameters.Add("@CustomerID", OleDbType.Char, 5, "CustomerID");
+            adapter.InsertCommand.Parameters.Add("@CompanyName", OleDbType.VarChar, 40, "CompanyName");
+
+            // Create Update parameter
+            adapter.UpdateCommand.Parameters.Add("@CustomerID", OleDbType.Char, 5, "CustomerID");
+            adapter.UpdateCommand.Parameters.Add("@CompanyName", OleDbType.VarChar, 40, "CompanyName");
+            adapter.UpdateCommand.Parameters.Add("@oldCustomerID", OleDbType.Char, 5, "CustomerID").SourceVersion = DataRowVersion.Original;
+
+            // Create Delete Parameter
+            adapter.DeleteCommand.Parameters.Add("@CustomerID", OleDbType.Char, 5, "CustomerID").SourceVersion = DataRowVersion.Original;
+
+            // Return adapter
+            return adapter;
+
+        }
 
     }
 

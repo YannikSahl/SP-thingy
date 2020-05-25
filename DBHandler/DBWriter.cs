@@ -4,7 +4,16 @@ using System.Text;
 
 namespace DBHandler
 {
-    class DBWriter
+    public class DBWriter : DBConnection
     {
+
+        // Constructor
+        public DBWriter(String fileLocation) : base(fileLocation)
+        {
+
+            
+
+        }
+
     }
 }
