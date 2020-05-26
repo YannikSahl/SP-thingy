@@ -1,31 +1,23 @@
 ﻿using System;
 using Microsoft.SharePoint.Client;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.SharePoint.Client.WorkflowServices;
-using Microsoft.Online.SharePoint.TenantAdministration;
-using System.Globalization;
-using Microsoft.SharePoint.Client.Application;
 
 namespace SharePointTryOut
 {
     class Program
     {
-        const string rootSite = "https://htwberlinde.sharepoint.com";
+        const string rootSite = "https://htwberlinde.sharepoint.com/";
         const string sourceSite = "https://htwberlinde.sharepoint.com/sites/SWE";
         static string sourceLibrary = "Documents";
         static string destinationPath = "C:\\downloads";
         static string username;
-        static SecureString password;
+        static string password;
         
 
         static void Main(string[] args)
         {
             username = Authentification.GetUserName();
-            password = Authentification.GetPassword(); //Authentification.StringToSecureString("");
+            password = Authentification.GetPassword().ToString(); //Authentification.StringToSecureString("");
 
             //using (var cntxt = new ClientContext(sourceSite))
             //{
@@ -41,18 +33,28 @@ namespace SharePointTryOut
             //    }
             //}
 
+            
             SharePointOnlineCredentials Credentials = new SharePointOnlineCredentials(username, password);
             ClientContext context = new ClientContext(sourceSite); //create context
             context.Credentials = Credentials;
 
             List list = context.Web.Lists.GetByTitle(sourceLibrary); //retrieve list
             context.Load(list);
-            context.ExecuteQuery();
+            try
+            {
+                context.ExecuteQueryAsync().Wait();
+
+            }
+            catch 
+            {
+                throw new Exception("Anmeldedaten falsch");
+            }
 
             CamlQuery query = new CamlQuery(); //retrieve all items
             ListItemCollection ListItems = list.GetItems(query);
             context.Load(ListItems);
-            context.ExecuteQuery();
+            context.ExecuteQueryAsync().Wait();
+             
 
 
             foreach (ListItem item in ListItems)
