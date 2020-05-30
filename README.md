@@ -23,5 +23,7 @@ Damit der DBHandler seine Arbeit erledigen kann, werden folgende Technologien be
 #### 2.1 Dokumentation: GUI
 
 #### 2.2 Dokumentation: DBHandler
+Die Datenbankdatei "Datenmodell.accdb" ist zurzeit noch im Repository enthalten in dem Projekt DBHandler. 
+Somit ist sichergestellt, dass die DBHandler-Komponente unkompliziert getestet werden kann, ohne SharePoint-Verbindung oder die Angabe eines lokalen Dateipfades.
 
 #### 2.3 Dokumentation: SPHandler
