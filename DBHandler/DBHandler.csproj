@@ -5,6 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Datenmodell.accdb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Datenmodell.accdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Data.OleDb" Version="4.7.1" />
   </ItemGroup>
 

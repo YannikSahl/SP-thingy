@@ -9,7 +9,7 @@ namespace DBHandlerTest
     {
         static void Main(string[] args)
         {
-            string fileLocation = "E:\\Benutzer\\Yannik\\NcDrive\\Ablage\\Datenmodell.accdb";
+            string fileLocation = "Datenmodell.accdb";
 
             // Create object
             DBConnection dbConn = new DBConnection(fileLocation);
@@ -23,7 +23,7 @@ namespace DBHandlerTest
             // Write new row
             Console.WriteLine("Adding row...");
             DataRow newRow = dt.NewRow();
-            newRow["PAD"] = "1337 Leet";
+            newRow["PAD"] = "1340";
             newRow["PArt"] = "PS4";
             newRow["VermArt"] = 1;
             newRow["Stabil"] = 1;
