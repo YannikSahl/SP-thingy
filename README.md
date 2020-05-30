@@ -3,6 +3,10 @@ Ein Projekt für die DB Netz AG im Rahmen des Software Entwicklungsprojektes der
 ### Dokumentation
 
 ### Voraussetzungen: DBHandler
-Damit der DBHandler seine Arbeit erledigen kann, wird die [Microsoft Access Runtime](https://support.office.com/en-us/article/download-and-install-office-365-access-runtime-185c5a32-8ba9-491e-ac76-91cbe3ea09c9) benötigt.
-Das Projekt verwendet .NET Core Version 3.1, welche ebenfalls installiert sein muss.
+Damit der DBHandler seine Arbeit erledigen kann, werden folgende benötigt:
+
+*  [.NET Core Version 3.1](https://dotnet.microsoft.com/download/dotnet-core) als grundlegendes Framework
+*  [Microsoft Access Runtime](https://support.office.com/en-us/article/download-and-install-office-365-access-runtime-185c5a32-8ba9-491e-ac76-91cbe3ea09c9) zur Kommunikation mit der Datenbank-Datei
+*  [NuGet-Paket "OleDB"](https://www.nuget.org/packages/System.Data.OleDb/4.7.1?_src=template) als weiteres Abstraktionslayer zur vereinfachten Arbeit mit der Datenbank
+
 
