@@ -16,4 +16,12 @@ Damit der DBHandler seine Arbeit erledigen kann, werden folgende Technologien be
 
 #### 1.3 Voraussetzungen: SPHandler
 
+
+
 ### 2. Dokumentation
+
+#### 2.1 Dokumentation: GUI
+
+#### 2.2 Dokumentation: DBHandler
+
+#### 2.3 Dokumentation: SPHandler
