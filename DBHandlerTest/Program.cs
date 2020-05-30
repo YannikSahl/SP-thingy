@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.Common;
 using DBHandler;
 
@@ -8,23 +9,41 @@ namespace DBHandlerTest
     {
         static void Main(string[] args)
         {
-            String fileLocation = "C:\\Users\\Yannik\\Desktop\\Datenmodell.accdb";
+            string fileLocation = "C:\\Users\\Yannik\\Desktop\\Datenmodell.accdb";
 
-            // Create objects
-            DBReader dbRead = new DBReader(fileLocation);
-            DBWriter dbWrite = new DBWriter(fileLocation);
+            // Create object
+            DBConnection dbConn = new DBConnection(fileLocation);
 
-            // Read info on tables
+            // Extract data table for pp table
+            System.Data.DataTable dt = dbConn.dbData.Tables["PP"];
 
-            // Read all rows
+            // Count rows
+            Console.WriteLine(dt.Rows.Count);
 
             // Write new row
+            Console.WriteLine("Adding row...");
+            DataRow newRow = dt.NewRow();
+            newRow["PAD"] = "1338 Leet";
+            newRow["PArt"] = "PS4";
+            newRow["VermArt"] = 1;
+            newRow["Stabil"] = 1;
+            newRow["Pdatum"] = "";
+            newRow["PBearb"] = "";
+            newRow["PAuftr"] = "";
+            newRow["PProg"] = "";
+            newRow["PText"] = "";
+            newRow["PStrecke"] = "0644";
+            newRow["PSTRRiKz"] = 1;
+            newRow["Station"] = 2;
+            newRow["Import"] = new DateTime();
+            newRow["loeschDatum"] = new DateTime();
+            dt.Rows.Add(newRow);
 
             // Read all rows
+            Console.WriteLine(dt.Rows.Count);
 
-
-            // Test
-            
+            // Update database
+            dbConn.updateDatabases();
 
         }
     }

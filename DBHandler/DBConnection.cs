@@ -41,16 +41,19 @@ namespace DBHandler
             dbConn = new OleDbConnection(connectionString);
 
             // Create OleDbAdapters
-            dbAdapterPH = CreateDataAdapter("PH", dbConn);
-            dbAdapterPL = CreateDataAdapter("PL", dbConn);
-            dbAdapterPP = CreateDataAdapter("PP", dbConn);
+            dbAdapterPH = createDataAdapter("PH", dbConn);
+            dbAdapterPL = createDataAdapter("PL", dbConn);
+            dbAdapterPP = createDataAdapter("PP", dbConn);
  
         }
 
         // Destructor
         ~DBConnection()
         {
-            dbConn.Close();
+            // Close connection
+            if (dbConn.State != ConnectionState.Open) dbConn.Close();
+
+            // Dipose of 
             dbConn.Dispose();
         }
 
@@ -59,9 +62,9 @@ namespace DBHandler
         {
 
             // Update databases
-            int rowsChanged_PH = dbAdapterPH.Update(dbData, "PH");
-            int rowsChanged_PL = dbAdapterPL.Update(dbData, "PL");
-            int rowsChanged_PP = dbAdapterPH.Update(dbData, "PP");
+            int rowsChanged_PH = dbAdapterPH.Update(dbData.Tables["PH"]);
+            int rowsChanged_PL = dbAdapterPL.Update(dbData.Tables["PL"]);
+            int rowsChanged_PP = dbAdapterPP.Update(dbData.Tables["PP"]);
 
             // Log info
             Console.WriteLine("Database Update: " + rowsChanged_PH + " rows affected in Table PH");
@@ -75,43 +78,35 @@ namespace DBHandler
 
         // Source: https://docs.microsoft.com/en-us/dotnet/api/system.data.oledb.oledbdataadapter?view=dotnet-plat-ext-3.1
         // Initializes DataAdapter
-        public OleDbDataAdapter CreateDataAdapter(string tableName, OleDbConnection connection)
+        public OleDbDataAdapter createDataAdapter(string tableName, OleDbConnection connection)
         {
 
             // Create OleDbAdapter
             string selectCommand = "SELECT * FROM " + tableName;
             OleDbDataAdapter adapter = new OleDbDataAdapter(selectCommand, connection);
 
-            // Include primary key information
-            adapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+            // Create command builder (automatically generates single-table sql commands)
+            OleDbCommandBuilder commandBuilder = new OleDbCommandBuilder(adapter);
+            commandBuilder.QuotePrefix = "[";
+            commandBuilder.QuoteSuffix = "]";
 
-            // Fill DataSet
-            adapter.Fill(dbData, tableName);
+            // Acquire built commands
+            if (connection.State != ConnectionState.Open)
+            {
+                connection.Open();
 
-            /*
+                adapter.UpdateCommand = commandBuilder.GetUpdateCommand();
+                adapter.DeleteCommand = commandBuilder.GetDeleteCommand();
+                adapter.InsertCommand = commandBuilder.GetInsertCommand();
 
-            // Create Insert commands
-            adapter.InsertCommand = new OleDbCommand("INSERT INTO Customers (CustomerID, CompanyName) " + "VALUES (?, ?)");
+                // Include primary key information
+                adapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
 
-            // Create Update commands
-            adapter.UpdateCommand = new OleDbCommand("UPDATE Customers SET CustomerID = ?, CompanyName = ? " + "WHERE CustomerID = ?");
+                // Fill DataSet
+                adapter.Fill(dbData, tableName);
 
-            // Create Delete commands
-            adapter.DeleteCommand = new OleDbCommand("DELETE FROM Customers WHERE CustomerID = ?");
-
-
-            // Create Insert parameter
-            adapter.InsertCommand.Parameters.Add("@CustomerID", OleDbType.Char, 5, "CustomerID");
-            adapter.InsertCommand.Parameters.Add("@CompanyName", OleDbType.VarChar, 40, "CompanyName");
-
-            // Create Update parameter
-            adapter.UpdateCommand.Parameters.Add("@CustomerID", OleDbType.Char, 5, "CustomerID");
-            adapter.UpdateCommand.Parameters.Add("@CompanyName", OleDbType.VarChar, 40, "CompanyName");
-            adapter.UpdateCommand.Parameters.Add("@oldCustomerID", OleDbType.Char, 5, "CustomerID").SourceVersion = DataRowVersion.Original;
-
-            // Create Delete Parameter
-            adapter.DeleteCommand.Parameters.Add("@CustomerID", OleDbType.Char, 5, "CustomerID").SourceVersion = DataRowVersion.Original;
-            */
+                connection.Close();
+            }
 
             // Return adapter
             return adapter;
