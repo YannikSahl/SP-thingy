@@ -31,3 +31,9 @@ Diese *DataTable* wird manuell manipuliert, indem eine Zeile hinzugefügt wird, 
 Gegebenfalls müssen die Schlüsselwerte geändert werden (DBHandlerTest.Program Zeile 26 newRow["PAD"] = ...), wenn mehrere neue Zeilen hinzugefügt werden sollen, da die Einträge sonst abgelehnt werden.
 
 #### 2.3 Dokumentation: SPHandler
+
+SharePoint
+Wir testen das Programm im jetzigen Stand mit einem privaten SharePoint.
+Für Studenten sind die WebApps von Office 365 kostenlos benutzbar, deswegen auch der Zugriff auf SharePoint.
+Sie sind über ihre HTW-Mail zu dem, von uns benutzen, SharePoint hinzugefügt worden.
+Wenn Sie sich also über diese Mail bei SharePoint Online anmelden, sollten die Zugriffsrechte stimmen und das Programm funktionieren.

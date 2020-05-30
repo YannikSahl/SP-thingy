@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DBHandler;
 
 namespace GUI
 {
@@ -32,7 +33,8 @@ namespace GUI
             //PProw.Add("PAD", "hgafg1f"); PProw.Add("PID", 7482);
             //columnLength = PProw.Count;
             //initPP();
-            FillPP(ref PP_TABELLE);
+            //FillPP(ref PP_TABELLE);
+            SetDataTable();
             FillPP(ref PL_TABELLE);
             FillPP(ref PH_TABELLE);
         }
@@ -124,6 +126,14 @@ namespace GUI
         {
             Abfragen abfrageWin = new Abfragen();
             abfrageWin.Show();
+        }
+
+        private void SetDataTable()
+        {
+            DBConnection dbc = new DBConnection("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            DataTable pp = dbc.dbData.Tables["PP"];
+            //PP_TABELLE.DataContext = pp;
+            PP_TABELLE.ItemsSource = pp.DefaultView;
         }
 
         /// <summary>
