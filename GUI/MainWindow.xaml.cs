@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -38,6 +39,7 @@ namespace GUI
             InitializeComponent();
             SetDatabase();
             SetPPDataTable();
+            SetPlAndPhTables();
         }
 
         /// <summary>
@@ -80,6 +82,14 @@ namespace GUI
             PP_TABELLE.ItemsSource = pp.DefaultView;
         }
 
+        private void SetPlAndPhTables()
+        {
+            DataTable ph = m_databaseConnection.dbData.Tables["PH"];
+            PH_TABELLE.ItemsSource = ph.DefaultView;
+            DataTable pl = m_databaseConnection.dbData.Tables["PL"];
+            PL_TABELLE.ItemsSource = pl.DefaultView;
+        }
+
         /// <summary>
         /// Do something after row editing
         /// </summary>
@@ -95,12 +105,71 @@ namespace GUI
         {
         }
 
-        // HIER MUSS DATA BINDING GEMACHT WERDEN! so geht das leider nicht :(
+        // https://stackoverflow.com/questions/25229503/findvisualchild-reference-issue?noredirect=1&lq=1
+        public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj)
+            where T : DependencyObject
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child != null && child is T)
+                    {
+                        yield return (T)child;
+                    }
+
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
+
+        public static childItem FindVisualChild<childItem>(DependencyObject obj)
+            where childItem : DependencyObject
+        {
+            foreach (childItem child in FindVisualChildren<childItem>(obj))
+            {
+                return child;
+            }
+
+            return null;
+        }
+
+        // https://stackoverflow.com/questions/3671003/wpf-how-to-get-a-cell-from-a-datagridrow/21295435
+        static DataGridCell GetCell(DataGrid grid, DataGridRow row, int columnIndex = 0)
+        {
+            if (row == null) return null;
+
+            //var presenter = row.FindVisualChild<DataGridCellsPresenter>();
+            //var presenter = FindVisualChildren<DataGridCellsPresenter>(row);
+            var presenter = FindVisualChild<DataGridCellsPresenter>(row);
+
+            if (presenter == null) return null;
+
+            var cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(columnIndex);
+            if (cell != null) return cell;
+
+            // now try to bring into view and retreive the cell
+            grid.ScrollIntoView(row, grid.Columns[columnIndex]);
+            cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(columnIndex);
+
+            return cell;
+        }
+
+        // HIER MUSS DATA BINDING GEMACHT WERDEN! so ist das leider sehr kompliziert
         private void RowSelected(object sender, RoutedEventArgs e)
         {
-            //var row = sender as DataGridRow;
-            //var pad = row.Item;
-            //SelectedPad.Text = pad.ToString(); //(DataGrid)sender;
+            // hotfix vor Sprint Ende
+            // komplizierter weg um die PAD zu bekommen
+            var row = sender as DataGridRow;
+            // String Operationen um die PAD zu bekommen
+            var padRaw = GetCell(PP_TABELLE, row).ToString().Split(" ").ToList();
+            padRaw.RemoveAt(0);
+            var pad = string.Concat(padRaw);
+            SelectedPad.Text = pad; //(DataGrid)sender;
         }
     }
 }
