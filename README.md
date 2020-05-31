@@ -16,6 +16,9 @@ Damit der DBHandler seine Arbeit erledigen kann, werden folgende Technologien be
 
 #### 1.3 Voraussetzungen: SPHandler
 
+* [TTCUE.NetCore.SharepointOnline.CSOM](https://www.nuget.org/packages/TTCUE.NetCore.SharepointOnline.CSOM.16.1.8029.1200)
+* [SharePoint Online](https://htwberlinde.sharepoint.com/sites/SWE/) 
+
 
 
 ### 2. Dokumentation
@@ -31,8 +34,6 @@ Diese *DataTable* wird manuell manipuliert, indem eine Zeile hinzugefügt wird, 
 Gegebenfalls müssen die Schlüsselwerte geändert werden (DBHandlerTest.Program Zeile 26 newRow["PAD"] = ...), wenn mehrere neue Zeilen hinzugefügt werden sollen, da die Einträge sonst abgelehnt werden.
 
 #### 2.3 Dokumentation: SPHandler
-
-SharePoint
 Wir testen das Programm im jetzigen Stand mit einem privaten SharePoint.
 Für Studenten sind die WebApps von Office 365 kostenlos benutzbar, deswegen auch der Zugriff auf SharePoint.
 Sie sind über ihre HTW-Mail zu dem, von uns benutzen, SharePoint hinzugefügt worden.
