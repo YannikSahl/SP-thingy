@@ -18,6 +18,14 @@ using DBHandler;
 
 namespace GUI
 {
+    /*
+    Author: Oliver Tworkowski
+    Credit for license-free Icons:
+    - sperren.png - https://www.flaticon.com/de/kostenloses-icon/sperren_483408?term=lock&page=1&position=7
+
+    TODO 1: DataGrid Struktur mit Liste binden, um auf Elemente einzeln zugreifen zu können und einfacher operationen durchführen zu können
+    */
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
