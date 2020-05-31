@@ -23,170 +23,76 @@ namespace GUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private DBConnection m_databaseConnection;
+
         public MainWindow()
         {
             InitializeComponent();
-            //fillPP();
-            //initPP();
-            //addPPRow(new PPRow{ pad = "Test1", pid = "Test2" });
-            //PProw = new Dictionary<string, object>();
-            //PProw.Add("PAD", "hgafg1f"); PProw.Add("PID", 7482);
-            //columnLength = PProw.Count;
-            //initPP();
-            //FillPP(ref PP_TABELLE);
-            SetDataTable();
-            FillPP(ref PL_TABELLE);
-            FillPP(ref PH_TABELLE);
-        }
-        #region testing
-        int columnLength = 0;
-
-        public void FillPP(ref DataGrid tabelle)
-        {
-            DataTable dt = new DataTable();
-
-            List<DataColumn> cols = new List<DataColumn>();
-
-            cols.Add(new DataColumn("PAD", typeof(string)));
-            cols.Add(new DataColumn("PAuftr", typeof(string)));
-            cols.Add(new DataColumn("PDatum", typeof(DateTime)));
-            cols.Add(new DataColumn("loeschDatum", typeof(DateTime)));
-            cols.Add(new DataColumn("PArt", typeof(string)));
-
-            //DataColumn datum = new DataColumn("PDatum", typeof(DateTime));
-            //DataColumn loeschDatum = new DataColumn("loeschDatum", typeof(DateTime));
-            //DataColumn art = new DataColumn("PArt", typeof(string));
-
-            foreach(var dc in cols)
-            {
-                dt.Columns.Add(dc);
-            }
-
-            DataRow rowTest = dt.NewRow();
-            rowTest[0] = "1z0825z080";
-            rowTest[1] = "Auftrag";
-            rowTest[2] = new DateTime(2020, 12, 24);
-            rowTest[3] = new DateTime(2020, 3, 12);
-            rowTest[4] = "Eine Art";
-
-            dt.Rows.Add(rowTest);
-            tabelle.ItemsSource = dt.DefaultView;
+            SetDatabase();
+            SetPPDataTable();
         }
 
-        public enum tables
-        {
-            PP_TABELLE,
-            PH_TABELLE,
-            PL_TABELLE
-        }
-
-        // fuktioniert nicht :(
-        /*public void addPPRow(object)
-        {
-            DataTable dt = new DataTable();
-            dt = ((DataView)PP_TABELLE.ItemsSource).ToTable();
-            DataRow dr = dt.NewRow();
-
-            foreach (var column in PProw)
-            {
-                pp.Columns.Add(new DataColumn(column.Key, column.Value.GetType()));
-            }
-
-            dt.Rows.Add(dr);
-
-            PP_TABELLE.ItemsSource = dt.DefaultView;
-        }*/
-
-        Dictionary<string, object> PProw;
-
-        private void initPP()
-        {
-            DataTable pp = new DataTable();
-            //var members = typeof(PPRow).GetMembers();
-            //foreach(var member in members)
-            //{
-            //    pp.Columns.Add(new DataColumn(member.Name, member.GetType()));
-            //}
-            foreach (var column in PProw)
-            {
-                pp.Columns.Add(new DataColumn(column.Key, column.Value.GetType()));
-            }
-            PP_TABELLE.ItemsSource = pp.DefaultView;
-        }
-
-        #endregion
-
+        /// <summary>
+        /// Opens Settings Window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void openSettingsWindow(object sender, RoutedEventArgs e)
         {
             Settings settingsWin = new Settings();
             settingsWin.Show();
         }
 
+        /// <summary>
+        /// Opens Query Window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void openAbfrageWindow(object sender, RoutedEventArgs e)
         {
             Abfragen abfrageWin = new Abfragen();
             abfrageWin.Show();
         }
 
-        private void SetDataTable()
+        /// <summary>
+        /// Sets member database variable
+        /// </summary>
+        private void SetDatabase()
         {
-            DBConnection dbc = new DBConnection("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
-            DataTable pp = dbc.dbData.Tables["PP"];
-            //PP_TABELLE.DataContext = pp;
+            // establish connection
+            m_databaseConnection = new DBConnection("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+        }
+
+        /// <summary>
+        /// Sets PP main table to data view
+        /// </summary>
+        private void SetPPDataTable()
+        {
+            DataTable pp = m_databaseConnection.dbData.Tables["PP"];
             PP_TABELLE.ItemsSource = pp.DefaultView;
         }
 
         /// <summary>
-        /// das anzuzeigende Thumbnail im Dataviewer
+        /// Do something after row editing
         /// </summary>
-        public class displayFile
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PP_TABELLE_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
         {
-            public displayFile() { }
-            public displayFile(string path) {
-                load(path);
-            }
-
-            public string extension;
-            public string name;
-            public string fullpath;
-            public string customColorGradient;
-
-            /// <summary>
-            /// lädt sich selber aus Dateipfad
-            /// </summary>
-            /// <returns>true if correctly loaded</returns>
-            public bool load(string path)
-            {
-                var file = new FileInfo(path);
-                // do some exception handling here!
-                // return false;
-                this.extension = file.Extension;
-                this.name = file.Name;
-                this.fullpath = file.FullName;
-                // custom color gradients hier
-                if (file.Extension == "jpg" || file.Extension == "jpeg")
-                    this.customColorGradient = "";
-                return true;
-            }
-
-            /// <summary>
-            /// zeigt Element als Thumbnail im Documentviewer an
-            /// </summary>
-            public void display()
-            {
-                // add file symbol with gradient + filename + path to the Dataview
-            }
+            // update after row was edited
+            m_databaseConnection.updateDatabases();
         }
 
-        //public displayFile loadFile(string path) {
-        //    var file = new FileInfo(path);
-        //    // do some exception handling here!
-        //    // return null;
-        //    var displFile = new displayFile { extension = file.Extension, name = file.Name, fullpath = file.FullName};
-        //    // custom color gradients hier
-        //    if (file.Extension == "jpg" || file.Extension == "jpeg")
-        //        displFile.customColorGradient = "";
-        //    return displFile;
-        //}
+        private void PP_TABELLE_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+        }
+
+        // HIER MUSS DATA BINDING GEMACHT WERDEN! so geht das leider nicht :(
+        private void RowSelected(object sender, RoutedEventArgs e)
+        {
+            //var row = sender as DataGridRow;
+            //var pad = row.Item;
+            //SelectedPad.Text = pad.ToString(); //(DataGrid)sender;
+        }
     }
 }
