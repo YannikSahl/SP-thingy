@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -18,175 +19,162 @@ using DBHandler;
 
 namespace GUI
 {
+    /*
+    Author: Oliver Tworkowski
+    Credit for license-free Icons:
+    - sperren.png - https://www.flaticon.com/de/kostenloses-icon/sperren_483408?term=lock&page=1&position=7
+
+    TODO 1: DataGrid Struktur mit Liste binden, um auf Elemente einzeln zugreifen zu können und einfacher operationen durchführen zu können
+    */
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        private DBConnection m_databaseConnection;
+
         public MainWindow()
         {
             InitializeComponent();
-            //fillPP();
-            //initPP();
-            //addPPRow(new PPRow{ pad = "Test1", pid = "Test2" });
-            //PProw = new Dictionary<string, object>();
-            //PProw.Add("PAD", "hgafg1f"); PProw.Add("PID", 7482);
-            //columnLength = PProw.Count;
-            //initPP();
-            //FillPP(ref PP_TABELLE);
-            SetDataTable();
-            FillPP(ref PL_TABELLE);
-            FillPP(ref PH_TABELLE);
-        }
-        #region testing
-        int columnLength = 0;
-
-        public void FillPP(ref DataGrid tabelle)
-        {
-            DataTable dt = new DataTable();
-
-            List<DataColumn> cols = new List<DataColumn>();
-
-            cols.Add(new DataColumn("PAD", typeof(string)));
-            cols.Add(new DataColumn("PAuftr", typeof(string)));
-            cols.Add(new DataColumn("PDatum", typeof(DateTime)));
-            cols.Add(new DataColumn("loeschDatum", typeof(DateTime)));
-            cols.Add(new DataColumn("PArt", typeof(string)));
-
-            //DataColumn datum = new DataColumn("PDatum", typeof(DateTime));
-            //DataColumn loeschDatum = new DataColumn("loeschDatum", typeof(DateTime));
-            //DataColumn art = new DataColumn("PArt", typeof(string));
-
-            foreach(var dc in cols)
-            {
-                dt.Columns.Add(dc);
-            }
-
-            DataRow rowTest = dt.NewRow();
-            rowTest[0] = "1z0825z080";
-            rowTest[1] = "Auftrag";
-            rowTest[2] = new DateTime(2020, 12, 24);
-            rowTest[3] = new DateTime(2020, 3, 12);
-            rowTest[4] = "Eine Art";
-
-            dt.Rows.Add(rowTest);
-            tabelle.ItemsSource = dt.DefaultView;
+            SetDatabase();
+            SetPPDataTable();
+            SetPlAndPhTables();
         }
 
-        public enum tables
-        {
-            PP_TABELLE,
-            PH_TABELLE,
-            PL_TABELLE
-        }
-
-        // fuktioniert nicht :(
-        /*public void addPPRow(object)
-        {
-            DataTable dt = new DataTable();
-            dt = ((DataView)PP_TABELLE.ItemsSource).ToTable();
-            DataRow dr = dt.NewRow();
-
-            foreach (var column in PProw)
-            {
-                pp.Columns.Add(new DataColumn(column.Key, column.Value.GetType()));
-            }
-
-            dt.Rows.Add(dr);
-
-            PP_TABELLE.ItemsSource = dt.DefaultView;
-        }*/
-
-        Dictionary<string, object> PProw;
-
-        private void initPP()
-        {
-            DataTable pp = new DataTable();
-            //var members = typeof(PPRow).GetMembers();
-            //foreach(var member in members)
-            //{
-            //    pp.Columns.Add(new DataColumn(member.Name, member.GetType()));
-            //}
-            foreach (var column in PProw)
-            {
-                pp.Columns.Add(new DataColumn(column.Key, column.Value.GetType()));
-            }
-            PP_TABELLE.ItemsSource = pp.DefaultView;
-        }
-
-        #endregion
-
+        /// <summary>
+        /// Opens Settings Window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void openSettingsWindow(object sender, RoutedEventArgs e)
         {
             Settings settingsWin = new Settings();
             settingsWin.Show();
         }
 
+        /// <summary>
+        /// Opens Query Window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void openAbfrageWindow(object sender, RoutedEventArgs e)
         {
             Abfragen abfrageWin = new Abfragen();
             abfrageWin.Show();
         }
 
-        private void SetDataTable()
+        /// <summary>
+        /// Sets member database variable
+        /// </summary>
+        private void SetDatabase()
         {
-            DBConnection dbc = new DBConnection("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
-            DataTable pp = dbc.dbData.Tables["PP"];
-            //PP_TABELLE.DataContext = pp;
-            PP_TABELLE.ItemsSource = pp.DefaultView;
+            // establish connection
+            m_databaseConnection = new DBConnection("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
         }
 
         /// <summary>
-        /// das anzuzeigende Thumbnail im Dataviewer
+        /// Sets PP main table to data view
         /// </summary>
-        public class displayFile
+        private void SetPPDataTable()
         {
-            public displayFile() { }
-            public displayFile(string path) {
-                load(path);
-            }
+            DataTable pp = m_databaseConnection.dbData.Tables["PP"];
+            PP_TABELLE.ItemsSource = pp.DefaultView;
+        }
 
-            public string extension;
-            public string name;
-            public string fullpath;
-            public string customColorGradient;
+        private void SetPlAndPhTables()
+        {
+            DataTable ph = m_databaseConnection.dbData.Tables["PH"];
+            PH_TABELLE.ItemsSource = ph.DefaultView;
+            DataTable pl = m_databaseConnection.dbData.Tables["PL"];
+            PL_TABELLE.ItemsSource = pl.DefaultView;
+        }
 
-            /// <summary>
-            /// lädt sich selber aus Dateipfad
-            /// </summary>
-            /// <returns>true if correctly loaded</returns>
-            public bool load(string path)
+        /// <summary>
+        /// Do something after row editing
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PP_TABELLE_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            // update after row was edited
+            m_databaseConnection.updateDatabases();
+        }
+
+        private void PP_TABELLE_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+        }
+
+        // https://stackoverflow.com/questions/25229503/findvisualchild-reference-issue?noredirect=1&lq=1
+        public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj)
+            where T : DependencyObject
+        {
+            if (depObj != null)
             {
-                var file = new FileInfo(path);
-                // do some exception handling here!
-                // return false;
-                this.extension = file.Extension;
-                this.name = file.Name;
-                this.fullpath = file.FullName;
-                // custom color gradients hier
-                if (file.Extension == "jpg" || file.Extension == "jpeg")
-                    this.customColorGradient = "";
-                return true;
-            }
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child != null && child is T)
+                    {
+                        yield return (T)child;
+                    }
 
-            /// <summary>
-            /// zeigt Element als Thumbnail im Documentviewer an
-            /// </summary>
-            public void display()
-            {
-                // add file symbol with gradient + filename + path to the Dataview
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
             }
         }
 
-        //public displayFile loadFile(string path) {
-        //    var file = new FileInfo(path);
-        //    // do some exception handling here!
-        //    // return null;
-        //    var displFile = new displayFile { extension = file.Extension, name = file.Name, fullpath = file.FullName};
-        //    // custom color gradients hier
-        //    if (file.Extension == "jpg" || file.Extension == "jpeg")
-        //        displFile.customColorGradient = "";
-        //    return displFile;
-        //}
+        public static childItem FindVisualChild<childItem>(DependencyObject obj)
+            where childItem : DependencyObject
+        {
+            foreach (childItem child in FindVisualChildren<childItem>(obj))
+            {
+                return child;
+            }
+
+            return null;
+        }
+
+        // https://stackoverflow.com/questions/3671003/wpf-how-to-get-a-cell-from-a-datagridrow/21295435
+        static DataGridCell GetCell(DataGrid grid, DataGridRow row, int columnIndex = 0)
+        {
+            if (row == null) return null;
+
+            //var presenter = row.FindVisualChild<DataGridCellsPresenter>();
+            //var presenter = FindVisualChildren<DataGridCellsPresenter>(row);
+            var presenter = FindVisualChild<DataGridCellsPresenter>(row);
+
+            if (presenter == null) return null;
+
+            var cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(columnIndex);
+            if (cell != null) return cell;
+
+            // now try to bring into view and retreive the cell
+            grid.ScrollIntoView(row, grid.Columns[columnIndex]);
+            cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(columnIndex);
+
+            return cell;
+        }
+
+        // HIER MUSS DATA BINDING GEMACHT WERDEN! so ist das leider sehr kompliziert
+        private void RowSelected(object sender, RoutedEventArgs e)
+        {
+            // hotfix vor Sprint Ende
+            // komplizierter weg um die PAD zu bekommen
+            var row = sender as DataGridRow;
+            // String Operationen um die PAD zu bekommen
+            var padRaw = GetCell(PP_TABELLE, row).ToString().Split(" ").ToList();
+            padRaw.RemoveAt(0);
+            var pad = string.Concat(padRaw);
+            SelectedPad.Text = pad; //(DataGrid)sender;
+        }
+
+        private void CloseApplication(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
     }
 }

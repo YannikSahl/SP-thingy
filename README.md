@@ -1,11 +1,15 @@
+
 ## Front-End Festpunktfelddatenbank für die DB Netz AG
 Ein Projekt für die DB Netz AG im Rahmen des Software Entwicklungsprojektes der HTW Berlin für das SoSe 2020.
 
 
 ### 1. Voraussetzungen
 Die nächsten Unterkapitel beschreiben, welche Technologien / Pakete / Bibliotheken von unserem Projekt benötigt werden.
+Alle Projekte laufen unter [.NET Core Version 3.1](https://dotnet.microsoft.com/download/dotnet-core)
 
 #### 1.1 Voraussetzungen: GUI
+Die GUI beansprucht keine externen Frameworks oder NuGet Pakete.
+Im Ordner `GUI/gui_resources` befinden sich Resourcen, wie Icons zur Visualisierung.
 
 #### 1.2 Voraussetzungen: DBHandler
 Damit der DBHandler seine Arbeit erledigen kann, werden folgende Technologien benötigt:
@@ -22,8 +26,16 @@ Damit der DBHandler seine Arbeit erledigen kann, werden folgende Technologien be
 
 
 ### 2. Dokumentation
-
+Beim Start der Applikation öffnet sich das Hauptformular der GUI. Um über weiteres navigieren innerhalb der GUI zu erfahren, lesen Sie bitte die Dokumentation zur GUI (2.1)
 #### 2.1 Dokumentation: GUI
+Beim Start der der Applikation erscheint das Hauptformular. 
+Im oberen Menü gibt es bis jetzt folgende, bis jetzt funktionierende Reiter: 
+- Datei/Neue Abfrage
+Wenn hier rauf geklickt wird, öffnet sich das Abfrageformular
+- Extras/Einstellungen
+Wenn hier rauf geklickt wird, öffnet sich das Einstellungen-Formular
+- Datei/Schließen
+Wenn hier rauf geklickt wird, schließen sich alle Fenster und die Applikation wird beendet
 
 #### 2.2 Dokumentation: DBHandler
 Die Datenbankdatei "Datenmodell.accdb" ist zurzeit noch im Repository enthalten in dem Projekt DBHandler. 
