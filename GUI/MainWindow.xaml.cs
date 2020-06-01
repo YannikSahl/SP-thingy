@@ -171,5 +171,10 @@ namespace GUI
             var pad = string.Concat(padRaw);
             SelectedPad.Text = pad; //(DataGrid)sender;
         }
+
+        private void CloseApplication(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
     }
 }

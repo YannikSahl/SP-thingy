@@ -16,13 +16,14 @@
                 <MenuItem Header="_Neue Abfrage" Foreground="Black" Click="openAbfrageWindow"/>
                 <MenuItem Header="_Aktualisieren" Foreground="Black"/>
                 <Separator />
-                <MenuItem Header="_Schließen" Foreground="Black"/>
+                <MenuItem Header="_Schließen" Foreground="Black" Click="CloseApplication"/>
             </MenuItem>
             <MenuItem Header="_Tools" Background="#FF444444">
                 <MenuItem Header="_DB Pflege" Foreground="Black"/>
                 <MenuItem Header="_Pfade" Foreground="Black"/>
-                <Separator />
-                <MenuItem Header="_Einstellungen" Foreground="Black" Click="openSettingsWindow"/>
+            </MenuItem>
+            <MenuItem Header="Extras" Background="#FF444444">
+                <MenuItem Header="Einstellungen" Foreground="Black" Click="openSettingsWindow"/>
             </MenuItem>
         </Menu>
         <TextBox DockPanel.Dock="Bottom" Background="#FF444444" Foreground="#FFBBBBBB"></TextBox>
