@@ -6,9 +6,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.SharePoint.Client.WorkflowServices;
-using Microsoft.Online.SharePoint.TenantAdministration;
 using System.Globalization;
-using Microsoft.Online.SharePoint.TenantManagement;
 
 namespace SPHandler
 {
@@ -19,7 +17,7 @@ namespace SPHandler
         static string sourceLibrary = "Documents";
         static string destinationPath = "Pfad aus Settings";
         private static string username;
-        private static SecureString password;
+        private static string password;
 
         public static void setUsername(string name)
         {
@@ -28,7 +26,7 @@ namespace SPHandler
 
         public static void setPassword(string pw)
         {
-            password = Authentification.StringToSecureString(pw);
+            password = Authentification.StringToSecureString(pw).ToString(); //SecureString war in der eigentlich CSOM vorgegeben, in der Neuen aber nicht, wird noch geändert
         }
 
         public static bool testConnection()
@@ -42,12 +40,12 @@ namespace SPHandler
 
                 List list = context.Web.Lists.GetByTitle(sourceLibrary); //retrieve list
                 context.Load(list);
-                context.ExecuteQuery();
+                context.ExecuteQueryAsync();
 
                 CamlQuery query = new CamlQuery(); //retrieve all items
                 ListItemCollection ListItems = list.GetItems(query);
                 context.Load(ListItems);
-                context.ExecuteQuery();
+                context.ExecuteQueryAsync();
             }catch(Exception e)
             {
                 return false;
@@ -59,7 +57,7 @@ namespace SPHandler
         static void SharePointTryOut()
         {
             username = Authentification.GetUserName();
-            password = Authentification.GetPassword();
+            password = Authentification.GetPassword().ToString();
             SharePointOnlineCredentials Credentials = new SharePointOnlineCredentials(username, password);
 
             ClientContext context = new ClientContext(sourceSite); //create context
@@ -67,12 +65,12 @@ namespace SPHandler
 
             List list = context.Web.Lists.GetByTitle(sourceLibrary); //retrieve list
             context.Load(list);
-            context.ExecuteQuery();
+            context.ExecuteQueryAsync();
 
             CamlQuery query = new CamlQuery(); //retrieve all items
             ListItemCollection ListItems = list.GetItems(query);
             context.Load(ListItems);
-            context.ExecuteQuery();
+            context.ExecuteQueryAsync();
 
 
             foreach (ListItem item in ListItems)
