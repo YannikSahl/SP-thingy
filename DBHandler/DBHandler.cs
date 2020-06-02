@@ -16,15 +16,15 @@ public enum StatusCode
 
 namespace DBHandler
 {
-    public class DbHandler
+    public class DbHandler : IDisposable
     {
 
         // Member variables
-        public OleDbConnection DbConn; // unmanaged
-        public OleDbDataAdapter DbAdapterPh; // unmanaged
-        public OleDbDataAdapter DbAdapterPl; // unmanaged
-        public OleDbDataAdapter DbAdapterPp; // unmanaged
-        public DataSet DbData; // managed
+        public OleDbConnection DbConn { get; }
+        public OleDbDataAdapter DbAdapterPh { get; }
+        public OleDbDataAdapter DbAdapterPl { get; }
+        public OleDbDataAdapter DbAdapterPp { get; }
+        public DataSet DbData { get; set; }
 
         // Constructor
         public DbHandler(string fileLocation)
@@ -47,11 +47,7 @@ namespace DBHandler
         // Destructor
         ~DbHandler()
         {
-            // Close connection
-            if (DbConn.State != ConnectionState.Open) DbConn.Close();
-
-            // Dipose of 
-            DbConn.Dispose();
+            Dispose(false);
         }
 
         // Update databases (e.g. to be used on "save changed" click)
@@ -104,14 +100,57 @@ namespace DBHandler
             // Fill DataSet
             adapter.Fill(DbData, tableName);
 
+            // Close connection
             connection.Close();
-            
 
             // Return adapter
             return adapter;
 
         }
 
+        // ************ DISPOSE
+
+        // To detect redundant calls
+        private bool _disposed = false;
+
+        // Free any unmanaged resources
+        private void ReleaseUnmanagedResources()
+        {
+            // None yet
+        }
+
+        // Private dispose function that runs checks based on bool
+        private void Dispose(bool disposing)
+        {
+
+            // Check if already disposed
+            if (_disposed)
+            {
+                return;
+            }
+            if (disposing)
+            {
+                // Dispose managed resources
+                DbConn?.Dispose();
+                DbAdapterPh?.Dispose();
+                DbAdapterPl?.Dispose();
+                DbAdapterPp?.Dispose();
+                DbData?.Dispose();
+            }
+
+            // Dispose unmanaged resources
+            ReleaseUnmanagedResources();
+
+            // Set to disposed
+            _disposed = true;
+        }
+
+        // Public dispose function
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 
 }
