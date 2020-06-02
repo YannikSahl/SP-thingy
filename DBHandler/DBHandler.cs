@@ -33,17 +33,14 @@ namespace DBHandler
             // Initialize DataSet
             DbData = new DataSet();
 
-            // Create SPHandler to connect to sharepoint
-            //this.SPHandler = new SPH.SharePointHandler(SharePointPath, apikey, downloadLocation);
-
             // Open file
             string connectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileLocation;
             DbConn = new OleDbConnection(connectionString);
 
             // Create OleDbAdapters
-            DbAdapterPh = createDataAdapter("PH", DbConn);
-            DbAdapterPl = createDataAdapter("PL", DbConn);
-            DbAdapterPp = createDataAdapter("PP", DbConn);
+            DbAdapterPh = CreateDataAdapter("PH", DbConn);
+            DbAdapterPl = CreateDataAdapter("PL", DbConn);
+            DbAdapterPp = CreateDataAdapter("PP", DbConn);
  
         }
 
@@ -78,7 +75,7 @@ namespace DBHandler
 
         // Source: https://docs.microsoft.com/en-us/dotnet/api/system.data.oledb.oledbdataadapter?view=dotnet-plat-ext-3.1
         // Initializes DataAdapter
-        public OleDbDataAdapter createDataAdapter(string tableName, OleDbConnection connection)
+        public OleDbDataAdapter CreateDataAdapter(string tableName, OleDbConnection connection)
         {
 
             // Create OleDbAdapter
