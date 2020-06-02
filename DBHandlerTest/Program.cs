@@ -12,10 +12,10 @@ namespace DBHandlerTest
             string fileLocation = "Datenmodell.accdb";
 
             // Create object
-            DBConnection dbConn = new DBConnection(fileLocation);
+            DBHandler.DbHandler dbConn = new DBHandler.DbHandler(fileLocation);
 
             // Extract data table for pp table
-            System.Data.DataTable dt = dbConn.dbData.Tables["PP"];
+            System.Data.DataTable dt = dbConn.DbData.Tables["PP"];
 
             // Count rows
             Console.WriteLine(dt.Rows.Count);
@@ -23,7 +23,7 @@ namespace DBHandlerTest
             // Write new row
             Console.WriteLine("Adding row...");
             DataRow newRow = dt.NewRow();
-            newRow["PAD"] = "1340";
+            newRow["PAD"] = "1350";
             newRow["PArt"] = "PS4";
             newRow["VermArt"] = 1;
             newRow["Stabil"] = 1;
@@ -43,7 +43,7 @@ namespace DBHandlerTest
             Console.WriteLine(dt.Rows.Count);
 
             // Update database
-            dbConn.updateDatabases();
+            dbConn.UpdateDatabases();
 
         }
     }
