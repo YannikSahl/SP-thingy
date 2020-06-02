@@ -32,14 +32,56 @@ namespace GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private DBHandler.DBHandler m_databaseConnection;
+        public enum ConnectionModus
+        {
+            Offline,
+            Online,
+            LostConnection
+        }
 
-        public MainWindow()
+        private ConnectionModus m_connectionModus;
+        private DBHandler.DbHandler m_databaseConnection;
+
+        public MainWindow(ConnectionModus conMod = ConnectionModus.Online)
         {
             InitializeComponent();
-            SetDatabase();
-            SetPPDataTable();
-            SetPlAndPhTables();
+            //SetDatabase();
+            //SetPPDataTable();
+            //SetPlAndPhTables();
+            CollapseExpander();
+            m_connectionModus = conMod;
+            PopoutConnectionStatusBar();
+        }
+
+        private void SetConnectionStatusBarStyle(string text, Color color)
+        {
+            ConnectionStatusBar.Text = text;
+            var brush = new SolidColorBrush(color);
+            ConnectionStatusBar.Background = brush;
+            ConnectionStatusBar.Visibility = Visibility.Visible;
+        }
+
+        private void PopoutConnectionStatusBar()
+        {
+            switch (m_connectionModus)
+            {
+                case ConnectionModus.Online:
+                {
+                    SetConnectionStatusBarStyle("Verbunden!", Colors.ForestGreen);
+                    break;
+                }
+                case ConnectionModus.Offline:
+                {
+                    SetConnectionStatusBarStyle("Offline Modus", Colors.DarkOrange);
+                    break;
+                }
+                case ConnectionModus.LostConnection:
+                {
+                    SetConnectionStatusBarStyle("Verbindung Fehlgeschlagen!", Colors.Red);
+                    break;
+                }
+                default: break;
+            }
         }
 
         /// <summary>
@@ -70,7 +112,7 @@ namespace GUI
         private void SetDatabase()
         {
             // establish connection
-            m_databaseConnection = new DBHandler.DBHandler("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            m_databaseConnection = new DBHandler.DbHandler("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
         }
 
         /// <summary>
@@ -78,15 +120,15 @@ namespace GUI
         /// </summary>
         private void SetPPDataTable()
         {
-            DataTable pp = m_databaseConnection.dbData.Tables["PP"];
+            DataTable pp = m_databaseConnection.DbData.Tables["PP"];
             PP_TABELLE.DataContext = pp;
         }
 
         private void SetPlAndPhTables()
         {
-            DataTable ph = m_databaseConnection.dbData.Tables["PH"];
+            DataTable ph = m_databaseConnection.DbData.Tables["PH"];
             PH_TABELLE.ItemsSource = ph.DefaultView;
-            DataTable pl = m_databaseConnection.dbData.Tables["PL"];
+            DataTable pl = m_databaseConnection.DbData.Tables["PL"];
             PL_TABELLE.ItemsSource = pl.DefaultView;
         }
 
@@ -98,9 +140,14 @@ namespace GUI
         private void PP_TABELLE_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
         {
             // update after row was edited
-            m_databaseConnection.updateDatabases();
+            m_databaseConnection.UpdateDatabases();
         }
 
+        /// <summary>
+        /// Row selection changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PP_TABELLE_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // get RowView
@@ -112,76 +159,36 @@ namespace GUI
             SelectedPad.Text = pad; //(DataGrid)sender;
         }
 
-        // https://stackoverflow.com/questions/25229503/findvisualchild-reference-issue?noredirect=1&lq=1
-        public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj)
-            where T : DependencyObject
-        {
-            if (depObj != null)
-            {
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
-                {
-                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
-                    if (child != null && child is T)
-                    {
-                        yield return (T)child;
-                    }
-
-                    foreach (T childOfChild in FindVisualChildren<T>(child))
-                    {
-                        yield return childOfChild;
-                    }
-                }
-            }
-        }
-
-        public static childItem FindVisualChild<childItem>(DependencyObject obj)
-            where childItem : DependencyObject
-        {
-            foreach (childItem child in FindVisualChildren<childItem>(obj))
-            {
-                return child;
-            }
-
-            return null;
-        }
-
-        // https://stackoverflow.com/questions/3671003/wpf-how-to-get-a-cell-from-a-datagridrow/21295435
-        static DataGridCell GetCell(DataGrid grid, DataGridRow row, int columnIndex = 0)
-        {
-            if (row == null) return null;
-
-            //var presenter = row.FindVisualChild<DataGridCellsPresenter>();
-            //var presenter = FindVisualChildren<DataGridCellsPresenter>(row);
-            var presenter = FindVisualChild<DataGridCellsPresenter>(row);
-
-            if (presenter == null) return null;
-
-            var cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(columnIndex);
-            if (cell != null) return cell;
-
-            // now try to bring into view and retreive the cell
-            grid.ScrollIntoView(row, grid.Columns[columnIndex]);
-            cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(columnIndex);
-
-            return cell;
-        }
-
-        // HIER MUSS DATA BINDING GEMACHT WERDEN! so ist das leider sehr kompliziert
-        private void RowSelected(object sender, RoutedEventArgs e)
-        {
-            //// hotfix vor Sprint Ende
-            //// komplizierter weg um die PAD zu bekommen
-            //var row = sender as DataGridRow;
-            //// String Operationen um die PAD zu bekommen
-            //var padRaw = GetCell(PP_TABELLE, row).ToString().Split(" ").ToList();
-            //padRaw.RemoveAt(0);
-            //var pad = string.Concat(padRaw);
-            //SelectedPad.Text = pad; //(DataGrid)sender;
-        }
-
+        /// <summary>
+        /// Close Application
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CloseApplication(object sender, RoutedEventArgs e)
         {
             System.Windows.Application.Current.Shutdown();
+        }
+
+        private void CollapseExpander()
+        {
+            DocumentViewContainer.Width = new GridLength(DocumentViewContainer.MinWidth);
+            ViewSplitter.Visibility = Visibility.Collapsed;
+        }
+
+        private void ExpandExpander()
+        {
+            DocumentViewContainer.Width = new GridLength(200);
+            ViewSplitter.Visibility = Visibility.Visible;
+        }
+
+        private void Expander_Collapsed(object sender, RoutedEventArgs e)
+        {
+            CollapseExpander();
+        }
+
+        private void Expander_Expanded(object sender, RoutedEventArgs e)
+        {
+            ExpandExpander();
         }
     }
 }
