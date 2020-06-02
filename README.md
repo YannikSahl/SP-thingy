@@ -14,7 +14,7 @@ Im Ordner `GUI/gui_resources` befinden sich Resourcen, wie Icons zur Visualisier
 Damit der DBHandler seine Arbeit erledigen kann, werden folgende Technologien benötigt:
 
 *  [.NET Core Version 3.1](https://dotnet.microsoft.com/download/dotnet-core) als grundlegendes Framework
-*  [Microsoft Access Runtime](https://support.office.com/en-us/article/download-and-install-office-365-access-runtime-185c5a32-8ba9-491e-ac76-91cbe3ea09c9) zur Kommunikation mit der Datenbank-Datei
+*  [Microsoft Access Runtime](https://www.microsoft.com/en-us/download/confirmation.aspx?id=13255) zur Kommunikation mit der Datenbank-Datei
 *  [NuGet-Paket "OleDB"](https://www.nuget.org/packages/System.Data.OleDb/4.7.1?_src=template) als weiteres Abstraktionslayer zur vereinfachten Arbeit mit der Datenbank
 *  Access / Office als 32-bit Anwendung (nicht kompatibel mit 64-bit Variante!)
 
