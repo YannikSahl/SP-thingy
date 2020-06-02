@@ -59,7 +59,7 @@
                             <RowDefinition Height="5"/>
                             <RowDefinition MinHeight="50"/>
                         </Grid.RowDefinitions>
-                        <DataGrid x:Name="PP_TABELLE" Margin="0,5,0,5" Grid.Row="0" RowEditEnding="PP_TABELLE_RowEditEnding" SelectionChanged="PP_TABELLE_SelectionChanged">
+                        <DataGrid x:Name="PP_TABELLE" Margin="0,5,0,5" Grid.Row="0" ItemsSource="{Binding}" RowEditEnding="PP_TABELLE_RowEditEnding" SelectionChanged="PP_TABELLE_SelectionChanged">
                             <DataGrid.ItemContainerStyle>
                                 <Style TargetType="DataGridRow">
                                     <EventSetter Event="MouseLeftButtonUp" Handler="RowSelected"/>

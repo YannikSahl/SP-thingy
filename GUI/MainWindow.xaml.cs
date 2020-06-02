@@ -79,7 +79,7 @@ namespace GUI
         private void SetPPDataTable()
         {
             DataTable pp = m_databaseConnection.dbData.Tables["PP"];
-            PP_TABELLE.ItemsSource = pp.DefaultView;
+            PP_TABELLE.DataContext = pp;
         }
 
         private void SetPlAndPhTables()
@@ -103,6 +103,13 @@ namespace GUI
 
         private void PP_TABELLE_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // get RowView
+            var dataRowView = e.AddedItems[0] as DataRowView;
+            if (dataRowView == null)
+                return;
+            // get PAD from DataRow
+            var pad = (string)dataRowView.Row["PAD"];
+            SelectedPad.Text = pad; //(DataGrid)sender;
         }
 
         // https://stackoverflow.com/questions/25229503/findvisualchild-reference-issue?noredirect=1&lq=1
@@ -162,14 +169,14 @@ namespace GUI
         // HIER MUSS DATA BINDING GEMACHT WERDEN! so ist das leider sehr kompliziert
         private void RowSelected(object sender, RoutedEventArgs e)
         {
-            // hotfix vor Sprint Ende
-            // komplizierter weg um die PAD zu bekommen
-            var row = sender as DataGridRow;
-            // String Operationen um die PAD zu bekommen
-            var padRaw = GetCell(PP_TABELLE, row).ToString().Split(" ").ToList();
-            padRaw.RemoveAt(0);
-            var pad = string.Concat(padRaw);
-            SelectedPad.Text = pad; //(DataGrid)sender;
+            //// hotfix vor Sprint Ende
+            //// komplizierter weg um die PAD zu bekommen
+            //var row = sender as DataGridRow;
+            //// String Operationen um die PAD zu bekommen
+            //var padRaw = GetCell(PP_TABELLE, row).ToString().Split(" ").ToList();
+            //padRaw.RemoveAt(0);
+            //var pad = string.Concat(padRaw);
+            //SelectedPad.Text = pad; //(DataGrid)sender;
         }
 
         private void CloseApplication(object sender, RoutedEventArgs e)
