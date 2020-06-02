@@ -32,7 +32,7 @@ namespace GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private DBConnection m_databaseConnection;
+        private DBHandler.DBHandler m_databaseConnection;
 
         public MainWindow()
         {
@@ -70,7 +70,7 @@ namespace GUI
         private void SetDatabase()
         {
             // establish connection
-            m_databaseConnection = new DBConnection("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            m_databaseConnection = new DBHandler.DBHandler("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
         }
 
         /// <summary>
