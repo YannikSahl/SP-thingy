@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using DBHandler;
 
 namespace GUI
@@ -23,6 +24,7 @@ namespace GUI
     Author: Oliver Tworkowski
     Credit for license-free Icons:
     - sperren.png - https://www.flaticon.com/de/kostenloses-icon/sperren_483408?term=lock&page=1&position=7
+    - auge.png - https://www.flaticon.com/de/kostenloses-icon/auge_609494?term=view&page=1&position=67
 
     TODO 1: DataGrid Struktur mit Liste binden, um auf Elemente einzeln zugreifen zu können und einfacher operationen durchführen zu können
     */
@@ -59,6 +61,34 @@ namespace GUI
             var brush = new SolidColorBrush(color);
             ConnectionStatusBar.Background = brush;
             ConnectionStatusBar.Visibility = Visibility.Visible;
+            StartTimer(5d);
+            m_connectionStatusBarActive = true;
+        }
+
+        private void HideConnectionStatusBar()
+        {
+            ConnectionStatusBar.Visibility = Visibility.Collapsed;
+            m_connectionStatusBarActive = false;
+        }
+
+        // TODO: use this to determine whether timer should be reset when popout during popout
+        private bool m_connectionStatusBarActive;
+        private void StartTimer(double seconds)
+        {
+            DispatcherTimer timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(seconds)
+            };
+            timer.Tick += TimerTick;
+            timer.Start();
+        }
+
+        private void TimerTick(object sender, EventArgs e)
+        {
+            DispatcherTimer timer = (DispatcherTimer)sender;
+            timer.Stop();
+            timer.Tick -= TimerTick;
+            HideConnectionStatusBar();
         }
 
         private void PopoutConnectionStatusBar()

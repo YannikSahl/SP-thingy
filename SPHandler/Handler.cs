@@ -19,6 +19,12 @@ namespace SPHandler
         private static string username;
         private static string password;
 
+        public enum FehlerCodes
+        {
+            WrongCredidentials,
+            SharePointPathNonExistent
+        }
+
         public static void setUsername(string name)
         {
             username = name;
@@ -40,12 +46,12 @@ namespace SPHandler
 
                 List list = context.Web.Lists.GetByTitle(sourceLibrary); //retrieve list
                 context.Load(list);
-                context.ExecuteQueryAsync();
+                context.ExecuteQueryAsync().RunSynchronously();
 
                 CamlQuery query = new CamlQuery(); //retrieve all items
                 ListItemCollection ListItems = list.GetItems(query);
                 context.Load(ListItems);
-                context.ExecuteQueryAsync();
+                context.ExecuteQueryAsync().RunSynchronously();
             }catch(Exception e)
             {
                 return false;

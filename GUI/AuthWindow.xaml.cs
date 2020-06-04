@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SPHandler;
 
 namespace GUI
 {
@@ -22,11 +23,42 @@ namespace GUI
             InitializeComponent();
         }
 
-        private void OfflineModus_ButtonClick(object sender, RoutedEventArgs e)
+        private void RedirectToMainWindow(MainWindow.ConnectionModus connectionStatus)
         {
-            MainWindow settingsWin = new MainWindow(MainWindow.ConnectionModus.Offline);
+            MainWindow settingsWin = new MainWindow(connectionStatus);
             settingsWin.Show();
             this.Close();
+        }
+
+        private void OfflineModus_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            RedirectToMainWindow(MainWindow.ConnectionModus.Offline);
+        }
+
+        private void Connect_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            SPHandler.Handler.setPassword(PasswordBox.Password);
+            SPHandler.Handler.setUsername(NameBox.Text);
+            var hasConnection = SPHandler.Handler.testConnection();
+
+            if(hasConnection)
+                RedirectToMainWindow(MainWindow.ConnectionModus.Online);
+            else
+            {
+                ErrorMessageContainer.Visibility = Visibility.Visible;
+                ErrorMessage.Text = "Error irgendwas 101";
+            }
+                
+        }
+
+        private void CloseErrorMessage_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            ErrorMessageContainer.Visibility = Visibility.Collapsed;
+        }
+
+        private void ShowPw_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            // TODO: show pw
         }
     }
 }
