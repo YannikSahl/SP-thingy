@@ -53,6 +53,24 @@ namespace GUI
             CollapseExpander();
             m_connectionModus = conMod;
             PopoutConnectionStatusBar();
+            //DocumentView.Children.Add(new FileView("..\\..\\..\\..\\README.md"));
+            AddFilePreview("..\\..\\..\\..\\README.md");
+            AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+        }
+
+        private void AddFilePreview(string path)
+        {
+            var container = new DockPanel();
+            var fView = new FileView(path);
+            var tView = new TextBlock();
+            tView.Text = fView.GetFileName();
+            container.Children.Add(tView);
+            container.Children.Add(fView);
+            DockPanel.SetDock(tView, Dock.Left);
+            DockPanel.SetDock(fView, Dock.Right);
+            fView.HorizontalAlignment = HorizontalAlignment.Right;
+            tView.VerticalAlignment = VerticalAlignment.Center;
+            DocumentView.Children.Add(container);
         }
 
         private void SetConnectionStatusBarStyle(string text, Color color)
