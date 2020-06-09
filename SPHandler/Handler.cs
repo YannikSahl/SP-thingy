@@ -14,7 +14,7 @@ namespace SPHandler
     {
         const string rootSite = "https://htwberlinde.sharepoint.com";
         const string sourceSite = "https://htwberlinde.sharepoint.com/sites/SWE";
-        static string sourceLibrary = "Documents";
+        static string sourceLibrary = "Dokumente";
         static string destinationPath = "Pfad aus Settings";
         private static string username;
         private static string password;
@@ -32,7 +32,7 @@ namespace SPHandler
 
         public static void setPassword(string pw)
         {
-            password = Authentification.StringToSecureString(pw).ToString(); //SecureString war in der eigentlich CSOM vorgegeben, in der Neuen aber nicht, wird noch geändert
+            password = pw; //SecureString war in der eigentlich CSOM vorgegeben, in der Neuen aber nicht, wird noch geändert
         }
 
         public static bool testConnection()
@@ -46,12 +46,12 @@ namespace SPHandler
 
                 List list = context.Web.Lists.GetByTitle(sourceLibrary); //retrieve list
                 context.Load(list);
-                context.ExecuteQueryAsync().RunSynchronously();
+                context.ExecuteQueryAsync().Wait();
 
                 CamlQuery query = new CamlQuery(); //retrieve all items
                 ListItemCollection ListItems = list.GetItems(query);
                 context.Load(ListItems);
-                context.ExecuteQueryAsync().RunSynchronously();
+                context.ExecuteQueryAsync().Wait();
             }catch(Exception e)
             {
                 return false;
