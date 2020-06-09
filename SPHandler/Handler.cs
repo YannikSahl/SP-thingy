@@ -19,23 +19,17 @@ namespace SPHandler
         private static string username;
         private static string password;
 
-        public enum FehlerCodes
-        {
-            WrongCredidentials,
-            SharePointPathNonExistent
-        }
-
-        public static void setUsername(string name)
+        public static void SetUsername(string name)
         {
             username = name;
         }
 
-        public static void setPassword(string pw)
+        public static void SetPassword(string pw)
         {
             password = pw; //SecureString war in der eigentlich CSOM vorgegeben, in der Neuen aber nicht, wird noch geändert
         }
 
-        public static bool testConnection()
+        public static string TestConnection(out bool success)
         {
             try
             {
@@ -54,9 +48,11 @@ namespace SPHandler
                 context.ExecuteQueryAsync().Wait();
             }catch(Exception e)
             {
-                return false;
+                success = false;
+                return e.Message;
             }
-            return true;
+            success = true;
+            return null;
         }
 
 

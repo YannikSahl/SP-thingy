@@ -1,34 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Microsoft.SharePoint.Client;
+using Color = System.Drawing.Color;
 using File = System.IO.File;
+using SystemColors = System.Drawing.SystemColors;
 
 namespace GUI
 {
     class FileView : DockPanel
     {
-        private static Dictionary<string, SolidColorBrush> presetList = new Dictionary<string, SolidColorBrush>
-        {
-            {".jpg", new SolidColorBrush(Colors.Red)},
-            {".pptx", new SolidColorBrush(Colors.DodgerBlue)},
-            {".png", new SolidColorBrush(Colors.Orange)},
-            {".pdf", new SolidColorBrush(Colors.DarkRed)}
-        };
+        //private static Dictionary<string, SolidColorBrush> presetList = new Dictionary<string, SolidColorBrush>
+        //{
+        //    {".jpg", new SolidColorBrush(Colors.Red)},
+        //    {".pptx", new SolidColorBrush(Colors.DodgerBlue)},
+        //    {".png", new SolidColorBrush(Colors.Orange)},
+        //    {".pdf", new SolidColorBrush(Colors.DarkRed)}
+        //};
+        private static Dictionary<string, LinearGradientBrush> _presetList;
 
-        public enum view
+        public enum View
         {
-            text,
-            textAndImage
+            Text,
+            TextAndImage
         }
 
-        public static view _view = view.textAndImage;
+        public static View _view = View.TextAndImage;
 
-        private SolidColorBrush _color;
+        //private SolidColorBrush _color;
+        private LinearGradientBrush _color;
         private string _displayText;
         private string _fileExtension;
         private string _filePath;
@@ -36,19 +41,21 @@ namespace GUI
 
         public FileView(string path)
         {
+            _presetList = new Dictionary<string, LinearGradientBrush>();
+            SetColorDict();
             if (File.Exists(path))
             {
                 _filePath = path;
                 _fileExtension = Path.GetExtension(path);
-                if(! FileView.presetList.TryGetValue(_fileExtension, out _color))
-                    _color = new SolidColorBrush(Colors.Azure);
+                if(! FileView._presetList.TryGetValue(_fileExtension, out _color))
+                    _color = new LinearGradientBrush(Colors.Azure, Colors.Azure, 0);//_color = new SolidColorBrush(Colors.Azure);
                 _fileName = Path.GetFileName(path).Trim(_fileExtension.ToCharArray());
                 
                 _displayText = _fileName;
 
                 SetupSelf();
                 // erstmal image einsetzen danach text um last child zu füllen
-                if (_view == view.textAndImage)
+                if (_view == View.TextAndImage)
                     AddImageToView();
             }
             else
@@ -57,6 +64,41 @@ namespace GUI
             }
 
             AddTextToView();
+        }
+
+        private System.Drawing.Color DrawingColorFromHex(string hexColor)
+        {
+            int argb = Int32.Parse(hexColor.Replace("#", ""), NumberStyles.HexNumber);
+            return Color.FromArgb(argb);
+        }
+
+        private System.Windows.Media.Color MediaColorFromHex(string hexColor)
+        {
+            return (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(hexColor);
+        }
+
+        private void SetColorDict()
+        {
+            // pptx gradient erstellen
+            var col = new GradientStop(MediaColorFromHex("#FFFF660F"), 1);
+            GradientStopCollection g = new GradientStopCollection();
+            g.Add(col);
+            col = new GradientStop(MediaColorFromHex("#FFFF4C17"), 0.306);
+            g.Add(col);
+            col = new GradientStop(MediaColorFromHex("#FFFF6A24"), 0.317);
+            g.Add(col);
+            col = new GradientStop(MediaColorFromHex("#FFFF8825"), 0.689);
+            g.Add(col);
+            col = new GradientStop(MediaColorFromHex("#FFFF9C38"), 0.698);
+            g.Add(col);
+            col = new GradientStop(MediaColorFromHex("#FFFF3622"), 0);
+            g.Add(col);
+            LinearGradientBrush ln = new LinearGradientBrush(g);
+            ln.StartPoint = new System.Windows.Point(0.5, 0);
+            ln.EndPoint = new System.Windows.Point(0.5, 1);
+            _presetList.Add(".pptx", ln);
+
+            // hier noch PDF und PNG gradienten erstellen
         }
 
         private void SetupSelf()
@@ -95,7 +137,7 @@ namespace GUI
             var fView = new Button();
             fView.Width = 50;
             fView.Height = fView.Width * 1.414d;
-            fView.BorderThickness = new Thickness(2);
+            fView.BorderThickness = new Thickness(0);
             fView.BorderBrush = new SolidColorBrush(Colors.DarkGray);
             fView.Margin = new Thickness(5);
             fView.Background = _color;
@@ -104,7 +146,7 @@ namespace GUI
             // setup and add text to grid
             var fViewText = new TextBlock();
             fViewText.IsHitTestVisible = false;
-            fViewText.Text = (string)_fileExtension;
+            fViewText.Text = _fileExtension;
             fViewText.FontSize = 15;
             fViewText.FontWeight = FontWeights.Bold;
             fViewText.VerticalAlignment = VerticalAlignment.Center;

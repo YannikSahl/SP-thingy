@@ -37,16 +37,17 @@ namespace GUI
 
         private void Connect_ButtonClick(object sender, RoutedEventArgs e)
         {
-            SPHandler.Handler.setPassword(PasswordBox.Password);
-            SPHandler.Handler.setUsername(NameBox.Text);
-            var hasConnection = SPHandler.Handler.testConnection();
+            SPHandler.Handler.SetPassword(PasswordBox.Password);
+            SPHandler.Handler.SetUsername(NameBox.Text);
+            bool hasConnection;
+            string errorMessage = SPHandler.Handler.TestConnection(out hasConnection);
 
-            if(hasConnection)
+            if (hasConnection)
                 RedirectToMainWindow(MainWindow.ConnectionModus.Online);
             else
             {
                 ErrorMessageContainer.Visibility = Visibility.Visible;
-                ErrorMessage.Text = "Error irgendwas 101";
+                ErrorMessage.Text = errorMessage;
             }
                 
         }

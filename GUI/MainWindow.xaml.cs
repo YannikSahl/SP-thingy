@@ -50,17 +50,18 @@ namespace GUI
             m_connectionModus = conMod;
             PopoutConnectionStatusBar();
 
-            if (m_connectionModus == ConnectionModus.Online)
-            {
-                //SetDatabase();
-                //SetPPDataTable();
-                //SetPlAndPhTables();
-                CollapseExpander();
-                AddFilePreview("..\\..\\..\\..\\README.md");
-                AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
-                //AddFilePreview("D:/GoldSquare_N.jpg");
-                //AddFilePreview("D:/img1.png");
-            }
+            //if (m_connectionModus == ConnectionModus.Online)
+            //{
+                
+            //}
+            //SetDatabase();
+            //SetPPDataTable();
+            //SetPlAndPhTables();
+            CollapseExpander();
+            AddFilePreview("..\\..\\..\\..\\README.md");
+            AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            //AddFilePreview("D:/GoldSquare_N.jpg");
+            //AddFilePreview("D:/img1.png");
         }
 
         private void AddFilePreview(string path)

@@ -27,7 +27,7 @@
             </MenuItem>
         </Menu>
         <TextBlock DockPanel.Dock="Bottom" Background="#FF444444" Foreground="#FFBBBBBB"></TextBlock>
-        <TextBlock x:Name="ConnectionStatusBar" Height="30" DockPanel.Dock="Bottom" Background="#FF21C947" Visibility="Collapsed" TextAlignment="Center">Verbunden</TextBlock>
+        <TextBlock x:Name="ConnectionStatusBar" Height="20" DockPanel.Dock="Bottom" Background="#FF21C947" Visibility="Collapsed" TextAlignment="Center">Verbunden</TextBlock>
         <DockPanel>
 
             <DockPanel DockPanel.Dock="Top" Background="#FFE8E8E8">
@@ -39,12 +39,12 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*" MinWidth="200" />
                     <ColumnDefinition Width="5" />
-                    <ColumnDefinition x:Name="DocumentViewContainer" Width="34" MinWidth="33" MaxWidth="300"/>
+                    <ColumnDefinition x:Name="DocumentViewContainer" Width="34" MinWidth="33" MaxWidth="500"/>
                 </Grid.ColumnDefinitions>
                 <DockPanel Margin="5,0,5,5">
                     <DockPanel DockPanel.Dock="Top" Margin="5,0,5,0">
                         <TextBlock DockPanel.Dock="Left" Padding="5" FontWeight="Bold">Tabellen</TextBlock>
-                        <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Width="20"  Padding="5" BorderBrush="{x:Null}">
+                        <Button IsHitTestVisible="False" DockPanel.Dock="Right" HorizontalAlignment="Right" Width="20"  Padding="5" BorderBrush="{x:Null}">
                             <Button.Background>
                                 <ImageBrush ImageSource="/gui_resources/sperren.png" Stretch="Uniform" TileMode="None"/>
                             </Button.Background>
