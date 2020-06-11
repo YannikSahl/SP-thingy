@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Security;
 
@@ -44,6 +45,19 @@ namespace SharePointTryOut
             return sStrPwd;
 
         }
+        String SecureStringToString(SecureString value)
+        {
+            IntPtr valuePtr = IntPtr.Zero;
+            try
+            {
+                valuePtr = Marshal.SecureStringToGlobalAllocUnicode(value);
+                return Marshal.PtrToStringUni(valuePtr);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
+            }
+        }
 
         public static string GetUserName()
         {
@@ -61,12 +75,6 @@ namespace SharePointTryOut
             return strUserName;
         }
 
-        public static SecureString StringToSecureString(string pw)
-        {
-            var spw = new SecureString();
-            foreach (var c in pw)
-                spw.AppendChar(c);
-            return spw;
-        }
+       
     }
 }

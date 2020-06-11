@@ -1,94 +1,67 @@
 ﻿using System;
+using System.IO;
 using Microsoft.SharePoint.Client;
 using System.Security;
+using File = Microsoft.SharePoint.Client.File;
 
 namespace SharePointTryOut
 {
-    class Program
+    internal class Program
     {
-        const string rootSite = "https://htwberlinde.sharepoint.com/";
-        const string sourceSite = "https://htwberlinde.sharepoint.com/sites/SWE";
-        static string sourceLibrary = "Documents";
-        static string destinationPath = "C:\\downloads";
-        static string username;
-        static string password;
-        
+        private const string rootSite = "https://htwberlinde.sharepoint.com/";
+        private const string sourceSite = "https://htwberlinde.sharepoint.com/sites/SWE";
+        private static string sourceLibrary = "Dokumente";
+        private static string destinationPath = "C:\\downloads";
+        private static string username;
+        private static string password;
 
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
-            username = Authentification.GetUserName();
-            password = Authentification.GetPassword().ToString(); //Authentification.StringToSecureString("");
+            username = "s0568476@htw-berlin.de";
+            password = "G1ftnude/";
 
-            //using (var cntxt = new ClientContext(sourceSite))
-            //{
-            //    cntxt.Credentials = new SharePointOnlineCredentials(username, password);
-            //    Web web = cntxt.Web;
-            //    cntxt.Load(web.Lists,
-            //        lists => lists.Include(list => list.Title,
-            //            list => list.Id));
-            //    cntxt.ExecuteQuery();
-            //    foreach (List ls in web.Lists)
-            //    {
-            //        Console.WriteLine("List title is: " + ls.Title);
-            //    }
-            //}
-
-            
-            SharePointOnlineCredentials Credentials = new SharePointOnlineCredentials(username, password);
-            ClientContext context = new ClientContext(sourceSite); //create context
+            var Credentials = new SharePointOnlineCredentials(username, password);
+            var context = new ClientContext(sourceSite); //create context
             context.Credentials = Credentials;
 
-            List list = context.Web.Lists.GetByTitle(sourceLibrary); //retrieve list
+            var list = context.Web.Lists.GetByTitle(sourceLibrary); //retrieve list
             context.Load(list);
-            try
-            {
-                context.ExecuteQueryAsync().Wait();
+            
+            context.ExecuteQueryAsync().Wait();
+           
 
-            }
-            catch 
-            {
-                throw new Exception("Anmeldedaten falsch");
-            }
-
-            CamlQuery query = new CamlQuery(); //retrieve all items
-            ListItemCollection ListItems = list.GetItems(query);
+            var query = new CamlQuery(); //retrieve all items
+            var ListItems = list.GetItems(query);
             context.Load(ListItems);
             context.ExecuteQueryAsync().Wait();
-             
 
 
-            foreach (ListItem item in ListItems)
-            {             
-            //File Variables
-            string fileName = item["FileLeafRef"].ToString();
-            string fileUrl = item["FileRef"].ToString();
-            string fileMeta = item["Meta"].ToString();
-            string modified = item["Modified"].ToString();
-            string created = item["Created"].ToString();
-            string sourceItemPath = rootSite + fileUrl;
-            string destinationFolderPath = destinationPath + fileMeta;
-            string destinationItemPath = destinationFolderPath + fileName;
+            foreach (var item in ListItems)
+            {
+                //File Variables
+                var fileName = item["FileLeafRef"].ToString();
+                var fileUrl = item["FileRef"].ToString();
+                var modified = item["Modified"].ToString();
+                var created = item["Created"].ToString();
+                var sourceItemPath = rootSite + fileUrl;
+                var destinationFolderPath = "C:\\Users\\multi\\Documents\\SWE";
+                var destinationItemPath = destinationFolderPath + fileName;
 
-                try 
-                {
-                    System.Net.WebClient client = new System.Net.WebClient();
-                    client.Credentials = new SharePointOnlineCredentials(username, password);
-                    client.Headers.Add("X-FORMS_BASED_AUTH_ACCEPTED", "f");
-                    client.DownloadFile(sourceItemPath, destinationItemPath);
-                    client.Dispose();
-                    //File file = Directory.GetFiles(destinationItemPath);
-                    //file.LastWriteTime = $modified;
-                    //file.CreationTime = $created
 
-                    Console.WriteLine("New document: " + destinationItemPath);
-                    
-                }
+                var client = new System.Net.WebClient();
+                client.Headers.Add("X-FORMS_BASED_AUTH_ACCEPTED", "f");
+                client.DownloadFile(sourceItemPath, destinationItemPath);
+                client.Dispose();
+                //File file = Directory.GetFiles(destinationItemPath);
+                //file.LastWriteTime = $modified;
+                //file.CreationTime = $created
 
-            
-                catch
-                {
-                    Console.WriteLine("Error occurred: " + destinationItemPath);
-                }
+                Console.WriteLine("New document: " + destinationItemPath);
+                
+
+
+                
 
 
                 //OVERWRITE ITEMS CHECK
@@ -109,23 +82,6 @@ namespace SharePointTryOut
                 //    Console.WriteLine("Skipped document" + destinationItemPath);
                 //}
             }
-
-
-
-
-
-
-
         }
     }
-        
-
-       
-      
-
-
-       
-
-        
-    
 }
