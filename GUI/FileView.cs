@@ -41,16 +41,18 @@ namespace GUI
 
         public FileView(string path)
         {
-            _presetList = new Dictionary<string, LinearGradientBrush>();
-            SetColorDict();
+            _filePath = path;
             if (File.Exists(path))
             {
-                _filePath = path;
+                _presetList = new Dictionary<string, LinearGradientBrush>();
+                SetColorDict();
+
                 _fileExtension = Path.GetExtension(path);
                 if(! FileView._presetList.TryGetValue(_fileExtension, out _color))
                     _color = new LinearGradientBrush(Colors.Azure, Colors.Azure, 0);//_color = new SolidColorBrush(Colors.Azure);
-                _fileName = Path.GetFileName(path).Trim(_fileExtension.ToCharArray());
-                
+                _fileName = Path.GetFileName(path);
+                _fileName = _fileName.Remove(_fileName.Length - (_fileExtension.Length));
+
                 _displayText = _fileName;
 
                 SetupSelf();
@@ -60,7 +62,7 @@ namespace GUI
             }
             else
             {
-                _displayText = "Datei existiert nicht!";
+                _displayText = _filePath + ": Datei existiert nicht!";
             }
 
             AddTextToView();
@@ -77,28 +79,85 @@ namespace GUI
             return (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(hexColor);
         }
 
+        private LinearGradientBrush CreateLinearBrushFromColors(string[] hexColorList)
+        {
+            LinearGradientBrush gradientBrushTemp;
+            // 6-er Liste
+            double[] pointList = { 0d, 0.333, 0.334, 0.666, 0.667, 1d };
+            if (hexColorList.Length != pointList.Length)
+                return null;
+
+            var gradStopCollTemp = new GradientStopCollection();
+            for (int i = 0; i < pointList.Length; i++)
+            {
+                var GradStopTemp = new GradientStop(MediaColorFromHex(hexColorList[i]), pointList[i]);
+                gradStopCollTemp.Add(GradStopTemp);
+            }
+
+            gradientBrushTemp = new LinearGradientBrush(gradStopCollTemp);
+            gradientBrushTemp.StartPoint = new System.Windows.Point(0.5, 0);
+            gradientBrushTemp.EndPoint = new System.Windows.Point(0.5, 1);
+
+            return gradientBrushTemp;
+        }
+
         private void SetColorDict()
         {
-            // pptx gradient erstellen
-            var col = new GradientStop(MediaColorFromHex("#FFFF660F"), 1);
-            GradientStopCollection g = new GradientStopCollection();
-            g.Add(col);
-            col = new GradientStop(MediaColorFromHex("#FFFF4C17"), 0.306);
-            g.Add(col);
-            col = new GradientStop(MediaColorFromHex("#FFFF6A24"), 0.317);
-            g.Add(col);
-            col = new GradientStop(MediaColorFromHex("#FFFF8825"), 0.689);
-            g.Add(col);
-            col = new GradientStop(MediaColorFromHex("#FFFF9C38"), 0.698);
-            g.Add(col);
-            col = new GradientStop(MediaColorFromHex("#FFFF3622"), 0);
-            g.Add(col);
-            LinearGradientBrush ln = new LinearGradientBrush(g);
-            ln.StartPoint = new System.Windows.Point(0.5, 0);
-            ln.EndPoint = new System.Windows.Point(0.5, 1);
-            _presetList.Add(".pptx", ln);
+            // PPTX
+            string[] pptx_hexColorList = {
+                "#FFFF3622",
+                "#FFFF4C17",
+                "#FFFF6A24",
+                "#FFFF8825",
+                "#FFFF9C38",
+                "#FFFF660F"
+            };
+            // create LinearGradientBrush
+            var pptx_gradBrush = CreateLinearBrushFromColors(pptx_hexColorList);
+            // add Brush to Dict
+            _presetList.Add(".pptx", pptx_gradBrush);
 
-            // hier noch PDF und PNG gradienten erstellen
+            // PNG
+            string[] png_hexColorList = {
+                "#0E6803",
+                "#00D927",
+                "#3CAA01",
+                "#50E800",
+                "#01B722",
+                "#004D1E"
+            };
+            // create LinearGradientBrush
+            var png_gradBrush = CreateLinearBrushFromColors(png_hexColorList);
+            // add Brush to Dict
+            _presetList.Add(".png", png_gradBrush);
+
+            // JPEG
+            string[] jpeg_hexColorList = {
+                "#001ACA",
+                "#249DFF",
+                "#33C2FF",
+                "#0074EC",
+                "#0B92E8",
+                "#002A99"
+            };
+            // create LinearGradientBrush
+            var jpeg_gradBrush = CreateLinearBrushFromColors(jpeg_hexColorList);
+            // add Brush to Dict
+            _presetList.Add(".jpeg", jpeg_gradBrush);
+
+            // PDF
+            string[] pdf_hexColorList = {
+                "#FF0004",
+                "#E30004",
+                "#FD0004",
+                "#A20608",
+                "#CC0306",
+                "#820A0C"
+            };
+            // create LinearGradientBrush
+            var pdf_gradBrush = CreateLinearBrushFromColors(pdf_hexColorList);
+            // add Brush to Dict
+            _presetList.Add(".pdf", pdf_gradBrush);
         }
 
         private void SetupSelf()
@@ -156,6 +215,8 @@ namespace GUI
             this.Children.Add(grid);
             DockPanel.SetDock(grid, Dock.Right);
         }
+
+
 
         /*protected override void OnClick()
         {

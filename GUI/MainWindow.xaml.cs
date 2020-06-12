@@ -54,12 +54,18 @@ namespace GUI
             //{
                 
             //}
-            //SetDatabase();
-            //SetPPDataTable();
+            SetDatabase();
+            SetPPDataTable();
             //SetPlAndPhTables();
             CollapseExpander();
             AddFilePreview("..\\..\\..\\..\\README.md");
-            AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            //AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            string pt = "\\..jpeg_test.jpeg";
+            AddFilePreview("..\\..\\..\\test_images\\png_test.png");
+            AddFilePreview("..\\..\\..\\test_images\\jpeg_test.jpeg");
+            AddFilePreview("..\\..\\..\\test_images\\pdf_test.pdf");
+            AddFilePreview("..\\..\\..\\test_images\\txt_test.txt");
+            AddFilePreview("..\\..\\..\\test_images\\pptx_test.pptx");
             //AddFilePreview("D:/GoldSquare_N.jpg");
             //AddFilePreview("D:/img1.png");
         }
@@ -81,7 +87,7 @@ namespace GUI
 
         private void HideConnectionStatusBar()
         {
-            ConnectionStatusBar.Visibility = Visibility.Collapsed;
+            ConnectionStatusBar.Visibility = Visibility.Hidden;
             m_connectionStatusBarActive = false;
         }
 
@@ -213,12 +219,20 @@ namespace GUI
             System.Windows.Application.Current.Shutdown();
         }
 
+        /// <summary>
+        /// wird aufgerufen wenn Expander kollabiert
+        /// Anpassung anderer Elemente auf kollabierten Expander
+        /// </summary>
         private void CollapseExpander()
         {
             DocumentViewContainer.Width = new GridLength(DocumentViewContainer.MinWidth);
             ViewSplitter.Visibility = Visibility.Collapsed;
         }
 
+        /// <summary>
+        /// wird aufgerufen wenn Expander expandiert
+        /// Anpassung anderer Elemente auf expandierten Expander
+        /// </summary>
         private void ExpandExpander()
         {
             DocumentViewContainer.Width = new GridLength(200);
@@ -233,6 +247,23 @@ namespace GUI
         private void Expander_Expanded(object sender, RoutedEventArgs e)
         {
             ExpandExpander();
+        }
+
+        private void Expander_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Expander ex = (Expander) sender;
+            // Automatisches Collapsen vom Expander auslösen
+            if (ex.ActualWidth < 35)
+            {
+                // Touch für ViewSplitter wegnehmen
+                ViewSplitter.ReleaseAllTouchCaptures();
+                ViewSplitter.IsHitTestVisible = false;
+
+                ex.IsExpanded = false;
+                // Expander_Collapsed Event wurde ausgelöst
+
+                ViewSplitter.IsHitTestVisible = true;
+            }
         }
     }
 }
