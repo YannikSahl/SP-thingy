@@ -47,30 +47,32 @@ namespace GUI
         public MainWindow(ConnectionModus conMod = ConnectionModus.Online)
         {
             InitializeComponent();
-            //SetDatabase();
-            //SetPPDataTable();
-            //SetPlAndPhTables();
-            CollapseExpander();
             m_connectionModus = conMod;
             PopoutConnectionStatusBar();
-            //DocumentView.Children.Add(new FileView("..\\..\\..\\..\\README.md"));
+
+            //if (m_connectionModus == ConnectionModus.Online)
+            //{
+                
+            //}
+            SetDatabase();
+            SetPPDataTable();
+            //SetPlAndPhTables();
+            CollapseExpander();
             AddFilePreview("..\\..\\..\\..\\README.md");
-            AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            //AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            string pt = "\\..jpeg_test.jpeg";
+            AddFilePreview("..\\..\\..\\test_images\\png_test.png");
+            AddFilePreview("..\\..\\..\\test_images\\jpeg_test.jpeg");
+            AddFilePreview("..\\..\\..\\test_images\\pdf_test.pdf");
+            AddFilePreview("..\\..\\..\\test_images\\txt_test.txt");
+            AddFilePreview("..\\..\\..\\test_images\\pptx_test.pptx");
+            //AddFilePreview("D:/GoldSquare_N.jpg");
+            //AddFilePreview("D:/img1.png");
         }
 
         private void AddFilePreview(string path)
         {
-            var container = new DockPanel();
-            var fView = new FileView(path);
-            var tView = new TextBlock();
-            tView.Text = fView.GetFileName();
-            container.Children.Add(tView);
-            container.Children.Add(fView);
-            DockPanel.SetDock(tView, Dock.Left);
-            DockPanel.SetDock(fView, Dock.Right);
-            fView.HorizontalAlignment = HorizontalAlignment.Right;
-            tView.VerticalAlignment = VerticalAlignment.Center;
-            DocumentView.Children.Add(container);
+            DocumentView.Children.Add(new FileView(path));
         }
 
         private void SetConnectionStatusBarStyle(string text, Color color)
@@ -85,7 +87,7 @@ namespace GUI
 
         private void HideConnectionStatusBar()
         {
-            ConnectionStatusBar.Visibility = Visibility.Collapsed;
+            ConnectionStatusBar.Visibility = Visibility.Hidden;
             m_connectionStatusBarActive = false;
         }
 
@@ -217,12 +219,20 @@ namespace GUI
             System.Windows.Application.Current.Shutdown();
         }
 
+        /// <summary>
+        /// wird aufgerufen wenn Expander kollabiert
+        /// Anpassung anderer Elemente auf kollabierten Expander
+        /// </summary>
         private void CollapseExpander()
         {
             DocumentViewContainer.Width = new GridLength(DocumentViewContainer.MinWidth);
             ViewSplitter.Visibility = Visibility.Collapsed;
         }
 
+        /// <summary>
+        /// wird aufgerufen wenn Expander expandiert
+        /// Anpassung anderer Elemente auf expandierten Expander
+        /// </summary>
         private void ExpandExpander()
         {
             DocumentViewContainer.Width = new GridLength(200);
@@ -237,6 +247,23 @@ namespace GUI
         private void Expander_Expanded(object sender, RoutedEventArgs e)
         {
             ExpandExpander();
+        }
+
+        private void Expander_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Expander ex = (Expander) sender;
+            // Automatisches Collapsen vom Expander auslösen
+            if (ex.ActualWidth < 35)
+            {
+                // Touch für ViewSplitter wegnehmen
+                ViewSplitter.ReleaseAllTouchCaptures();
+                ViewSplitter.IsHitTestVisible = false;
+
+                ex.IsExpanded = false;
+                // Expander_Collapsed Event wurde ausgelöst
+
+                ViewSplitter.IsHitTestVisible = true;
+            }
         }
     }
 }

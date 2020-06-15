@@ -25,14 +25,17 @@ namespace GUI
 
         public void saveAuth()
         {
-            SPHandler.Handler.setUsername(sp_name.Text);
-            SPHandler.Handler.setPassword(sp_pw.Password);
+            SPHandler.Handler.SetUsername(sp_name.Text);
+            SPHandler.Handler.SetPassword(sp_pw.Password);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             saveAuth();
-            if (SPHandler.Handler.testConnection())
+            bool hasConnection;
+            string errorMessage = SPHandler.Handler.TestConnection(out hasConnection);
+
+            if (hasConnection)
                 sp_test.Background = new SolidColorBrush(Color.FromRgb(20, 200, 20));
             else
                 sp_test.Background = new SolidColorBrush(Color.FromRgb(200,20,20));

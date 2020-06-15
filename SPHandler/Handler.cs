@@ -14,28 +14,22 @@ namespace SPHandler
     {
         const string rootSite = "https://htwberlinde.sharepoint.com";
         const string sourceSite = "https://htwberlinde.sharepoint.com/sites/SWE";
-        static string sourceLibrary = "Documents";
+        static string sourceLibrary = "Dokumente";
         static string destinationPath = "Pfad aus Settings";
         private static string username;
         private static string password;
 
-        public enum FehlerCodes
-        {
-            WrongCredidentials,
-            SharePointPathNonExistent
-        }
-
-        public static void setUsername(string name)
+        public static void SetUsername(string name)
         {
             username = name;
         }
 
-        public static void setPassword(string pw)
+        public static void SetPassword(string pw)
         {
-            password = Authentification.StringToSecureString(pw).ToString(); //SecureString war in der eigentlich CSOM vorgegeben, in der Neuen aber nicht, wird noch geändert
+            password = pw; //SecureString war in der eigentlich CSOM vorgegeben, in der Neuen aber nicht, wird noch geändert
         }
 
-        public static bool testConnection()
+        public static string TestConnection(out bool success)
         {
             try
             {
@@ -46,17 +40,19 @@ namespace SPHandler
 
                 List list = context.Web.Lists.GetByTitle(sourceLibrary); //retrieve list
                 context.Load(list);
-                context.ExecuteQueryAsync().RunSynchronously();
+                context.ExecuteQueryAsync().Wait();
 
                 CamlQuery query = new CamlQuery(); //retrieve all items
                 ListItemCollection ListItems = list.GetItems(query);
                 context.Load(ListItems);
-                context.ExecuteQueryAsync().RunSynchronously();
+                context.ExecuteQueryAsync().Wait();
             }catch(Exception e)
             {
-                return false;
+                success = false;
+                return e.Message;
             }
-            return true;
+            success = true;
+            return null;
         }
 
 

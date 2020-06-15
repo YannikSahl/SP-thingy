@@ -1,131 +1,119 @@
 ﻿using System;
+using System.IO;
 using Microsoft.SharePoint.Client;
 using System.Security;
+using File = Microsoft.SharePoint.Client.File;
 
 namespace SharePointTryOut
 {
-    class Program
+    internal class Program
     {
-        const string rootSite = "https://htwberlinde.sharepoint.com/";
-        const string sourceSite = "https://htwberlinde.sharepoint.com/sites/SWE";
-        static string sourceLibrary = "Documents";
-        static string destinationPath = "C:\\downloads";
-        static string username;
-        static string password;
-        
+        private const string rootSite = "https://htwberlinde.sharepoint.com/";
+        private const string sourceSite = "https://htwberlinde.sharepoint.com/sites/SWE";
+        private static string sourceLibrary = "Dokumente";
+        private static string destinationPath = "C:\\downloads";
+        private static string username;
+        private static string password;
 
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
-            username = Authentification.GetUserName();
-            password = Authentification.GetPassword().ToString(); //Authentification.StringToSecureString("");
+            username = "s0568476@htw-berlin.de";
+            password = "G1ftnude/";
 
-            //using (var cntxt = new ClientContext(sourceSite))
-            //{
-            //    cntxt.Credentials = new SharePointOnlineCredentials(username, password);
-            //    Web web = cntxt.Web;
-            //    cntxt.Load(web.Lists,
-            //        lists => lists.Include(list => list.Title,
-            //            list => list.Id));
-            //    cntxt.ExecuteQuery();
-            //    foreach (List ls in web.Lists)
-            //    {
-            //        Console.WriteLine("List title is: " + ls.Title);
-            //    }
-            //}
-
-            
-            SharePointOnlineCredentials Credentials = new SharePointOnlineCredentials(username, password);
-            ClientContext context = new ClientContext(sourceSite); //create context
+            var Credentials = new SharePointOnlineCredentials(username, password);
+            var context = new ClientContext(sourceSite); //create context
             context.Credentials = Credentials;
+            Web site = context.Web;
 
-            List list = context.Web.Lists.GetByTitle(sourceLibrary); //retrieve list
-            context.Load(list);
-            try
+            //var list = context.Web.Lists.GetByTitle(sourceLibrary); //retrieve list
+            //context.Load(list);
+            
+            //context.ExecuteQueryAsync().Wait();
+
+            //FolderCollection collFolder = site.Folders;
+            //context.Load(collFolder);
+            //context.ExecuteQueryAsync().Wait();
+
+            GetFolders(site);
+
+            //Get all Folders and Subfolders
+            FolderCollection GetFolders(Web folderUrl)
             {
+                FolderCollection folderColl = folderUrl.Folders;
+                context.Load(folderColl);
                 context.ExecuteQueryAsync().Wait();
 
-            }
-            catch 
-            {
-                throw new Exception("Anmeldedaten falsch");
-            }
-
-            CamlQuery query = new CamlQuery(); //retrieve all items
-            ListItemCollection ListItems = list.GetItems(query);
-            context.Load(ListItems);
-            context.ExecuteQueryAsync().Wait();
-             
-
-
-            foreach (ListItem item in ListItems)
-            {             
-            //File Variables
-            string fileName = item["FileLeafRef"].ToString();
-            string fileUrl = item["FileRef"].ToString();
-            string fileMeta = item["Meta"].ToString();
-            string modified = item["Modified"].ToString();
-            string created = item["Created"].ToString();
-            string sourceItemPath = rootSite + fileUrl;
-            string destinationFolderPath = destinationPath + fileMeta;
-            string destinationItemPath = destinationFolderPath + fileName;
-
-                try 
+                foreach (Folder folder in folderColl)
                 {
-                    System.Net.WebClient client = new System.Net.WebClient();
-                    client.Credentials = new SharePointOnlineCredentials(username, password);
-                    client.Headers.Add("X-FORMS_BASED_AUTH_ACCEPTED", "f");
-                    client.DownloadFile(sourceItemPath, destinationItemPath);
-                    client.Dispose();
-                    //File file = Directory.GetFiles(destinationItemPath);
-                    //file.LastWriteTime = $modified;
-                    //file.CreationTime = $created
+                    Console.WriteLine(folder.Name);
+                    //Web newFolderURL = new Web(new ObjectPath(folderUrl + "/" + folder.Name), );
+                    //GetFolders(newFolderURL);
 
-                    Console.WriteLine("New document: " + destinationItemPath);
-                    
                 }
-
-            
-                catch
-                {
-                    Console.WriteLine("Error occurred: " + destinationItemPath);
-                }
-
-
-                //OVERWRITE ITEMS CHECK
-                //if (item.LastWriteTime.ToString("d-M-yyyy hh:mm:ss") - ne $modified.addhours(1).ToString("d-M-yyyy hh:mm:ss"))
-                //{
-                //    System.Net.WebClient client = new System.Net.WebClient;
-                //    client.Credentials = Credentials;
-                //    client.Headers.Add("X-FORMS_BASED_AUTH_ACCEPTED", "f");
-                //    client.DownloadFile(sourceItemPath, destinationItemPath);
-                //    client.Dispose();
-                //    file = Get - Item $destinationItemPath;
-                //    file.LastWriteTime = $modified;
-
-                //    Console.WriteLine("Overwritten document" + destinationItemPath);                
-                //}
-                //else
-                //{
-                //    Console.WriteLine("Skipped document" + destinationItemPath);
-                //}
+                return folderColl;
             }
 
 
+        //FileCollection files = list.RootFolder.Folders.GetByUrl(sourceSite + sourceLibrary + "04321_DB_Festp/03_Skizzen/JPG/6000/6400/6441").Files;
+        //context.Load(files);
+        //context.ExecuteQueryAsync().Wait();
+
+
+
+        Console.ReadLine();
+
+            //var query = new CamlQuery(); //retrieve all items
+            //var ListItems = list.GetItems(query);
+            //context.Load(ListItems);
+            //context.ExecuteQueryAsync().Wait();
+
+
+            //foreach (var item in ListItems)
+            //{
+            //    //File Variables
+            //    var fileName = item["FileLeafRef"].ToString();
+            //    var fileUrl = item["FileRef"].ToString();
+            //    var modified = item["Modified"].ToString();
+            //    var created = item["Created"].ToString();
+            //    var sourceItemPath = rootSite + fileUrl;
+            //    var destinationFolderPath = "C:\\Users\\multi\\Documents\\SWE";
+            //    var destinationItemPath = destinationFolderPath + fileName;
+
+
+            //    var client = new System.Net.WebClient();
+            //    client.Headers.Add("X-FORMS_BASED_AUTH_ACCEPTED", "f");
+            //    client.DownloadFile(sourceItemPath, destinationItemPath);
+            //    client.Dispose();
+            //    //File file = Directory.GetFiles(destinationItemPath);
+            //    //file.LastWriteTime = $modified;
+            //    //file.CreationTime = $created
+
+            //    Console.WriteLine("New document: " + destinationItemPath);
 
 
 
 
 
+
+            //OVERWRITE ITEMS CHECK
+            //if (item.LastWriteTime.ToString("d-M-yyyy hh:mm:ss") - ne $modified.addhours(1).ToString("d-M-yyyy hh:mm:ss"))
+            //{
+            //    System.Net.WebClient client = new System.Net.WebClient;
+            //    client.Credentials = Credentials;
+            //    client.Headers.Add("X-FORMS_BASED_AUTH_ACCEPTED", "f");
+            //    client.DownloadFile(sourceItemPath, destinationItemPath);
+            //    client.Dispose();
+            //    file = Get - Item $destinationItemPath;
+            //    file.LastWriteTime = $modified;
+
+            //    Console.WriteLine("Overwritten document" + destinationItemPath);                
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Skipped document" + destinationItemPath);
+            //}
+            //}
         }
     }
-        
-
-       
-      
-
-
-       
-
-        
-    
 }
