@@ -113,7 +113,7 @@ namespace DBHandler
         // To detect redundant calls
         private bool _disposed = false;
 
-        // Free any unmanaged resources
+        // Free any unmanaged resources (not managed by GC)
         private void ReleaseUnmanagedResources()
         {
             // None yet
@@ -130,7 +130,7 @@ namespace DBHandler
             }
             if (disposing)
             {
-                // Dispose managed resources
+                // Dispose managed resources (managed by GC)
                 DbConn?.Dispose();
                 DbAdapterPh?.Dispose();
                 DbAdapterPl?.Dispose();
