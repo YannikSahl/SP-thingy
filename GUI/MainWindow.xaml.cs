@@ -24,6 +24,7 @@ namespace GUI
     Author: Oliver Tworkowski
     Credit for license-free Icons:
     - sperren.png - https://www.flaticon.com/de/kostenloses-icon/sperren_483408?term=lock&page=1&position=7
+    - entsperren.png - https://www.flaticon.com/de/kostenloses-icon/vorhangeschloss_126479
     - auge.png - https://www.flaticon.com/de/kostenloses-icon/auge_609494?term=view&page=1&position=67
 
     TODO 1: DataGrid Struktur mit Liste binden, um auf Elemente einzeln zugreifen zu können und einfacher operationen durchführen zu können
@@ -41,8 +42,21 @@ namespace GUI
             LostConnection
         }
 
+        private static string m_phTableName = "PH";
+        private static string m_plTableName = "PL";
+
         private ConnectionModus m_connectionModus;
+        //ConnectionStatus
         private DBHandler.DbHandler m_databaseConnection;
+        private bool m_isEditable = false;
+        public bool isEditable
+        {
+            get { return m_isEditable; }
+            set
+            {
+                SetEditable(value);
+            }
+        }
 
         public MainWindow(ConnectionModus conMod = ConnectionModus.Online)
         {
@@ -50,13 +64,13 @@ namespace GUI
             m_connectionModus = conMod;
             PopoutConnectionStatusBar();
 
-            //if (m_connectionModus == ConnectionModus.Online)
-            //{
-                
-            //}
+            if (m_connectionModus == ConnectionModus.Online)
+            {
+                SetEditable(true);
+            }
             SetDatabase();
             SetPPDataTable();
-            //SetPlAndPhTables();
+
             CollapseExpander();
             AddFilePreview("..\\..\\..\\..\\README.md");
             //AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
@@ -171,15 +185,66 @@ namespace GUI
         private void SetPPDataTable()
         {
             DataTable pp = m_databaseConnection.DbData.Tables["PP"];
-            PP_TABELLE.DataContext = pp;
+            PpTable.DataContext = pp;
+            DataTable ph = m_databaseConnection.DbData.Tables[m_phTableName];
+            DataTable pl = m_databaseConnection.DbData.Tables[m_plTableName];
+            var phColumnsOnly = new DataTable(m_phTableName);
+            foreach (DataColumn col in ph.Columns)
+            {
+                phColumnsOnly.Columns.Add(new DataColumn(col.ColumnName));
+            }
+            var plColumnsOnly = new DataTable(m_plTableName);
+            foreach (DataColumn col in pl.Columns)
+            {
+                plColumnsOnly.Columns.Add(new DataColumn(col.ColumnName));
+            }
+
+            PlTable.DataContext = plColumnsOnly;
+            PhTable.DataContext = phColumnsOnly;
         }
 
-        private void SetPlAndPhTables()
+        private void SetPlOrPhTableByPad(string tableName, string pad)
         {
-            DataTable ph = m_databaseConnection.DbData.Tables["PH"];
-            PH_TABELLE.ItemsSource = ph.DefaultView;
-            DataTable pl = m_databaseConnection.DbData.Tables["PL"];
-            PL_TABELLE.ItemsSource = pl.DefaultView;
+            DataGrid dg;
+            TextBlock emptyMessageBlock;
+            if (tableName == m_plTableName)
+            {
+                emptyMessageBlock = PlTableEmptyMessage;
+                dg = PlTable;
+            }else if (tableName == m_phTableName)
+            {
+                emptyMessageBlock = PhTableEmptyMessage;
+                dg = PhTable;
+            }
+            else
+            {
+                throw new Exception("Weder PH noch PL wurde als Argument übergeben");
+            }
+
+            dg.ItemsSource = null;
+
+            if (pad == null)
+            {
+                emptyMessageBlock.Visibility = Visibility.Visible;
+                return;
+            }
+            var rows = m_databaseConnection.RetrieveRowByPad(tableName, pad);
+            if (rows.Length == 0)
+            {
+                emptyMessageBlock.Visibility = Visibility.Visible;
+                return;
+            }
+            emptyMessageBlock.Visibility = Visibility.Hidden;
+
+            DataTable dt = (DataTable)dg.DataContext;
+            dt.Rows.Clear();
+
+            foreach (var row in rows)
+            {
+                dt.ImportRow(row);
+            }
+            dg.DataContext = dt;
+            dg.ItemsSource = dt.DefaultView;
         }
 
         /// <summary>
@@ -207,6 +272,8 @@ namespace GUI
             // get PAD from DataRow
             var pad = (string)dataRowView.Row["PAD"];
             SelectedPad.Text = pad; //(DataGrid)sender;
+            SetPlOrPhTableByPad(m_phTableName, pad);
+            SetPlOrPhTableByPad(m_plTableName, pad);
         }
 
         /// <summary>
@@ -264,6 +331,27 @@ namespace GUI
 
                 ViewSplitter.IsHitTestVisible = true;
             }
+        }
+
+        private void SetEditable(bool editable)
+        {
+            m_isEditable = editable;
+            PhTable.IsReadOnly = !editable;
+            PpTable.IsReadOnly = !editable;
+            PlTable.IsReadOnly = !editable;
+            BitmapImage icon;
+            if (editable)
+                icon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\entsperren.png", UriKind.Relative));
+            else
+                icon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\sperren.png", UriKind.Relative));
+            ImageBrush ib = new ImageBrush(icon);
+            ib.Stretch = Stretch.Uniform;
+            EditModeIcon.Background = ib;
+        }
+
+        private void Bearbeiten_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            SetEditable(!m_isEditable);
         }
     }
 }
