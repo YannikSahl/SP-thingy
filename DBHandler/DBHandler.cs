@@ -134,27 +134,48 @@ namespace DBHandler
 
         // 
         /// <summary>
-        /// Returns DataRow from PH / PL Table by primary key values
+        /// Retrieves a DataRow from PH or PL Table by Primary Key values
         /// </summary>
         /// <param name="tableName">Table that is to be queried; must be PL or PH</param>
-        /// <param name="Pad">Corresponding PAD value</param>
-        /// <param name="HSysOrLSys">Corresponding HSys (PH) or LSys (PH) value</param>
+        /// <param name="pad">Corresponding PAD value</param>
+        /// <param name="hSysOrLSys">Corresponding HSys (PH) or LSys (PH) value</param>
         /// <returns>DataRow that matches parameter values</returns>
-        public DataRow RetrieveRowByPrimaryKey(string tableName, string Pad, string HSysOrLSys)
+        public DataRow RetrieveRowByPrimaryKey(string tableName, string pad, string hSysOrLSys)
         {
 
             // Get table
-            DataTable plTable = DbData.Tables[tableName];
-            DataRowCollection dataRows = plTable.Rows;
+            DataTable dataTable = DbData.Tables[tableName];
+            DataRowCollection dataRows = dataTable.Rows;
 
             // Construct key
-            object[] keys = new object[2]{ Pad, HSysOrLSys };
+            object[] keys = new object[2]{ pad, hSysOrLSys };
 
             // Find DataRow by pad
             DataRow dataRow = dataRows.Find(keys);
             return dataRow;
 
         }
+
+        /// <summary>
+        /// Retrieves DataRows from PH or PL Table that match PAD value.
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="pad">Corresponding PAD value</param>
+        /// <returns>DataRow that contain PAD value</returns>
+        public DataRow[] RetrieveRowByPad(string tableName, string pad)
+        {
+
+            // Get table
+            DataTable dataTable = DbData.Tables[tableName];
+
+            // Select by pad
+            string filterExpression = $"PAD = '{pad}'";
+            DataRow[] selectedRows = dataTable.Select(filterExpression);
+            return selectedRows;
+
+        }
+
+
 
 
         // ************ DISPOSE

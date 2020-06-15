@@ -18,14 +18,24 @@ namespace DBHandlerTest
             //AddRow(dbHandler);
 
             // Filter by id
-            FilterbyId(dbHandler);
+            FilterTable(dbHandler);
 
         }
 
-        public static void FilterbyId(DbHandler dbHandler)
+        public static void FilterTable(DbHandler dbHandler)
         {
+
+            // Filter by primary key (PAD + LSys / HSys)
             DataRow dataRowPh = dbHandler.RetrieveRowByPrimaryKey("PH", "1112DB   40", "O00");
             DataRow dataRowPl = dbHandler.RetrieveRowByPrimaryKey("PL", "1122BP  301", "ER0");
+
+            // Filter by PAD
+            DataRow[] dataRowsPh = dbHandler.RetrieveRowByPad("PH", "1112DB   40");
+            DataRow[] dataRowsPl = dbHandler.RetrieveRowByPad("PL", "1122BP  301");
+
+            // Debug
+            Console.WriteLine($"Filter by PAD: Found {dataRowsPh.Length} matches in PH table and {dataRowsPl.Length} matches in PL table.");
+
         }
 
 
