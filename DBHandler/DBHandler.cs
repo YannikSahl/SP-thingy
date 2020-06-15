@@ -6,12 +6,13 @@ using System.Data;
 using System.Data.Common;
 using System.ComponentModel;
 using System.Reflection.Metadata.Ecma335;
+using Exceptions;
 
 public enum StatusCode
 {
     CommandOk = 0,
     CommandFailed = 1,
-    ConnectionFailed = 2
+    OleDbNotRegistered = 2
 }
 
 namespace DBHandler
@@ -87,20 +88,25 @@ namespace DBHandler
             // Acquire built commands
             if (connection.State != ConnectionState.Open)
             {
-                connection.Open();
+                try
+                {
+                    connection.Open();
+                }
+                catch (InvalidOperationException ioe)
+                {
+                    throw new OleDbProviderMissingException("Access Runtime is missing from your computer. Please download it from here: https://www.microsoft.com/en-us/download/confirmation.aspx?id=13255");
+                }
+                
             }
 
             adapter.UpdateCommand = commandBuilder.GetUpdateCommand();
             adapter.DeleteCommand = commandBuilder.GetDeleteCommand();
             adapter.InsertCommand = commandBuilder.GetInsertCommand();
 
-            // Include primary key information
-            adapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
-
             // Fill DataSet
             adapter.Fill(DbData, tableName);
 
-            // See table
+            // Retrieve DataTable
             DataTable dataTable = DbData.Tables[tableName];
 
             // Add PrimaryKey information
@@ -174,7 +180,6 @@ namespace DBHandler
             return selectedRows;
 
         }
-
 
 
 

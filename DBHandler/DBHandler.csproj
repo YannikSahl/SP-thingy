@@ -22,4 +22,8 @@
     <PackageReference Include="System.Data.OleDb" Version="4.7.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Exceptions\Exceptions.csproj" />
+  </ItemGroup>
+
 </Project>
