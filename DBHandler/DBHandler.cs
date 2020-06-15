@@ -41,7 +41,7 @@ namespace DBHandler
             DbAdapterPh = CreateDataAdapter("PH", DbConn);
             DbAdapterPl = CreateDataAdapter("PL", DbConn);
             DbAdapterPp = CreateDataAdapter("PP", DbConn);
- 
+
         }
 
         // Destructor
@@ -100,6 +100,30 @@ namespace DBHandler
             // Fill DataSet
             adapter.Fill(DbData, tableName);
 
+            // See table
+            DataTable dataTable = DbData.Tables[tableName];
+
+            // Add PrimaryKey information
+            DataColumn[] keyColumns = new DataColumn[3];
+            keyColumns[0] = dataTable.Columns["PAD"];
+
+            switch (tableName)
+            {
+                case "PH":
+                    keyColumns[1] = dataTable.Columns["HSys"];
+                    break;
+
+                case "PL":
+                    keyColumns[1] = dataTable.Columns["LSys"];
+                    break;
+
+                case "PP":
+                    keyColumns[1] = dataTable.Columns["PStrecke"];
+                    keyColumns[2] = dataTable.Columns["PSTRRiKz"];
+                    break;
+            }
+            dataTable.PrimaryKey = keyColumns;
+
             // Close connection
             connection.Close();
 
@@ -107,6 +131,31 @@ namespace DBHandler
             return adapter;
 
         }
+
+        // 
+        /// <summary>
+        /// Returns DataRow from PH / PL Table by primary key values
+        /// </summary>
+        /// <param name="tableName">Table that is to be queried; must be PL or PH</param>
+        /// <param name="Pad">Corresponding PAD value</param>
+        /// <param name="HSysOrLSys">Corresponding HSys (PH) or LSys (PH) value</param>
+        /// <returns>DataRow that matches parameter values</returns>
+        public DataRow RetrieveRowByPrimaryKey(string tableName, string Pad, string HSysOrLSys)
+        {
+
+            // Get table
+            DataTable plTable = DbData.Tables[tableName];
+            DataRowCollection dataRows = plTable.Rows;
+
+            // Construct key
+            object[] keys = new object[2]{ Pad, HSysOrLSys };
+
+            // Find DataRow by pad
+            DataRow dataRow = dataRows.Find(keys);
+            return dataRow;
+
+        }
+
 
         // ************ DISPOSE
 

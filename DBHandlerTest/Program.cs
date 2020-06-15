@@ -12,10 +12,27 @@ namespace DBHandlerTest
             string fileLocation = "Datenmodell.accdb";
 
             // Create object
-            DBHandler.DbHandler dbConn = new DBHandler.DbHandler(fileLocation);
+            DBHandler.DbHandler dbHandler = new DBHandler.DbHandler(fileLocation);
 
+            // Add row
+            //AddRow(dbHandler);
+
+            // Filter by id
+            FilterbyId(dbHandler);
+
+        }
+
+        public static void FilterbyId(DbHandler dbHandler)
+        {
+            DataRow dataRowPh = dbHandler.RetrieveRowByPrimaryKey("PH", "1112DB   40", "O00");
+            DataRow dataRowPl = dbHandler.RetrieveRowByPrimaryKey("PL", "1122BP  301", "ER0");
+        }
+
+
+        public static void AddRow(DbHandler dbConn)
+        {
             // Extract data table for pp table
-            System.Data.DataTable dt = dbConn.DbData.Tables["PP"];
+            DataTable dt = dbConn.DbData.Tables["PP"];
 
             // Count rows
             Console.WriteLine(dt.Rows.Count);
@@ -44,7 +61,6 @@ namespace DBHandlerTest
 
             // Update database
             dbConn.UpdateDatabases();
-
         }
     }
 }
