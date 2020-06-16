@@ -18,8 +18,8 @@ namespace SharePointTryOut
 
         private static void Main(string[] args)
         {
-            username = "s0568476@htw-berlin.de";
-            password = "G1ftnude/";
+            username = "";
+            password = "";
 
             var Credentials = new SharePointOnlineCredentials(username, password);
             var context = new ClientContext(sourceSite); //create context
