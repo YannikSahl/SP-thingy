@@ -7,10 +7,16 @@
         mc:Ignorable="d"
         Title="Settings" Height="450" Width="800">
     <StackPanel Margin="15,5,15,10">
-        <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0">
+        <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
+            <Label.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFFF782A" Offset="0"/>
+                    <GradientStop Color="#FFFFAD1E" Offset="1"/>
+                </LinearGradientBrush>
+            </Label.Background>
             Sharepoint Authentification
         </Label>
-        <Grid Margin="5">
+        <Grid Background="#FFF7F7F7">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="3*"/>
@@ -21,17 +27,28 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0">Name</TextBlock>
-            <TextBox x:Name="sp_name" HorizontalAlignment="Left" Width="200" Grid.Row="0" Grid.Column="1" Margin="5"></TextBox>
+            <DockPanel Margin="2" LastChildFill="True" Grid.Row="0" Grid.Column="1">
+                <TextBox x:Name="sp_name"></TextBox>
+            </DockPanel>
+            <DockPanel Margin="2" LastChildFill="True" Grid.Row="1" Grid.Column="1">
+                <PasswordBox x:Name="sp_pw"></PasswordBox>
+            </DockPanel>
             <TextBlock Grid.Row="1" Grid.Column="0">Password</TextBlock>
-            <PasswordBox x:Name="sp_pw" HorizontalAlignment="Left" Width="200" Grid.Row="1" Grid.Column="1" Margin="5"></PasswordBox>
-
-            <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Margin="5" Click="Button_Click">Test Connection</Button>
-            <TextBlock x:Name="sp_test" Grid.Row="2" Grid.Column="1" Background="AliceBlue" Margin="5"></TextBlock>
+            <DockPanel Grid.Row="2" Grid.ColumnSpan="2" LastChildFill="True">
+                <Button DockPanel.Dock="Left" Margin="2" Click="Button_Click" BorderBrush="{x:Null}" MinHeight="25">Test Connection</Button>
+            </DockPanel>
         </Grid>
-        <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0">
+
+        <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
+            <Label.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="1">
+                    <GradientStop Color="#FFFF782A" Offset="0"/>
+                    <GradientStop Color="#FFFFAD1E" Offset="1"/>
+                </LinearGradientBrush>
+            </Label.Background>
             Pfade
         </Label>
-        <Grid>
+        <Grid Background="#FFF7F7F7">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -46,47 +63,58 @@
 
             <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Sharepoint</TextBlock>
             <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True" Margin="2">
-                <Button DockPanel.Dock="Right">Select</Button>
+                <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
                 <TextBox VerticalContentAlignment="Center"></TextBox>
             </DockPanel>
 
             <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Datenbank im Sharepoint</TextBlock>
             <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True" Margin="2">
-                <Button DockPanel.Dock="Right">Select</Button>
+                <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
                 <TextBox VerticalContentAlignment="Center"></TextBox>
             </DockPanel>
 
             <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Skizzen im Sharepoint</TextBlock>
             <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True" Margin="2">
-                <Button DockPanel.Dock="Right">Select</Button>
+                <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
                 <TextBox VerticalContentAlignment="Center"></TextBox>
             </DockPanel>
 
             <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Export DB</TextBlock>
             <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="True" Margin="2">
-                <Button DockPanel.Dock="Right" Click="SelectDirectory">Select</Button>
                 <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
                 <TextBox x:Name="DbSave" VerticalContentAlignment="Center"/>
             </DockPanel>
 
             <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Export Skizzen</TextBlock>
             <DockPanel Grid.Row="4" Grid.Column="1" LastChildFill="True" Margin="2">
-                <Button DockPanel.Dock="Right">Select</Button>
+                <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
                 <TextBox VerticalContentAlignment="Center"></TextBox>
             </DockPanel>
         </Grid>
 
-        <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Margin="0,5,0,0">
+        <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
+            <Label.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFFF782A" Offset="0"/>
+                    <GradientStop Color="#FFFFAD1E" Offset="1"/>
+                </LinearGradientBrush>
+            </Label.Background>
             Design
         </Label>
-        <TextBlock>
+        <TextBlock Background="#FFF7F7F7">
             Darkmode / Lightmode
         </TextBlock>
 
-        <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Margin="0,5,0,0">
+        <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
+            <Label.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFFF782A" Offset="0"/>
+                    <GradientStop Color="#FFFFAD1E" Offset="1"/>
+                </LinearGradientBrush>
+            </Label.Background>
             Sprache
         </Label>
-        <TextBlock>
+        <TextBlock Background="#FFF7F7F7">
             Deutsch / Englisch
         </TextBlock>
     </StackPanel>

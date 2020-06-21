@@ -34,14 +34,15 @@ namespace GUI
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            Button mSender = (Button) sender;
             saveAuth();
             bool hasConnection;
             string errorMessage = SPHandler.Handler.TestConnection(out hasConnection);
 
             if (hasConnection)
-                sp_test.Background = new SolidColorBrush(Color.FromRgb(20, 200, 20));
+                mSender.Background = new SolidColorBrush(Color.FromRgb(20, 200, 20));
             else
-                sp_test.Background = new SolidColorBrush(Color.FromRgb(200,20,20));
+                mSender.Background = new SolidColorBrush(Color.FromRgb(200,20,20));
         }
 
         private void TexBoxLinkEnter(object sender, RoutedEventArgs e)
