@@ -31,21 +31,50 @@
         <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0">
             Pfade
         </Label>
-        <TextBlock>
-            Sharepoint
-        </TextBlock>
-        <TextBlock>
-            Datenbank im Sharepoint
-        </TextBlock>
-        <TextBlock>
-            Skizzen im Sharepoint
-        </TextBlock>
-        <TextBlock>
-            Export Skizzen
-        </TextBlock>
-        <TextBlock>
-            Export DB
-        </TextBlock>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Sharepoint</TextBlock>
+            <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True" Margin="2">
+                <Button DockPanel.Dock="Right">Select</Button>
+                <TextBox VerticalContentAlignment="Center"></TextBox>
+            </DockPanel>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Datenbank im Sharepoint</TextBlock>
+            <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True" Margin="2">
+                <Button DockPanel.Dock="Right">Select</Button>
+                <TextBox VerticalContentAlignment="Center"></TextBox>
+            </DockPanel>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Skizzen im Sharepoint</TextBlock>
+            <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True" Margin="2">
+                <Button DockPanel.Dock="Right">Select</Button>
+                <TextBox VerticalContentAlignment="Center"></TextBox>
+            </DockPanel>
+
+            <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Export DB</TextBlock>
+            <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="True" Margin="2">
+                <Button DockPanel.Dock="Right" Click="SelectDirectory">Select</Button>
+                <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
+                <TextBox x:Name="DbSave" VerticalContentAlignment="Center"/>
+            </DockPanel>
+
+            <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Export Skizzen</TextBlock>
+            <DockPanel Grid.Row="4" Grid.Column="1" LastChildFill="True" Margin="2">
+                <Button DockPanel.Dock="Right">Select</Button>
+                <TextBox VerticalContentAlignment="Center"></TextBox>
+            </DockPanel>
+        </Grid>
 
         <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Margin="0,5,0,0">
             Design
