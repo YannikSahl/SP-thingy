@@ -26,9 +26,10 @@ Damit der DBHandler seine Arbeit erledigen kann, werden folgende Technologien be
 
 
 ### 2. Dokumentation
-Beim Start der Applikation öffnet sich das Hauptformular der GUI. Um über weiteres navigieren innerhalb der GUI zu erfahren, lesen Sie bitte die Dokumentation zur GUI (2.1)
+Beim Start der Applikation öffnet sich ein Authentifizierungs Formular. Durch Anmeldung oder durch den Offline Modus, wird man ins Hauptformular weitergeleitet
+Um über weiteres navigieren innerhalb der GUI zu erfahren, lesen Sie bitte die Dokumentation zur GUI (2.1)
 #### 2.1 Dokumentation: GUI
-Beim Start der der Applikation erscheint das Hauptformular. 
+Im Hauptformular sind folgende optionen zum Navigieren durch die einzelnen Formulare möglich.
 Im oberen Menü gibt es bis jetzt folgende, bis jetzt funktionierende Reiter: 
 - Datei/Neue Abfrage
 Wenn hier rauf geklickt wird, öffnet sich das Abfrageformular
