@@ -26,7 +26,7 @@ namespace SPHandler
 
         public static void SetPassword(string pw)
         {
-            password = pw; //SecureString war in der eigentlich CSOM vorgegeben, in der Neuen aber nicht, wird noch geändert
+            password = pw;
         }
 
         public static string TestConnection(out bool success)
@@ -54,84 +54,30 @@ namespace SPHandler
             success = true;
             return null;
         }
-
-
-        static void SharePointTryOut()
+        public static string GetFileUrlFromDb(int entry, bool type)
         {
-            username = Authentification.GetUserName();
-            password = Authentification.GetPassword().ToString();
-            SharePointOnlineCredentials Credentials = new SharePointOnlineCredentials(username, password);
+            string fileRelativUrl;
 
-            ClientContext context = new ClientContext(sourceSite); //create context
-            context.Credentials = Credentials;
+            var thousands = entry / 1000 % 10 * 1000;
+            var hundreds = thousands + entry / 100 % 10 * 100;
 
-            List list = context.Web.Lists.GetByTitle(sourceLibrary); //retrieve list
-            context.Load(list);
-            context.ExecuteQueryAsync();
+            if (type)
+                fileRelativUrl = "/04321_DB_Festp/03_Skizzen/PDF/" + thousands + "/" + hundreds + "/" + entry;
+            else
+                fileRelativUrl = "/04321_DB_Festp/03_Skizzen/JPG/" + thousands + "/" + hundreds + "/" + entry;
 
-            CamlQuery query = new CamlQuery(); //retrieve all items
-            ListItemCollection ListItems = list.GetItems(query);
-            context.Load(ListItems);
-            context.ExecuteQueryAsync();
-
-
-            foreach (ListItem item in ListItems)
-            {
-                //File Variables
-                string fileName = item["FileLeafRef"].ToString();
-                string fileUrl = item["FileRef"].ToString();
-                string fileMeta = item["Meta"].ToString();
-                string modified = item["Modified"].ToString();
-                string created = item["Created"].ToString();
-                string sourceItemPath = rootSite + fileUrl;
-                string destinationFolderPath = destinationPath + fileMeta;
-                string destinationItemPath = destinationFolderPath + fileName;
-
-                try
-                {
-                    System.Net.WebClient client = new System.Net.WebClient();
-                    client.Credentials = new SharePointOnlineCredentials(username, password);
-                    client.Headers.Add("X-FORMS_BASED_AUTH_ACCEPTED", "f");
-                    client.DownloadFile(sourceItemPath, destinationItemPath);
-                    client.Dispose();
-                    //File file = Directory.GetFiles(destinationItemPath);
-                    //file.LastWriteTime = $modified;
-                    //file.CreationTime = $created
-
-                    Console.WriteLine("New document: " + destinationItemPath);
-
-                }
-                catch
-                {
-                   throw new Exception("something went wrong");
-                }
-
-
-                //OVERWRITE ITEMS CHECK
-                //if (item.LastWriteTime.ToString("d-M-yyyy hh:mm:ss") - ne modified.addhours(1).ToString("d-M-yyyy hh:mm:ss"))
-                //{
-                //    System.Net.WebClient client = new System.Net.WebClient;
-                //    client.Credentials = Credentials;
-                //    client.Headers.Add("X-FORMS_BASED_AUTH_ACCEPTED", "f");
-                //    client.DownloadFile(sourceItemPath, destinationItemPath);
-                //    client.Dispose();
-                //    file = Get - Item destinationItemPath;
-                //    file.LastWriteTime = $modified;
-
-                //    Console.WriteLine("Overwritten document" + destinationItemPath);                
-                //}
-                //else
-                //{
-                //    Console.WriteLine("Skipped document" + destinationItemPath);
-                //}
-            }
-
-
+            return fileRelativUrl;
         }
 
 
 
 
-        
+
+
+
+
+
+
+
     }
 }
