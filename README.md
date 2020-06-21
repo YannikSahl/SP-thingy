@@ -1,4 +1,3 @@
-
 ## Front-End Festpunktfelddatenbank für die DB Netz AG
 Ein Projekt für die DB Netz AG im Rahmen des Software Entwicklungsprojektes der HTW Berlin für das SoSe 2020.
 
@@ -15,8 +14,9 @@ Im Ordner `GUI/gui_resources` befinden sich Resourcen, wie Icons zur Visualisier
 Damit der DBHandler seine Arbeit erledigen kann, werden folgende Technologien benötigt:
 
 *  [.NET Core Version 3.1](https://dotnet.microsoft.com/download/dotnet-core) als grundlegendes Framework
-*  [Microsoft Access Runtime](https://support.office.com/en-us/article/download-and-install-office-365-access-runtime-185c5a32-8ba9-491e-ac76-91cbe3ea09c9) zur Kommunikation mit der Datenbank-Datei
+*  [Microsoft Access Runtime](https://www.microsoft.com/en-us/download/confirmation.aspx?id=13255) zur Kommunikation mit der Datenbank-Datei
 *  [NuGet-Paket "OleDB"](https://www.nuget.org/packages/System.Data.OleDb/4.7.1?_src=template) als weiteres Abstraktionslayer zur vereinfachten Arbeit mit der Datenbank
+*  Access / Office als 32-bit Anwendung (nicht kompatibel mit 64-bit Variante!)
 
 #### 1.3 Voraussetzungen: SPHandler
 
@@ -26,9 +26,10 @@ Damit der DBHandler seine Arbeit erledigen kann, werden folgende Technologien be
 
 
 ### 2. Dokumentation
-Beim Start der Applikation öffnet sich das Hauptformular der GUI. Um über weiteres navigieren innerhalb der GUI zu erfahren, lesen Sie bitte die Dokumentation zur GUI (2.1)
+Beim Start der Applikation öffnet sich ein Authentifizierungs Formular. Durch Anmeldung oder durch den Offline Modus, wird man ins Hauptformular weitergeleitet
+Um über weiteres navigieren innerhalb der GUI zu erfahren, lesen Sie bitte die Dokumentation zur GUI (2.1)
 #### 2.1 Dokumentation: GUI
-Beim Start der der Applikation erscheint das Hauptformular. 
+Im Hauptformular sind folgende optionen zum Navigieren durch die einzelnen Formulare möglich.
 Im oberen Menü gibt es bis jetzt folgende, bis jetzt funktionierende Reiter: 
 - Datei/Neue Abfrage
 Wenn hier rauf geklickt wird, öffnet sich das Abfrageformular

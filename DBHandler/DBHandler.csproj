@@ -4,6 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Datenmodell.accdb" />
   </ItemGroup>
@@ -16,6 +20,10 @@
 
   <ItemGroup>
     <PackageReference Include="System.Data.OleDb" Version="4.7.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Exceptions\Exceptions.csproj" />
   </ItemGroup>
 
 </Project>

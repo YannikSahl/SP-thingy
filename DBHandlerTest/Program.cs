@@ -12,10 +12,37 @@ namespace DBHandlerTest
             string fileLocation = "Datenmodell.accdb";
 
             // Create object
-            DBConnection dbConn = new DBConnection(fileLocation);
+            DBHandler.DbHandler dbHandler = new DBHandler.DbHandler(fileLocation);
 
+            // Add row
+            //AddRow(dbHandler);
+
+            // Filter by id
+            FilterTable(dbHandler);
+
+        }
+
+        public static void FilterTable(DbHandler dbHandler)
+        {
+
+            // Filter by primary key (PAD + LSys / HSys)
+            DataRow dataRowPh = dbHandler.RetrieveRowByPrimaryKey("PH", "1112DB   40", "O00");
+            DataRow dataRowPl = dbHandler.RetrieveRowByPrimaryKey("PL", "1122BP  301", "ER0");
+
+            // Filter by PAD
+            DataRow[] dataRowsPh = dbHandler.RetrieveRowByPad("PH", "1112DB   40");
+            DataRow[] dataRowsPl = dbHandler.RetrieveRowByPad("PL", "1122BP  301");
+
+            // Debug
+            Console.WriteLine($"Filter by PAD: Found {dataRowsPh.Length} matches in PH table and {dataRowsPl.Length} matches in PL table.");
+
+        }
+
+
+        public static void AddRow(DbHandler dbConn)
+        {
             // Extract data table for pp table
-            System.Data.DataTable dt = dbConn.dbData.Tables["PP"];
+            DataTable dt = dbConn.DbData.Tables["PP"];
 
             // Count rows
             Console.WriteLine(dt.Rows.Count);
@@ -23,7 +50,7 @@ namespace DBHandlerTest
             // Write new row
             Console.WriteLine("Adding row...");
             DataRow newRow = dt.NewRow();
-            newRow["PAD"] = "1340";
+            newRow["PAD"] = "1350";
             newRow["PArt"] = "PS4";
             newRow["VermArt"] = 1;
             newRow["Stabil"] = 1;
@@ -43,8 +70,7 @@ namespace DBHandlerTest
             Console.WriteLine(dt.Rows.Count);
 
             // Update database
-            dbConn.updateDatabases();
-
+            dbConn.UpdateDatabases();
         }
     }
 }
