@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
-        Title="Hauptformular" Height="450" Width="800">
+        Title="Hauptformular" Height="450" Width="800" Closing="Window_Closing">
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top" Background="#FF444444" Foreground="White" AutomationProperties.AcceleratorKey="Ctrl+R">
             <MenuItem Header="_Datei" Background="#FF444444">
@@ -16,7 +16,7 @@
                 <MenuItem Header="_Neue Abfrage" Foreground="Black" Click="openAbfrageWindow"/>
                 <MenuItem Header="_Aktualisieren" Foreground="Black"/>
                 <Separator />
-                <MenuItem Header="_Schließen" Foreground="Black" Click="CloseApplication"/>
+                <MenuItem Header="_Schließen" Foreground="Black" Click="MenuCloseApp_Click"/>
             </MenuItem>
             <MenuItem Header="_Tools" Background="#FF444444">
                 <MenuItem Header="_DB Pflege" Foreground="Black"/>

@@ -35,6 +35,9 @@ namespace GUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Settings _settingsWindow;
+        private Abfragen _abfrageWindow;
+
         public enum ConnectionModus
         {
             Offline,
@@ -155,8 +158,16 @@ namespace GUI
         /// <param name="e"></param>
         private void openSettingsWindow(object sender, RoutedEventArgs e)
         {
-            Settings settingsWin = new Settings();
-            settingsWin.Show();
+            // bedeutet Fenster existiert schon
+            if (_settingsWindow != null)
+            {
+                //_settingsWindow.Topmost = true;
+                _settingsWindow.Activate();
+                return;
+            }
+
+            _settingsWindow = new Settings();
+            _settingsWindow.Show();
         }
 
         /// <summary>
@@ -166,8 +177,16 @@ namespace GUI
         /// <param name="e"></param>
         private void openAbfrageWindow(object sender, RoutedEventArgs e)
         {
-            Abfragen abfrageWin = new Abfragen();
-            abfrageWin.Show();
+            // bedeutet Fenster existiert schon
+            if (_abfrageWindow != null)
+            {
+                //_settingsWindow.Topmost = true;
+                _abfrageWindow.Activate();
+                return;
+            }
+
+            _abfrageWindow = new Abfragen();
+            _abfrageWindow.Show();
         }
 
         /// <summary>
@@ -266,11 +285,24 @@ namespace GUI
         private void PP_TABELLE_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // get RowView
-            var dataRowView = e.AddedItems[0] as DataRowView;
+            DataRowView dataRowView = null;
+            try
+            {
+                dataRowView = e.AddedItems[0] as DataRowView;
+            }
+            catch (IndexOutOfRangeException E)
+            {
+                // bedeutet dass zeile gelöscht ist
+                return;
+            }
+
             if (dataRowView == null)
                 return;
             // get PAD from DataRow
-            var pad = (string)dataRowView.Row["PAD"];
+            var pad = dataRowView.Row["PAD"] as string;
+            // pad == null falls PAD nicht string ist (z.B. wenn leere Zeile ausgewählt)
+            if (pad == null)
+                return;
             SelectedPad.Text = pad; //(DataGrid)sender;
             SetPlOrPhTableByPad(m_phTableName, pad);
             SetPlOrPhTableByPad(m_plTableName, pad);
@@ -279,9 +311,7 @@ namespace GUI
         /// <summary>
         /// Close Application
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void CloseApplication(object sender, RoutedEventArgs e)
+        private void CloseApplication()
         {
             System.Windows.Application.Current.Shutdown();
         }
@@ -352,6 +382,16 @@ namespace GUI
         private void Bearbeiten_ButtonClick(object sender, RoutedEventArgs e)
         {
             SetEditable(!m_isEditable);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            CloseApplication();
+        }
+
+        private void MenuCloseApp_Click(object sender, RoutedEventArgs e)
+        {
+            CloseApplication();
         }
     }
 }

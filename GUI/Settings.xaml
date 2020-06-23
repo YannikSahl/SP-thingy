@@ -28,10 +28,10 @@
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0">Name</TextBlock>
             <DockPanel Margin="2" LastChildFill="True" Grid.Row="0" Grid.Column="1">
-                <TextBox x:Name="sp_name"></TextBox>
+                <TextBox x:Name="sp_name" Height="20"></TextBox>
             </DockPanel>
             <DockPanel Margin="2" LastChildFill="True" Grid.Row="1" Grid.Column="1">
-                <PasswordBox x:Name="sp_pw"></PasswordBox>
+                <PasswordBox x:Name="sp_pw" Height="20"></PasswordBox>
             </DockPanel>
             <TextBlock Grid.Row="1" Grid.Column="0">Password</TextBlock>
             <DockPanel Grid.Row="2" Grid.ColumnSpan="2" LastChildFill="True">
@@ -64,31 +64,31 @@
             <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Sharepoint</TextBlock>
             <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True" Margin="2">
                 <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
-                <TextBox VerticalContentAlignment="Center"></TextBox>
+                <TextBox VerticalContentAlignment="Center" Height="20"/>
             </DockPanel>
 
             <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Datenbank im Sharepoint</TextBlock>
             <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True" Margin="2">
                 <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
-                <TextBox VerticalContentAlignment="Center"></TextBox>
+                <TextBox VerticalContentAlignment="Center" Height="20"></TextBox>
             </DockPanel>
 
             <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Skizzen im Sharepoint</TextBlock>
             <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True" Margin="2">
                 <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
-                <TextBox VerticalContentAlignment="Center"></TextBox>
+                <TextBox VerticalContentAlignment="Center" Height="20"></TextBox>
             </DockPanel>
 
             <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Export DB</TextBlock>
             <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="True" Margin="2">
                 <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
-                <TextBox x:Name="DbSave" VerticalContentAlignment="Center"/>
+                <TextBox x:Name="DbSave" VerticalContentAlignment="Center" Height="20"/>
             </DockPanel>
 
             <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Export Skizzen</TextBlock>
             <DockPanel Grid.Row="4" Grid.Column="1" LastChildFill="True" Margin="2">
                 <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
-                <TextBox VerticalContentAlignment="Center"></TextBox>
+                <TextBox VerticalContentAlignment="Center" Height="20"></TextBox>
             </DockPanel>
         </Grid>
 
