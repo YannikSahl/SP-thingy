@@ -80,7 +80,24 @@ namespace GUI
 
         private void SetPpSearchFilter(string filter)
         {
-            ((DataTable)PpTable.DataContext).DefaultView.RowFilter = $"PAD LIKE '%{filter}%'";
+            if (filter == null)
+                return;
+            var table = PpTable.DataContext as DataTable;
+            if (table == null)
+                return;
+            // index 0 sollte PAD sein
+            string padColumnName = "PAD"; //table.Columns[0].ColumnName;
+            // hier könnte man like verbinden mit "AND" expression um mehrere Zeilen zu suchen
+            try
+            {
+                table.DefaultView.RowFilter = $"{padColumnName} LIKE '%{filter}%'";
+            }
+            catch (EvaluateException E)
+            {
+                MessageBox.Show(E.ToString(), $"Interner Fehler", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+            }
+            SetPlOrPhTableByPad(m_plTableName, null);
+            SetPlOrPhTableByPad(m_phTableName, null);
         }
 
         /// <summary>
@@ -405,6 +422,8 @@ namespace GUI
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
+            if (SearchPpTextfield.Text == "")
+                return;
             SetPpSearchFilter(SearchPpTextfield.Text);
             //DataTable pp = _ppOriginal;
             //DataTable replace = new DataTable("PpSearched");
@@ -430,6 +449,8 @@ namespace GUI
 
         private void ClearPpSearchButton_Click(object sender, RoutedEventArgs e)
         {
+            if (SearchPpTextfield.Text == "")
+                return;
             SetPpSearchFilter("");
             SearchPpTextfield.Text = "";
         }
