@@ -16,25 +16,28 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Xml.Schema;
 using DBHandler;
 
-namespace GUI
-{
-    /*
-    Author: Oliver Tworkowski
+/*
+    Author: Oliver Tworkowski, s0568202
+
     Credit for license-free Icons:
     - sperren.png - https://www.flaticon.com/de/kostenloses-icon/sperren_483408?term=lock&page=1&position=7
     - entsperren.png - https://www.flaticon.com/de/kostenloses-icon/vorhangeschloss_126479
     - auge.png - https://www.flaticon.com/de/kostenloses-icon/auge_609494?term=view&page=1&position=67
 
-    TODO 1: DataGrid Struktur mit Liste binden, um auf Elemente einzeln zugreifen zu können und einfacher operationen durchführen zu können
-    */
+*/
 
+namespace GUI
+{
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Statics
+
         public enum ConnectionModus
         {
             Offline,
@@ -42,132 +45,77 @@ namespace GUI
             LostConnection
         }
 
-        private static string m_phTableName = "PH";
-        private static string m_plTableName = "PL";
+        private static readonly string m_ppTableName = "PP";
+        private static readonly string m_phTableName = "PH";
+        private static readonly string m_plTableName = "PL";
+
+        #endregion
+
+        #region Members
 
         private ConnectionModus m_connectionModus;
+        
         //ConnectionStatus
-        private DBHandler.DbHandler m_databaseConnection;
+        private DbHandler m_databaseConnection;
         private bool m_isEditable = false;
-        public bool isEditable
-        {
-            get { return m_isEditable; }
-            set
-            {
-                SetEditable(value);
-            }
-        }
+
+        private Settings _settingsWindow;
+        private Abfragen _abfrageWindow;
+
+        #endregion
+
+        #region Constructors
 
         public MainWindow(ConnectionModus conMod = ConnectionModus.Online)
         {
             InitializeComponent();
-            m_connectionModus = conMod;
+            SetConnectionStatus(conMod);
             PopoutConnectionStatusBar();
 
             if (m_connectionModus == ConnectionModus.Online)
             {
                 SetEditable(true);
             }
-            SetDatabase();
-            SetPPDataTable();
+            else
+            {
+                SetEditable(false);
+            }
+            LoadTables();
 
             CollapseExpander();
             AddFilePreview("..\\..\\..\\..\\README.md");
             //AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
-            string pt = "\\..jpeg_test.jpeg";
-            AddFilePreview("..\\..\\..\\test_images\\png_test.png");
-            AddFilePreview("..\\..\\..\\test_images\\jpeg_test.jpeg");
-            AddFilePreview("..\\..\\..\\test_images\\pdf_test.pdf");
-            AddFilePreview("..\\..\\..\\test_images\\txt_test.txt");
-            AddFilePreview("..\\..\\..\\test_images\\pptx_test.pptx");
-            //AddFilePreview("D:/GoldSquare_N.jpg");
-            //AddFilePreview("D:/img1.png");
+            //AddFilePreview("..\\..\\..\\test_images\\png_test.png");
+            //AddFilePreview("..\\..\\..\\test_images\\jpeg_test.jpeg");
+            //AddFilePreview("..\\..\\..\\test_images\\pdf_test.pdf");
+            //AddFilePreview("..\\..\\..\\test_images\\txt_test.txt");
+            //AddFilePreview("..\\..\\..\\test_images\\pptx_test.pptx");
         }
 
-        private void AddFilePreview(string path)
-        {
-            DocumentView.Children.Add(new FileView(path));
-        }
+        #endregion
 
-        private void SetConnectionStatusBarStyle(string text, Color color)
-        {
-            ConnectionStatusBar.Text = text;
-            var brush = new SolidColorBrush(color);
-            ConnectionStatusBar.Background = brush;
-            ConnectionStatusBar.Visibility = Visibility.Visible;
-            StartTimer(5d);
-            m_connectionStatusBarActive = true;
-        }
+        #region Custom Methods
 
-        private void HideConnectionStatusBar()
+        private void SetPpSearchFilter(string filter)
         {
-            ConnectionStatusBar.Visibility = Visibility.Hidden;
-            m_connectionStatusBarActive = false;
-        }
-
-        // TODO: use this to determine whether timer should be reset when popout during popout
-        private bool m_connectionStatusBarActive;
-        private void StartTimer(double seconds)
-        {
-            DispatcherTimer timer = new DispatcherTimer
+            if (filter == null)
+                return;
+            var table = PpTable.DataContext as DataTable;
+            if (table == null)
+                return;
+            // index 0 sollte PAD sein
+            string padColumnName = "PAD"; //table.Columns[0].ColumnName;
+            // hier könnte man like verbinden mit "AND" expression um mehrere Zeilen zu suchen
+            try
             {
-                Interval = TimeSpan.FromSeconds(seconds)
-            };
-            timer.Tick += TimerTick;
-            timer.Start();
-        }
-
-        private void TimerTick(object sender, EventArgs e)
-        {
-            DispatcherTimer timer = (DispatcherTimer)sender;
-            timer.Stop();
-            timer.Tick -= TimerTick;
-            HideConnectionStatusBar();
-        }
-
-        private void PopoutConnectionStatusBar()
-        {
-            switch (m_connectionModus)
-            {
-                case ConnectionModus.Online:
-                {
-                    SetConnectionStatusBarStyle("Verbunden!", Colors.ForestGreen);
-                    break;
-                }
-                case ConnectionModus.Offline:
-                {
-                    SetConnectionStatusBarStyle("Offline Modus", Colors.DarkOrange);
-                    break;
-                }
-                case ConnectionModus.LostConnection:
-                {
-                    SetConnectionStatusBarStyle("Verbindung Fehlgeschlagen!", Colors.Red);
-                    break;
-                }
-                default: break;
+                table.DefaultView.RowFilter = $"{padColumnName} LIKE '%{filter}%'";
             }
-        }
-
-        /// <summary>
-        /// Opens Settings Window
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void openSettingsWindow(object sender, RoutedEventArgs e)
-        {
-            Settings settingsWin = new Settings();
-            settingsWin.Show();
-        }
-
-        /// <summary>
-        /// Opens Query Window
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void openAbfrageWindow(object sender, RoutedEventArgs e)
-        {
-            Abfragen abfrageWin = new Abfragen();
-            abfrageWin.Show();
+            catch (EvaluateException E)
+            {
+                MessageBox.Show(E.ToString(), $"Interner Fehler", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+            }
+            SetPlOrPhTableByPad(m_plTableName, null);
+            SetPlOrPhTableByPad(m_phTableName, null);
         }
 
         /// <summary>
@@ -182,12 +130,16 @@ namespace GUI
         /// <summary>
         /// Sets PP main table to data view
         /// </summary>
-        private void SetPPDataTable()
+        private void LoadTables()
         {
-            DataTable pp = m_databaseConnection.DbData.Tables["PP"];
+            SetDatabase();
+
+            DataTable pp = m_databaseConnection.DbData.Tables[m_ppTableName];
             PpTable.DataContext = pp;
             DataTable ph = m_databaseConnection.DbData.Tables[m_phTableName];
             DataTable pl = m_databaseConnection.DbData.Tables[m_plTableName];
+
+            // set columns for ph and pl
             var phColumnsOnly = new DataTable(m_phTableName);
             foreach (DataColumn col in ph.Columns)
             {
@@ -211,7 +163,8 @@ namespace GUI
             {
                 emptyMessageBlock = PlTableEmptyMessage;
                 dg = PlTable;
-            }else if (tableName == m_phTableName)
+            }
+            else if (tableName == m_phTableName)
             {
                 emptyMessageBlock = PhTableEmptyMessage;
                 dg = PhTable;
@@ -247,41 +200,66 @@ namespace GUI
             dg.ItemsSource = dt.DefaultView;
         }
 
-        /// <summary>
-        /// Do something after row editing
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void PP_TABELLE_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        private void AddFilePreview(string path)
         {
-            // update after row was edited
-            m_databaseConnection.UpdateDatabases();
+            DocumentView.Children.Add(new FileView(path));
         }
 
-        /// <summary>
-        /// Row selection changed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void PP_TABELLE_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SetConnectionStatusBarStyle(string text, Color color)
         {
-            // get RowView
-            var dataRowView = e.AddedItems[0] as DataRowView;
-            if (dataRowView == null)
-                return;
-            // get PAD from DataRow
-            var pad = (string)dataRowView.Row["PAD"];
-            SelectedPad.Text = pad; //(DataGrid)sender;
-            SetPlOrPhTableByPad(m_phTableName, pad);
-            SetPlOrPhTableByPad(m_plTableName, pad);
+            ConnectionStatusBar.Text = text;
+            var brush = new SolidColorBrush(color);
+            ConnectionStatusBar.Background = brush;
+            ConnectionStatusBar.Visibility = Visibility.Visible;
+            StartTimer(5d);
+            m_connectionStatusBarActive = true;
+        }
+
+        private void HideConnectionStatusBar()
+        {
+            ConnectionStatusBar.Visibility = Visibility.Collapsed;
+            m_connectionStatusBarActive = false;
+        }
+
+        // TODO: use this to determine whether timer should be reset when popout during popout
+        private bool m_connectionStatusBarActive;
+        private void StartTimer(double seconds)
+        {
+            DispatcherTimer timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(seconds)
+            };
+            timer.Tick += TimerTick;
+            timer.Start();
+        }
+
+        private void PopoutConnectionStatusBar()
+        {
+            switch (m_connectionModus)
+            {
+                case ConnectionModus.Online:
+                {
+                    SetConnectionStatusBarStyle("Verbunden!", Colors.ForestGreen);
+                    break;
+                }
+                case ConnectionModus.Offline:
+                {
+                    SetConnectionStatusBarStyle("Offline Modus", Colors.DarkOrange);
+                    break;
+                }
+                case ConnectionModus.LostConnection:
+                {
+                    SetConnectionStatusBarStyle("Verbindung Fehlgeschlagen!", Colors.Red);
+                    break;
+                }
+                default: break;
+            }
         }
 
         /// <summary>
         /// Close Application
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void CloseApplication(object sender, RoutedEventArgs e)
+        private void CloseApplication()
         {
             System.Windows.Application.Current.Shutdown();
         }
@@ -304,6 +282,130 @@ namespace GUI
         {
             DocumentViewContainer.Width = new GridLength(200);
             ViewSplitter.Visibility = Visibility.Visible;
+        }
+
+        private void SetEditable(bool editable)
+        {
+            m_isEditable = editable;
+            PhTable.IsReadOnly = !editable;
+            PpTable.IsReadOnly = !editable;
+            PlTable.IsReadOnly = !editable;
+            BitmapImage icon;
+            if (editable)
+            {
+                icon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\entsperren.png", UriKind.Relative));
+                EditModeButton.Foreground = new SolidColorBrush(Colors.DarkGreen);
+            }
+            else
+            {
+                icon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\sperren.png", UriKind.Relative));
+                EditModeButton.Foreground = new SolidColorBrush(Colors.Black);
+            }
+            ImageBrush ib = new ImageBrush(icon);
+            ib.Stretch = Stretch.Uniform;
+            EditModeIcon.Background = ib;
+
+            // Statusanzeige (unten)
+            EditStatus.Text = editable ? "AN" : "AUS";
+        }
+
+        private void SetConnectionStatus(ConnectionModus mode)
+        {
+            this.m_connectionModus = mode;
+            // Statusanzeige (unten)
+            ConnectionStatus.Text = Enum.GetName(typeof(ConnectionModus), mode);
+        }
+
+        #endregion
+
+        #region Events
+
+        private void TimerTick(object sender, EventArgs e)
+        {
+            DispatcherTimer timer = (DispatcherTimer)sender;
+            timer.Stop();
+            timer.Tick -= TimerTick;
+            HideConnectionStatusBar();
+        }
+
+        /// <summary>
+        /// Opens Settings Window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenSettingsWindow(object sender, RoutedEventArgs e)
+        {
+            // bedeutet Fenster existiert schon
+            if (_settingsWindow != null)
+            {
+                //_settingsWindow.Topmost = true;
+                _settingsWindow.Activate();
+                return;
+            }
+
+            _settingsWindow = new Settings();
+            _settingsWindow.Show();
+        }
+
+        /// <summary>
+        /// Opens Query Window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenAbfrageWindow(object sender, RoutedEventArgs e)
+        {
+            // bedeutet Fenster existiert schon
+            if (_abfrageWindow != null)
+            {
+                //_settingsWindow.Topmost = true;
+                _abfrageWindow.Activate();
+                return;
+            }
+
+            _abfrageWindow = new Abfragen();
+            _abfrageWindow.Show();
+        }
+
+        /// <summary>
+        /// Do something after row editing
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PP_TABELLE_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            // update after row was edited
+            m_databaseConnection.UpdateDatabases();
+        }
+
+        /// <summary>
+        /// Row selection changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PP_TABELLE_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // get RowView
+            DataRowView dataRowView = null;
+            try
+            {
+                dataRowView = e.AddedItems[0] as DataRowView;
+            }
+            catch (IndexOutOfRangeException E)
+            {
+                // bedeutet dass zeile gelöscht ist
+                return;
+            }
+
+            if (dataRowView == null)
+                return;
+            // get PAD from DataRow
+            var pad = dataRowView.Row["PAD"] as string;
+            // pad == null falls PAD nicht string ist (z.B. wenn leere Zeile ausgewählt)
+            if (pad == null)
+                return;
+            SelectedPad.Text = pad; //(DataGrid)sender;
+            SetPlOrPhTableByPad(m_phTableName, pad);
+            SetPlOrPhTableByPad(m_plTableName, pad);
         }
 
         private void Expander_Collapsed(object sender, RoutedEventArgs e)
@@ -333,25 +435,56 @@ namespace GUI
             }
         }
 
-        private void SetEditable(bool editable)
-        {
-            m_isEditable = editable;
-            PhTable.IsReadOnly = !editable;
-            PpTable.IsReadOnly = !editable;
-            PlTable.IsReadOnly = !editable;
-            BitmapImage icon;
-            if (editable)
-                icon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\entsperren.png", UriKind.Relative));
-            else
-                icon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\sperren.png", UriKind.Relative));
-            ImageBrush ib = new ImageBrush(icon);
-            ib.Stretch = Stretch.Uniform;
-            EditModeIcon.Background = ib;
-        }
-
-        private void Bearbeiten_ButtonClick(object sender, RoutedEventArgs e)
+        private void EditModeButton_Click(object sender, RoutedEventArgs e)
         {
             SetEditable(!m_isEditable);
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            CloseApplication();
+        }
+
+        private void MenuCloseApp_Click(object sender, RoutedEventArgs e)
+        {
+            CloseApplication();
+        }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (SearchPpTextfield.Text == "")
+                return;
+            SetPpSearchFilter(SearchPpTextfield.Text);
+            //DataTable pp = _ppOriginal;
+            //DataTable replace = new DataTable("PpSearched");
+            //// Refractoring!
+            //foreach (DataColumn column in pp.Columns)
+            //{
+            //    replace.Columns.Add(new DataColumn(column.ColumnName));
+            //}
+            //_ppOriginal = pp;
+            //foreach (DataRow row in pp.Rows)
+            //{
+            //    var pad = row.ItemArray[0] as string;
+            //    if (pad == null)
+            //        continue;
+
+            //    if (pad.Trim().Contains(SearchPpTextfield.Text.Trim()))
+            //    {
+            //        replace.ImportRow(row);
+            //        PpTable.DataContext = replace;
+            //    }
+            //}
+        }
+
+        private void ClearPpSearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (SearchPpTextfield.Text == "")
+                return;
+            SetPpSearchFilter("");
+            SearchPpTextfield.Text = "";
+        }
+
+        #endregion
     }
 }

@@ -24,4 +24,19 @@
     <Resource Include="gui_resources\sperren.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="lang_de.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>lang_de.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="lang_de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>lang_de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

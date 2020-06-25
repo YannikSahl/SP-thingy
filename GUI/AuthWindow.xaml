@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="AuthWindow" Height="360" Width="400" Background="White" Foreground="Black">
+        Title="Anmeldung" Height="360" Width="400" Background="White" Foreground="Black">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -18,7 +18,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock FontWeight="Bold" FontSize="15" TextAlignment="Center" Margin="5">Sharepoint Auth</TextBlock>
+        <TextBlock FontWeight="Bold" FontSize="15" TextAlignment="Center" Margin="5">Sharepoint Anmeldung</TextBlock>
         <TextBlock Grid.Row="1" TextAlignment="Center"> Name</TextBlock>
         <TextBox x:Name="NameBox" Grid.Row="2" Height="40" Margin="5" Padding="10" FontSize="14" VerticalAlignment="Center"></TextBox>
         <TextBlock Grid.Row="3" TextAlignment="Center"> Password</TextBlock>
