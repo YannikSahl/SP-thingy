@@ -19,24 +19,24 @@ using System.Windows.Threading;
 using System.Xml.Schema;
 using DBHandler;
 
-namespace GUI
-{
-    /*
-    Author: Oliver Tworkowski
+/*
+    Author: Oliver Tworkowski, s0568202
+
     Credit for license-free Icons:
     - sperren.png - https://www.flaticon.com/de/kostenloses-icon/sperren_483408?term=lock&page=1&position=7
     - entsperren.png - https://www.flaticon.com/de/kostenloses-icon/vorhangeschloss_126479
     - auge.png - https://www.flaticon.com/de/kostenloses-icon/auge_609494?term=view&page=1&position=67
 
-    */
+*/
 
+namespace GUI
+{
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Settings _settingsWindow;
-        private Abfragen _abfrageWindow;
+        #region Statics
 
         public enum ConnectionModus
         {
@@ -48,21 +48,37 @@ namespace GUI
         private static readonly string m_ppTableName = "PP";
         private static readonly string m_phTableName = "PH";
         private static readonly string m_plTableName = "PL";
+
+        #endregion
+
+        #region Members
+
         private ConnectionModus m_connectionModus;
         
         //ConnectionStatus
         private DbHandler m_databaseConnection;
         private bool m_isEditable = false;
 
+        private Settings _settingsWindow;
+        private Abfragen _abfrageWindow;
+
+        #endregion
+
+        #region Constructors
+
         public MainWindow(ConnectionModus conMod = ConnectionModus.Online)
         {
             InitializeComponent();
-            m_connectionModus = conMod;
+            SetConnectionStatus(conMod);
             PopoutConnectionStatusBar();
 
             if (m_connectionModus == ConnectionModus.Online)
             {
                 SetEditable(true);
+            }
+            else
+            {
+                SetEditable(false);
             }
             LoadTables();
 
@@ -75,6 +91,8 @@ namespace GUI
             //AddFilePreview("..\\..\\..\\test_images\\txt_test.txt");
             //AddFilePreview("..\\..\\..\\test_images\\pptx_test.pptx");
         }
+
+        #endregion
 
         #region Custom Methods
 
@@ -286,9 +304,21 @@ namespace GUI
             ImageBrush ib = new ImageBrush(icon);
             ib.Stretch = Stretch.Uniform;
             EditModeIcon.Background = ib;
+
+            // Statusanzeige (unten)
+            EditStatus.Text = editable ? "AN" : "AUS";
+        }
+
+        private void SetConnectionStatus(ConnectionModus mode)
+        {
+            this.m_connectionModus = mode;
+            // Statusanzeige (unten)
+            ConnectionStatus.Text = Enum.GetName(typeof(ConnectionModus), mode);
         }
 
         #endregion
+
+        #region Events
 
         private void TimerTick(object sender, EventArgs e)
         {
@@ -454,5 +484,7 @@ namespace GUI
             SetPpSearchFilter("");
             SearchPpTextfield.Text = "";
         }
+
+        #endregion
     }
 }

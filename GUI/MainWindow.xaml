@@ -13,14 +13,14 @@
                     <MenuItem Header="_Auswahl exportieren" Foreground="Black"/>
                     <MenuItem Header="_Importieren" Foreground="Black"/>
                 </MenuItem>
-                <MenuItem Header="_Neue Abfrage" Foreground="Black" Click="OpenAbfrageWindow"/>
-                <MenuItem Header="_Aktualisieren" Foreground="Black"/>
                 <Separator />
                 <MenuItem Header="_Schließen" Foreground="Black" Click="MenuCloseApp_Click"/>
             </MenuItem>
-            <MenuItem Header="_Tools" Background="#FF444444">
+            <MenuItem Header="_Datenbank" Background="#FF444444">
                 <MenuItem Header="_DB Pflege" Foreground="Black"/>
                 <MenuItem Header="_Pfade" Foreground="Black"/>
+                <MenuItem Header="_Neue Abfrage" Foreground="Black" Click="OpenAbfrageWindow"/>
+                <MenuItem Header="_Aktualisieren" Foreground="Black"/>
             </MenuItem>
             <MenuItem Header="Extras" Background="#FF444444">
                 <MenuItem Header="Einstellungen" Foreground="Black" Click="OpenSettingsWindow"/>
@@ -28,10 +28,10 @@
         </Menu>
         <DockPanel DockPanel.Dock="Bottom" Background="#FF444444" Height="16" LastChildFill="True">
             <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" Foreground="LightGray" Margin="2,0,2,0" FontSize="10">Verbindung:</TextBlock>
-            <TextBlock VerticalAlignment="Center" x:Name="ConnectionStatus" DockPanel.Dock="Left" Foreground="LightGray" Margin="2,0,2,0" FontSize="10"></TextBlock>
+            <TextBlock VerticalAlignment="Center" x:Name="ConnectionStatus" DockPanel.Dock="Left" Foreground="#FFFF9429" Margin="2,0,2,0" FontSize="10"></TextBlock>
 
             <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" Foreground="LightGray" Margin="2,0,2,0" FontSize="10">| Bearbeitung:</TextBlock>
-            <TextBlock VerticalAlignment="Center" x:Name="EditStatus" DockPanel.Dock="Left" Foreground="LightGray" Margin="2,0,2,0" FontSize="10"></TextBlock>
+            <TextBlock VerticalAlignment="Center" x:Name="EditStatus" DockPanel.Dock="Left" Foreground="#FFFF9429" Margin="2,0,2,0" FontSize="10"></TextBlock>
         </DockPanel>
         <TextBlock x:Name="ConnectionStatusBar" Height="20" DockPanel.Dock="Bottom" Background="#FF21C947" Visibility="Collapsed" TextAlignment="Center">Verbunden</TextBlock>
         <DockPanel>

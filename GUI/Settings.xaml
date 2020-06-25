@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
-        Title="Settings" Height="450" Width="800">
+        Title="Einstellungen" Height="450" Width="800">
     <StackPanel Margin="15,5,15,10">
         <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
             <Label.Background>
@@ -14,7 +14,7 @@
                     <GradientStop Color="#FFFFAD1E" Offset="1"/>
                 </LinearGradientBrush>
             </Label.Background>
-            Sharepoint Authentification
+            Sharepoint Authentifizierung
         </Label>
         <Grid Background="#FFF7F7F7">
             <Grid.ColumnDefinitions>
