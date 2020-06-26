@@ -131,15 +131,19 @@ namespace DBHandler
         {
 
             // Check if there were filters built before this one
-            var querySubString = queryString.Substring(queryString.Length - 2);
-            if (querySubString == ") ")
+            if (filterSet.Count != 0)
             {
-                queryString += queryConnector;
+                var querySubString = queryString.Substring(queryString.Length - 2);
+                if (querySubString == ") ")
+                {
+                    queryString += queryConnector;
+                }
+                queryString += " (";
             }
+            
 
-            // Prepare parenthesis and connector
+            // Prepare connector
             var innerQueryConnector = "";
-            if (filterSet.Count != 0) innerQueryConnector += " (";
 
             // Build filter
             foreach (string filter in filterSet)
