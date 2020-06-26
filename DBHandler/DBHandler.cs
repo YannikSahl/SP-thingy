@@ -14,7 +14,8 @@ public enum StatusCode
     CommandOk = 0,
     CommandFailed = 1,
     OleDbNotRegistered = 2,
-    NoDatabaseChanges = 3
+    NoDatabaseChanges = 3,
+    SqlError = 4
 }
 
 namespace DBHandler
@@ -49,11 +50,11 @@ namespace DBHandler
         }
 
         // Fill in data from .accdb file
-        public StatusCode FillInData(HashSet<string> Pad, HashSet<string> PStrecke, HashSet<string> PArt, HashSet<string> PAuftr)
+        public StatusCode FillInData(HashSet<string> Pad, HashSet<string> PStrecke, HashSet<string> PArt, HashSet<string> PAuftr, bool isAndConnector)
         {
 
             // Build query string
-            string queryStringFilterPP = BuildQueryString(Pad, PStrecke, PArt, PAuftr);
+            string queryStringFilterPP = BuildQueryString(Pad, PStrecke, PArt, PAuftr, isAndConnector);
 
             // Try to access data
             try
@@ -74,12 +75,39 @@ namespace DBHandler
 
         }
 
+        // Fill in data from .accdb file with custom query
+        public StatusCode FillInData(string queryString)
+        {
+
+            // Try to access data
+            try
+            {
+                // Create OleDbAdapters
+                DbAdapterPh = CreateDataAdapter("PH", DbConn, "SELECT * FROM PH");
+                DbAdapterPl = CreateDataAdapter("PL", DbConn, "SELECT * FROM PL");
+                DbAdapterPp = CreateDataAdapter("PP", DbConn, queryString);
+
+            }
+            // Catch exception on runtime missing error, return appropriate error code
+            catch (InvalidOperationException ioe)
+            {
+                return StatusCode.OleDbNotRegistered;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode.SqlError;
+            }
+
+            return StatusCode.CommandOk;
+
+        }
+
         // Builds query string for pp table based on GUI input
-        public string BuildQueryString(HashSet<string> PAD, HashSet<string> PStrecke, HashSet<string> PArt, HashSet<string> PAuftr)
+        public string BuildQueryString(HashSet<string> PAD, HashSet<string> PStrecke, HashSet<string> PArt, HashSet<string> PAuftr, bool isAndConnector)
         {
 
             var queryString = "SELECT DISTINCT * FROM PP";
-            var orConnector = "";
+            var queryConnector = isAndConnector ? "AND" : "OR";
 
             // Append where
             if (PAD.Count != 0 || PStrecke.Count != 0 || PArt.Count != 0 || PAuftr.Count != 0)
@@ -88,10 +116,10 @@ namespace DBHandler
             }
 
             // Build filter
-            BuildFilter(PAD, "PAD", ref orConnector, ref queryString);
-            BuildFilter(PStrecke, "PStrecke", ref orConnector, ref queryString);
-            BuildFilter(PArt, "PArt", ref orConnector, ref queryString);
-            BuildFilter(PAuftr, "PAuftr", ref orConnector, ref queryString);
+            BuildFilter(PAD, "PAD", ref queryString, queryConnector);
+            BuildFilter(PStrecke, "PStrecke",  ref queryString, queryConnector);
+            BuildFilter(PArt, "PArt", ref queryString, queryConnector);
+            BuildFilter(PAuftr, "PAuftr", ref queryString, queryConnector);
 
             // Return built string
             Console.WriteLine($"Query string: {queryString}");
@@ -99,14 +127,28 @@ namespace DBHandler
         }
 
         // Builds filter queries
-        public void BuildFilter(HashSet<string> filterSet, string filterVariable, ref string orConnector, ref string queryString)
+        public void BuildFilter(HashSet<string> filterSet, string filterVariable, ref string queryString, string queryConnector)
         {
+
+            // Check if there were filters built before this one
+            var querySubString = queryString.Substring(queryString.Length - 2);
+            if (querySubString == ") ")
+            {
+                queryString += queryConnector;
+            }
+
+            // Prepare parenthesis and connector
+            var innerQueryConnector = "";
+            if (filterSet.Count != 0) innerQueryConnector += " (";
+
             // Build filter
             foreach (string filter in filterSet)
             {
-                queryString += $" {orConnector} {filterVariable} = '{filter}'";
-                orConnector = "OR";
+                queryString += $"{innerQueryConnector} {filterVariable} = '{filter}' ";
+                innerQueryConnector = "OR";
             }
+
+            if (filterSet.Count != 0) queryString += ") ";
         }
 
         // Update databases (e.g. to be used on "save changed" click)
@@ -159,6 +201,7 @@ namespace DBHandler
             // Retrieve DataTable
             DataTable dataTable = DbData.Tables[tableName];
             int dataTableRows = dataTable.Rows.Count;
+            Console.WriteLine($"{tableName} Table row count: {dataTableRows}");
 
             // Add PrimaryKey information
             DataColumn[] keyColumns = new DataColumn[3];

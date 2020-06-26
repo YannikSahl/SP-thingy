@@ -28,12 +28,12 @@ namespace DBHandlerTest
 
         public static void FillInData(DbHandler dbHandler)
         {
-            HashSet<string> padFilter = new HashSet<string>() { };
+            HashSet<string> padFilter = new HashSet<string>() {};
             HashSet<string> pstreckeFilter = new HashSet<string>() {};
             HashSet<string> pArtFilter = new HashSet<string>() {};
             HashSet<string> pAuftrFilter = new HashSet<string>() {};
 
-            dbHandler.FillInData(padFilter, pstreckeFilter, pArtFilter, pAuftrFilter);
+            dbHandler.FillInData(padFilter, pstreckeFilter, pArtFilter, pAuftrFilter, false);
         }
 
         public static void FilterTable(DbHandler dbHandler)
