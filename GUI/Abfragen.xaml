@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
-        Title="Abfragen" Height="510" Width="800">
+        Title="Abfragen" Height="550" Width="800">
     <DockPanel Margin="10,5,10,5" Background="#FFE8E8E8" LastChildFill="True">
 
         <DockPanel DockPanel.Dock="Top">
@@ -32,7 +32,7 @@
                     <RadioButton x:Name="QueryInA" DockPanel.Dock="Left" Margin="5" FontWeight="Bold" GroupName="ChooseQuery" IsChecked="True">Textfelder</RadioButton>
                     <TextBlock DockPanel.Dock="Right" FontStyle="Italic" Foreground="#FF464646" VerticalAlignment="Center">mehrere Werte durch Komma getrennt möglich</TextBlock>
                 </DockPanel>
-                <Grid Margin="2" DockPanel.Dock="Top">
+                <Grid Margin="5" DockPanel.Dock="Top">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -42,22 +42,22 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <DockPanel>
-                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="5,0,0,0" >Strecke</TextBlock>
+                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="2" >Strecke</TextBlock>
                         <TextBox x:Name="StreckeInput" DockPanel.Dock="Right" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"></TextBox>
                     </DockPanel>
                     <DockPanel Grid.Column="1">
-                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="5,0,0,0">Auftrag</TextBlock>
+                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="2">Auftrag</TextBlock>
                         <TextBox x:Name="AuftragInput" DockPanel.Dock="Right" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"></TextBox>
                     </DockPanel>
                     <DockPanel Grid.Column="0" Grid.Row="1">
-                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="5,0,0,0">Punktart</TextBlock>
+                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="2">Punktart</TextBlock>
                         <TextBox x:Name="PunktartInput" DockPanel.Dock="Right" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"></TextBox>
                     </DockPanel>
                 </Grid>
 
                 <Separator DockPanel.Dock="Top"></Separator>
 
-                <Grid DockPanel.Dock="Top" Margin="2">
+                <Grid DockPanel.Dock="Top" Margin="5">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -68,28 +68,28 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Column="0" Grid.Row="0">
-                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="5,0,0,0">km</TextBlock>
-                        <TextBox DockPanel.Dock="Right" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"></TextBox>
+                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="2">km</TextBlock>
+                        <TextBox x:Name="VonKm" DockPanel.Dock="Right" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"></TextBox>
                     </DockPanel>
                     <DockPanel Grid.Column="1" Grid.Row="0">
-                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,0,0" FontStyle="Italic">bis</TextBlock>
-                        <TextBox DockPanel.Dock="Right" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"></TextBox>
+                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2" FontStyle="Italic">bis</TextBlock>
+                        <TextBox x:Name="BisKm" DockPanel.Dock="Right" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"></TextBox>
                     </DockPanel>
                     <DockPanel Grid.Column="0" Grid.Row="1">
-                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="5,0,0,0">Punkt</TextBlock>
-                        <TextBox DockPanel.Dock="Right" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"></TextBox>
+                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="2">Punkt</TextBlock>
+                        <TextBox x:Name="VonPunkt" DockPanel.Dock="Right" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"></TextBox>
                     </DockPanel>
                     <DockPanel Grid.Column="1" Grid.Row="1">
-                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,0,0" FontStyle="Italic">bis</TextBlock>
-                        <TextBox DockPanel.Dock="Right" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"></TextBox>
+                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2" FontStyle="Italic">bis</TextBlock>
+                        <TextBox x:Name="BisPunkt" DockPanel.Dock="Right" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"></TextBox>
                     </DockPanel>
                     <DockPanel Grid.Column="0" Grid.Row="2">
-                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="5,0,0,0">Blatt</TextBlock>
-                        <TextBox DockPanel.Dock="Right" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"></TextBox>
+                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="2">Blatt</TextBlock>
+                        <TextBox x:Name="VonBlatt" DockPanel.Dock="Right" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"></TextBox>
                     </DockPanel>
                     <DockPanel Grid.Column="1" Grid.Row="2">
-                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,0,0" FontStyle="Italic">bis</TextBlock>
-                        <TextBox DockPanel.Dock="Right" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"></TextBox>
+                        <TextBlock MinWidth="60" DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2" FontStyle="Italic">bis</TextBlock>
+                        <TextBox x:Name="BisBlatt" DockPanel.Dock="Right" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"></TextBox>
                     </DockPanel>
                 </Grid>
 
@@ -103,7 +103,7 @@
 
             </DockPanel>
             <DockPanel Grid.Row="0" Grid.Column="1" Margin="5" Background="LightGray">
-                <RadioButton x:Name="QueryInB" DockPanel.Dock="Top" Margin="5" FontWeight="Bold" GroupName="ChooseQuery">Eigene SQL Query</RadioButton>
+                <RadioButton x:Name="QueryInB" DockPanel.Dock="Top" Margin="5" FontWeight="Bold" GroupName="ChooseQuery">Eigene SQL Abfrage</RadioButton>
                 <TextBox x:Name="RawQuery" Margin="5" Padding="5" TextWrapping="Wrap" Text="SELECT * FROM PP" FontFamily="Monospac821 BT" FontWeight="Normal" FontStyle="Normal"/>
             </DockPanel>
         </Grid>
@@ -123,10 +123,10 @@
 
                 <DockPanel DockPanel.Dock="Right" LastChildFill="False">
                     <Button DockPanel.Dock="Top" Width="40" Height="40" FontWeight="Bold" FontSize="24" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="AddSavedQueryButton_Click" BorderBrush="{x:Null}" Background="#FF6A6A6A" Foreground="White">+</Button>
-
                     <Button DockPanel.Dock="Top" Width="40" Height="40" FontWeight="Bold" FontSize="24" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="DeleteSavedQueryButton_Click" BorderBrush="{x:Null}" Foreground="White" Background="#FF6A6A6A">-</Button>
+                    <Button DockPanel.Dock="Top" Width="40" Height="40" FontWeight="Bold" FontSize="24" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="LoadSavedQueryButton_Click" BorderBrush="{x:Null}" Foreground="White" Background="#FF6A6A6A">-></Button>
                 </DockPanel>
-                <DataGrid x:Name="SavedQueriesGrid" DockPanel.Dock="Left" BorderBrush="{x:Null}"></DataGrid>
+                <DataGrid x:Name="SavedQueriesGrid" DockPanel.Dock="Left" BorderBrush="{x:Null}" CellEditEnding="SavedQueriesGrid_CellEditEnding"></DataGrid>
             </DockPanel>
         </DockPanel>
     </DockPanel>
