@@ -70,7 +70,7 @@ namespace GUI
             string hashMessage = $"{StreckeInput.Text}{AuftragInput.Text}{PunktartInput.Text}";
             if ("".Equals(hashMessage))
                 return;
-            string hash = GetHash(SHA256.Create(), hashMessage);
+            string hash = GetHash(MD5.Create(), hashMessage);
             DataTable dt = (DataTable) SavedQueriesGrid.DataContext;
             DataRow dr = dt.NewRow();
             dr[0] = StreckeInput.Text;
@@ -96,21 +96,43 @@ namespace GUI
             }
         }
 
+        private HashSet<string> TextToHashSet(string text)
+        {
+            char[] separators = {',', ';'};
+            var arr = text.Split(separators);
+
+            var attributeSet = new HashSet<string>();
+            foreach (var att in arr)
+            {
+                if (!"".Equals(att))
+                {
+                    attributeSet.Add(att.Trim());
+                }
+            }
+
+            return attributeSet;
+        }
+
         private void AbfrageStartButton_Click(object sender, RoutedEventArgs e)
         {
             DBHandler.DbHandler dbh = new DBHandler.DbHandler("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
             StatusCode queryExecuted = StatusCode.CommandFailed;
-            if ((bool)QueryInA.IsChecked)
+            bool queryByText = QueryInA.IsChecked.HasValue ? QueryInA.IsChecked.Value : false;
+            if (queryByText)
             {
+                // Query by Parameters from textboxes
+                bool isAndOperator = AndOp.IsChecked.HasValue ? AndOp.IsChecked.Value : false;
                 queryExecuted = dbh.FillInData(
                     new HashSet<string>(),
-                    StreckeInput.Text == "" ? new HashSet<string>() : new HashSet<string>() { StreckeInput.Text },
-                    PunktartInput.Text == "" ? new HashSet<string>() : new HashSet<string>() { PunktartInput.Text },
-                    AuftragInput.Text == "" ? new HashSet<string>() : new HashSet<string>() { AuftragInput.Text }
+                    TextToHashSet(StreckeInput.Text),
+                    TextToHashSet(PunktartInput.Text),
+                    TextToHashSet(AuftragInput.Text),
+                    isAndOperator
                 );
-            }else if ((bool) QueryInB.IsChecked)
+            }else
             {
-                queryExecuted = dbh.FillInData(RawQuery.Text);
+                // Query by raw SQL
+                //queryExecuted = dbh.FillInData(RawQuery.Text);
             }
 
             if (queryExecuted == StatusCode.CommandOk)
