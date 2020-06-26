@@ -74,49 +74,24 @@ namespace DBHandler
 
         }
 
-        public StatusCode FillInData(string query)
-        {
-            // Try to access data
-            try
-            {
-                // Create OleDbAdapters
-                DbAdapterPh = CreateDataAdapter("PH", DbConn, "SELECT * FROM PH");
-                DbAdapterPl = CreateDataAdapter("PL", DbConn, "SELECT * FROM PL");
-                DbAdapterPp = CreateDataAdapter("PP", DbConn, query);
-
-            }
-            // Catch exception on runtime missing error, return appropriate error code
-            catch (InvalidOperationException ioe)
-            {
-                return StatusCode.OleDbNotRegistered;
-            }
-
-            return StatusCode.CommandOk;
-
-        }
-
         // Builds query string for pp table based on GUI input
         public string BuildQueryString(HashSet<string> PAD, HashSet<string> PStrecke, HashSet<string> PArt, HashSet<string> PAuftr)
         {
 
             var queryString = "SELECT DISTINCT * FROM PP";
-            var queryOperator = "";
+            var orConnector = "";
 
             // Append where
             if (PAD.Count != 0 || PStrecke.Count != 0 || PArt.Count != 0 || PAuftr.Count != 0)
             {
                 queryString += " WHERE";
             }
-            else
-            {
-                return "SELECT * FROM PP";
-            }
 
             // Build filter
-            BuildFilter(PAD, "PAD", ref queryOperator, ref queryString);
-            BuildFilter(PStrecke, "PStrecke", ref queryOperator, ref queryString);
-            BuildFilter(PArt, "PArt", ref queryOperator, ref queryString);
-            BuildFilter(PAuftr, "PAuftr", ref queryOperator, ref queryString);
+            BuildFilter(PAD, "PAD", ref orConnector, ref queryString);
+            BuildFilter(PStrecke, "PStrecke", ref orConnector, ref queryString);
+            BuildFilter(PArt, "PArt", ref orConnector, ref queryString);
+            BuildFilter(PAuftr, "PAuftr", ref orConnector, ref queryString);
 
             // Return built string
             Console.WriteLine($"Query string: {queryString}");
@@ -124,20 +99,13 @@ namespace DBHandler
         }
 
         // Builds filter queries
-        public void BuildFilter(HashSet<string> filterSet, string filterVariable, ref string queryOperator, ref string queryString)
+        public void BuildFilter(HashSet<string> filterSet, string filterVariable, ref string orConnector, ref string queryString)
         {
-            if (filterSet.Count == 0)
-                queryString += "";
             // Build filter
             foreach (string filter in filterSet)
             {
-                if (filter == "")
-                    continue;
-                else
-                {
-                    queryString += $" {queryOperator} {filterVariable} = '{filter}'";
-                    queryOperator = "AND";
-                }
+                queryString += $" {orConnector} {filterVariable} = '{filter}'";
+                orConnector = "OR";
             }
         }
 
@@ -171,7 +139,8 @@ namespace DBHandler
             // Create command builder (automatically generates single-table sql commands)
             OleDbCommandBuilder commandBuilder = new OleDbCommandBuilder(adapter)
             {
-                QuotePrefix = "[", QuoteSuffix = "]"
+                QuotePrefix = "[",
+                QuoteSuffix = "]"
             };
 
             // Acquire built commands
@@ -236,7 +205,7 @@ namespace DBHandler
             DataRowCollection dataRows = dataTable.Rows;
 
             // Construct key
-            object[] keys = new object[2]{ pad, hSysOrLSys };
+            object[] keys = new object[2] { pad, hSysOrLSys };
 
             // Find DataRow by pad
             DataRow dataRow = dataRows.Find(keys);
