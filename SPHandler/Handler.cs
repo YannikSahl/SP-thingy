@@ -69,6 +69,19 @@ namespace SPHandler
             return fileRelativUrl;
         }
 
+        public static int GetIntfromPAD(string PAD)
+        {
+            double forPath = 0;
+
+            char[] ar = PAD.ToCharArray();
+
+            forPath = char.GetNumericValue(ar[0]) * 1000 + char.GetNumericValue(ar[1]) * 100 + char.GetNumericValue(ar[2]) * 10 + char.GetNumericValue(ar[3]);
+
+            Console.WriteLine(forPath);
+
+            return (int)forPath;
+        }
+
 
 
 

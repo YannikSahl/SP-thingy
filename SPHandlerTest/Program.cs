@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
+using System.Security;
 using Microsoft.SharePoint.Client;
 
 namespace SharePointTryOut
@@ -20,35 +22,25 @@ namespace SharePointTryOut
         {
             username = "";
             password = "";
+            SecureString knox = ToSecureString(password);
 
-            using (var ctx = new ClientContext(rootSite))
-            {
-                CredentialCache cc = new CredentialCache();
-                SharePointOnlineCredentials Creds = new SharePointOnlineCredentials(username, password);
-                ctx.Credentials = Creds;
-                var web = ctx.Web;
-                ctx.Load(web);
-                ctx.ExecuteQueryAsync().Wait();
+            //using (var client = new WebClient())
+            //{
+            //    SharePointOnlineCredentials Creds = new SharePointOnlineCredentials(username, password);
+                
+            //    client.UseDefaultCredentials = true;
+            //    client.Headers.Add("X-FORMS_BASED_AUTH_ACCEPTED", "f");
+            //    client.Headers.Add("User-Agent: Other");
+            //    client.Credentials = Creds;
+            //    Console.WriteLine(rootSite + sourceSite + folderSite + fileSite);
+            //    client.DownloadFile(rootSite+sourceSite+folderSite+fileSite, destinationPath);
 
-
-                DownloadFile(rootSite+ sourceSite + folderSite + fileSite,Creds, destinationPath);
-            }
-
-            Console.ReadLine();
+            //}
+            //Console.ReadLine();
+            GetIntfromPAD("6020CZ 2303");
         }
 
-        private static void DownloadFile(string webUrl, SharePointOnlineCredentials credentials, string destinationPath)
-        {
-            using (var client = new WebClient())
-            {
-                client.UseDefaultCredentials = true;
-                client.Headers.Add("X-FORMS_BASED_AUTH_ACCEPTED", "f");
-                client.Headers.Add("User-Agent: Other");
-                client.Credentials = credentials;
-                client.DownloadFile(webUrl, destinationPath);
-            }
-            
-        }
+       
 
         public static string GetFileUrlFromDB(int entry, bool type)
         {
@@ -63,6 +55,29 @@ namespace SharePointTryOut
                 fileRelativUrl = "/04321_DB_Festp/03_Skizzen/JPG/" + thousands + "/" + hundreds + "/" + entry;
             
             return fileRelativUrl;
+        }
+        public static SecureString ToSecureString(string _self)
+        {
+            SecureString knox = new SecureString();
+            char[] chars = _self.ToCharArray();
+            foreach (char c in chars)
+            {
+                knox.AppendChar(c);
+            }
+            return knox;
+        }
+
+        public static int GetIntfromPAD(string PAD)
+        {
+            double forPath = 0;
+
+            char[] ar = PAD.ToCharArray();
+
+            forPath = char.GetNumericValue(ar[0])*1000 + char.GetNumericValue(ar[1]) * 100 + char.GetNumericValue(ar[2]) * 10 + char.GetNumericValue(ar[3]);
+
+            Console.WriteLine(forPath);
+
+            return (int)forPath;
         }
     }
 }
