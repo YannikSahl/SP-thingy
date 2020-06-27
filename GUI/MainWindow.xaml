@@ -75,18 +75,31 @@
                             <RowDefinition MinHeight="50"/>
                         </Grid.RowDefinitions>
                         <DockPanel Grid.Row="0" Margin="0,0,0,5">
-                            <TextBlock Text="PP Tabelle" DockPanel.Dock="Top" FontWeight="Bold" Foreground="#FF686868" FontStyle="Italic"></TextBlock>
+                            <DockPanel DockPanel.Dock="Top" LastChildFill="False">
+                                <TextBlock DockPanel.Dock="Left" Text="PP Tabelle" FontWeight="Bold" Foreground="#FF686868" FontStyle="Italic"></TextBlock>
+                                <TextBlock DockPanel.Dock="Right" Text="Einträge" Foreground="#FF686868" Margin="5,0,0,0"></TextBlock>
+                                <TextBlock x:Name="PpCount" DockPanel.Dock="Right" Text="0" Foreground="#FF686868" FontWeight="Bold" ></TextBlock>
+                            </DockPanel>
                             <DataGrid x:Name="PpTable" ItemsSource="{Binding}" RowEditEnding="PP_TABELLE_RowEditEnding" SelectionChanged="PP_TABELLE_SelectionChanged"></DataGrid>
                         </DockPanel>
+                        <TextBlock x:Name="PpTableEmptyMessage" Grid.Row="0" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" Foreground="#FFFF1313" Margin="0,10,0,0">Keine Auswahl</TextBlock>
                         <GridSplitter Grid.Row="1"  Height="5"  HorizontalAlignment="Stretch"/>
                         <DockPanel Grid.Row="2" Margin="0,5,0,5">
-                            <TextBlock Text="PL Tabelle" DockPanel.Dock="Top" FontWeight="Bold" Foreground="#FF686868" FontStyle="Italic"></TextBlock>
+                            <DockPanel DockPanel.Dock="Top" LastChildFill="False">
+                                <TextBlock DockPanel.Dock="Left" Text="PL Tabelle" FontWeight="Bold" Foreground="#FF686868" FontStyle="Italic"></TextBlock>
+                                <TextBlock DockPanel.Dock="Right" Text="Einträge" Foreground="#FF686868" Margin="5,0,0,0"></TextBlock>
+                                <TextBlock DockPanel.Dock="Right" x:Name="PlCount" Text="0" Foreground="#FF686868" FontWeight="Bold" ></TextBlock>
+                            </DockPanel>
                             <DataGrid x:Name="PlTable"/>
                         </DockPanel>
                         <TextBlock x:Name="PlTableEmptyMessage" Grid.Row="2" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" Foreground="#FF4D4D4D" Margin="0,10,0,0">Keine Auswahl</TextBlock>
                         <GridSplitter Grid.Row="3" Height="5" HorizontalAlignment="Stretch" />
                         <DockPanel Grid.Row="4" Margin="0,5,0,0">
-                            <TextBlock Text="PH Tabelle" DockPanel.Dock="Top" FontWeight="Bold" Foreground="#FF686868" FontStyle="Italic"></TextBlock>
+                            <DockPanel DockPanel.Dock="Top" LastChildFill="False">
+                                <TextBlock DockPanel.Dock="Left" Text="PH Tabelle" FontWeight="Bold" Foreground="#FF686868" FontStyle="Italic"></TextBlock>
+                                <TextBlock DockPanel.Dock="Right" Text="Einträge" Foreground="#FF686868" Margin="5,0,0,0"></TextBlock>
+                                <TextBlock DockPanel.Dock="Right" x:Name="PhCount" Text="0" Foreground="#FF686868" FontWeight="Bold" ></TextBlock>
+                            </DockPanel>
                             <DataGrid x:Name="PhTable"/>
                         </DockPanel>
                         <TextBlock x:Name="PhTableEmptyMessage" Grid.Row="4" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" Foreground="#FF4D4D4D" Margin="0,10,0,0">Keine Auswahl</TextBlock>

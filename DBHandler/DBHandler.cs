@@ -5,6 +5,7 @@ using System.Data.OleDb;
 using System.Data;
 using System.Data.Common;
 using System.ComponentModel;
+using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 using Exceptions;
 
@@ -12,7 +13,9 @@ public enum StatusCode
 {
     CommandOk = 0,
     CommandFailed = 1,
-    OleDbNotRegistered = 2
+    OleDbNotRegistered = 2,
+    NoDatabaseChanges = 3,
+    SqlError = 4
 }
 
 namespace DBHandler
@@ -22,9 +25,9 @@ namespace DBHandler
 
         // Member variables
         public OleDbConnection DbConn { get; }
-        public OleDbDataAdapter DbAdapterPh { get; }
-        public OleDbDataAdapter DbAdapterPl { get; }
-        public OleDbDataAdapter DbAdapterPp { get; }
+        public OleDbDataAdapter DbAdapterPh { get; set; }
+        public OleDbDataAdapter DbAdapterPl { get; set; }
+        public OleDbDataAdapter DbAdapterPp { get; set; }
         public DataSet DbData { get; set; }
 
         // Constructor
@@ -38,17 +41,118 @@ namespace DBHandler
             string connectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileLocation;
             DbConn = new OleDbConnection(connectionString);
 
-            // Create OleDbAdapters
-            DbAdapterPh = CreateDataAdapter("PH", DbConn);
-            DbAdapterPl = CreateDataAdapter("PL", DbConn);
-            DbAdapterPp = CreateDataAdapter("PP", DbConn);
-
         }
 
         // Destructor
         ~DbHandler()
         {
             Dispose(false);
+        }
+
+        // Fill in data from .accdb file
+        public StatusCode FillInData(HashSet<string> Pad, HashSet<string> PStrecke, HashSet<string> PArt, HashSet<string> PAuftr, bool isAndConnector)
+        {
+
+            // Build query string
+            string queryStringFilterPP = BuildQueryString(Pad, PStrecke, PArt, PAuftr, isAndConnector);
+
+            // Try to access data
+            try
+            {
+                // Create OleDbAdapters
+                DbAdapterPh = CreateDataAdapter("PH", DbConn, "SELECT * FROM PH");
+                DbAdapterPl = CreateDataAdapter("PL", DbConn, "SELECT * FROM PL");
+                DbAdapterPp = CreateDataAdapter("PP", DbConn, queryStringFilterPP);
+
+            }
+            // Catch exception on runtime missing error, return appropriate error code
+            catch (InvalidOperationException ioe)
+            {
+                return StatusCode.OleDbNotRegistered;
+            }
+
+            return StatusCode.CommandOk;
+
+        }
+
+        // Fill in data from .accdb file with custom query
+        public StatusCode FillInData(string queryString)
+        {
+
+            // Try to access data
+            try
+            {
+                // Create OleDbAdapters
+                DbAdapterPh = CreateDataAdapter("PH", DbConn, "SELECT * FROM PH");
+                DbAdapterPl = CreateDataAdapter("PL", DbConn, "SELECT * FROM PL");
+                DbAdapterPp = CreateDataAdapter("PP", DbConn, queryString);
+
+            }
+            // Catch exception on runtime missing error, return appropriate error code
+            catch (InvalidOperationException ioe)
+            {
+                return StatusCode.OleDbNotRegistered;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode.SqlError;
+            }
+
+            return StatusCode.CommandOk;
+
+        }
+
+        // Builds query string for pp table based on GUI input
+        public string BuildQueryString(HashSet<string> PAD, HashSet<string> PStrecke, HashSet<string> PArt, HashSet<string> PAuftr, bool isAndConnector)
+        {
+
+            var queryString = "SELECT DISTINCT * FROM PP";
+            var queryConnector = isAndConnector ? "AND" : "OR";
+
+            // Append where
+            if (PAD.Count != 0 || PStrecke.Count != 0 || PArt.Count != 0 || PAuftr.Count != 0)
+            {
+                queryString += " WHERE";
+            }
+
+            // Build filter
+            BuildFilter(PAD, "PAD", ref queryString, queryConnector);
+            BuildFilter(PStrecke, "PStrecke",  ref queryString, queryConnector);
+            BuildFilter(PArt, "PArt", ref queryString, queryConnector);
+            BuildFilter(PAuftr, "PAuftr", ref queryString, queryConnector);
+
+            // Return built string
+            Console.WriteLine($"Query string: {queryString}");
+            return queryString;
+        }
+
+        // Builds filter queries
+        public void BuildFilter(HashSet<string> filterSet, string filterVariable, ref string queryString, string queryConnector)
+        {
+
+            // Check if there were filters built before this one
+            if (filterSet.Count != 0)
+            {
+                var querySubString = queryString.Substring(queryString.Length - 2);
+                if (querySubString == ") ")
+                {
+                    queryString += queryConnector;
+                }
+                queryString += " (";
+            }
+            
+
+            // Prepare connector
+            var innerQueryConnector = "";
+
+            // Build filter
+            foreach (string filter in filterSet)
+            {
+                queryString += $"{innerQueryConnector} {filterVariable} = '{filter}' ";
+                innerQueryConnector = "OR";
+            }
+
+            if (filterSet.Count != 0) queryString += ") ";
         }
 
         // Update databases (e.g. to be used on "save changed" click)
@@ -66,37 +170,29 @@ namespace DBHandler
             Console.WriteLine("Database Update: " + rowsChangedPp + " rows affected in Table PP");
 
             // Return status code
-            return (rowsChangedPh > 0 || rowsChangedPl > 0 || rowsChangedPp > 0) ? StatusCode.CommandOk : StatusCode.CommandFailed;
+            return (rowsChangedPh > 0 || rowsChangedPl > 0 || rowsChangedPp > 0) ? StatusCode.CommandOk : StatusCode.NoDatabaseChanges;
 
         }
 
         // Source: https://docs.microsoft.com/en-us/dotnet/api/system.data.oledb.oledbdataadapter?view=dotnet-plat-ext-3.1
         // Initializes DataAdapter
-        public OleDbDataAdapter CreateDataAdapter(string tableName, OleDbConnection connection)
+        public OleDbDataAdapter CreateDataAdapter(string tableName, OleDbConnection connection, string selectCommand)
         {
 
-            // Create OleDbAdapter
-            string selectCommand = "SELECT * FROM " + tableName;
+            // Create adapter
             OleDbDataAdapter adapter = new OleDbDataAdapter(selectCommand, connection);
 
             // Create command builder (automatically generates single-table sql commands)
             OleDbCommandBuilder commandBuilder = new OleDbCommandBuilder(adapter)
             {
-                QuotePrefix = "[", QuoteSuffix = "]"
+                QuotePrefix = "[",
+                QuoteSuffix = "]"
             };
 
             // Acquire built commands
             if (connection.State != ConnectionState.Open)
             {
-                try
-                {
-                    connection.Open();
-                }
-                catch (InvalidOperationException ioe)
-                {
-                    throw new OleDbProviderMissingException("Access Runtime is missing from your computer. Please download it from here: https://www.microsoft.com/en-us/download/confirmation.aspx?id=13255");
-                }
-                
+                connection.Open();
             }
 
             adapter.UpdateCommand = commandBuilder.GetUpdateCommand();
@@ -108,6 +204,8 @@ namespace DBHandler
 
             // Retrieve DataTable
             DataTable dataTable = DbData.Tables[tableName];
+            int dataTableRows = dataTable.Rows.Count;
+            Console.WriteLine($"{tableName} Table row count: {dataTableRows}");
 
             // Add PrimaryKey information
             DataColumn[] keyColumns = new DataColumn[3];
@@ -154,7 +252,7 @@ namespace DBHandler
             DataRowCollection dataRows = dataTable.Rows;
 
             // Construct key
-            object[] keys = new object[2]{ pad, hSysOrLSys };
+            object[] keys = new object[2] { pad, hSysOrLSys };
 
             // Find DataRow by pad
             DataRow dataRow = dataRows.Find(keys);
@@ -180,7 +278,6 @@ namespace DBHandler
             return selectedRows;
 
         }
-
 
 
         // ************ DISPOSE

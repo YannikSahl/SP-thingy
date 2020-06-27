@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using DBHandler;
@@ -18,8 +19,21 @@ namespace DBHandlerTest
             //AddRow(dbHandler);
 
             // Filter by id
-            FilterTable(dbHandler);
+            //FilterTable(dbHandler);
 
+            // Fill in data
+            FillInData(dbHandler);
+
+        }
+
+        public static void FillInData(DbHandler dbHandler)
+        {
+            HashSet<string> padFilter = new HashSet<string>() {};
+            HashSet<string> pstreckeFilter = new HashSet<string>() { "ABC" };
+            HashSet<string> pArtFilter = new HashSet<string>() { "PS1", "PS2" };
+            HashSet<string> pAuftrFilter = new HashSet<string>() {};
+
+            dbHandler.FillInData(padFilter, pstreckeFilter, pArtFilter, pAuftrFilter, false);
         }
 
         public static void FilterTable(DbHandler dbHandler)

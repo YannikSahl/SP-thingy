@@ -60,7 +60,7 @@ namespace GUI
         private bool m_isEditable = false;
 
         private Settings _settingsWindow;
-        private Abfragen _abfrageWindow;
+        public Abfragen _abfrageWindow;
 
         #endregion
 
@@ -80,7 +80,11 @@ namespace GUI
             {
                 SetEditable(false);
             }
-            LoadTables();
+            //LoadTables();
+            //_abfrageWindow = new Abfragen(this);
+            //_abfrageWindow.Show();
+            //_abfrageWindow.Activate();
+            //_abfrageWindow.Focus();
 
             CollapseExpander();
             AddFilePreview("..\\..\\..\\..\\README.md");
@@ -114,6 +118,8 @@ namespace GUI
             {
                 MessageBox.Show(E.ToString(), $"Interner Fehler", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             }
+
+            PpCount.Text = table.DefaultView.Count.ToString();
             SetPlOrPhTableByPad(m_plTableName, null);
             SetPlOrPhTableByPad(m_phTableName, null);
         }
@@ -121,21 +127,28 @@ namespace GUI
         /// <summary>
         /// Sets member database variable
         /// </summary>
-        private void SetDatabase()
+        public void SetDatabase(DBHandler.DbHandler dbh)
         {
+            SetPlOrPhTableByPad(m_plTableName, null);
+            SetPlOrPhTableByPad(m_phTableName, null);
             // establish connection
-            m_databaseConnection = new DBHandler.DbHandler("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            m_databaseConnection = dbh;
         }
 
         /// <summary>
         /// Sets PP main table to data view
         /// </summary>
-        private void LoadTables()
+        public void LoadTables()
         {
-            SetDatabase();
+            //SetDatabase(new DBHandler.DbHandler("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb"));
 
             DataTable pp = m_databaseConnection.DbData.Tables[m_ppTableName];
             PpTable.DataContext = pp;
+            if (pp.Rows.Count == 0)
+                PpTableEmptyMessage.Visibility = Visibility.Visible;
+            else
+                PpTableEmptyMessage.Visibility = Visibility.Hidden;
+            PpCount.Text = pp.Rows.Count.ToString();
             DataTable ph = m_databaseConnection.DbData.Tables[m_phTableName];
             DataTable pl = m_databaseConnection.DbData.Tables[m_plTableName];
 
@@ -159,15 +172,18 @@ namespace GUI
         {
             DataGrid dg;
             TextBlock emptyMessageBlock;
+            TextBlock counter;
             if (tableName == m_plTableName)
             {
                 emptyMessageBlock = PlTableEmptyMessage;
                 dg = PlTable;
+                counter = PlCount;
             }
             else if (tableName == m_phTableName)
             {
                 emptyMessageBlock = PhTableEmptyMessage;
                 dg = PhTable;
+                counter = PhCount;
             }
             else
             {
@@ -179,12 +195,14 @@ namespace GUI
             if (pad == null)
             {
                 emptyMessageBlock.Visibility = Visibility.Visible;
+                counter.Text = "0";
                 return;
             }
             var rows = m_databaseConnection.RetrieveRowByPad(tableName, pad);
             if (rows.Length == 0)
             {
                 emptyMessageBlock.Visibility = Visibility.Visible;
+                counter.Text = "0";
                 return;
             }
             emptyMessageBlock.Visibility = Visibility.Hidden;
@@ -198,6 +216,7 @@ namespace GUI
             }
             dg.DataContext = dt;
             dg.ItemsSource = dt.DefaultView;
+            counter.Text = rows.Length.ToString();
         }
 
         private void AddFilePreview(string path)
@@ -362,7 +381,7 @@ namespace GUI
                 return;
             }
 
-            _abfrageWindow = new Abfragen();
+            _abfrageWindow = new Abfragen(this);
             _abfrageWindow.Show();
         }
 
