@@ -43,7 +43,10 @@ namespace GUI
             string errorMessage = SPHandler.Handler.TestConnection(out hasConnection);
 
             if (hasConnection)
+            {
                 RedirectToMainWindow(MainWindow.ConnectionModus.Online);
+                Properties.Settings1.Default.Save();
+            }
             else
             {
                 ErrorMessageContainer.Visibility = Visibility.Visible;

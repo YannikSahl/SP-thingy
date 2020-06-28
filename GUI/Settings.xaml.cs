@@ -20,10 +20,13 @@ namespace GUI
     /// </summary>
     public partial class Settings : Window
     {
+        private SolidColorBrush _settingWrongColor = new SolidColorBrush(Colors.Red);
+        private SolidColorBrush _settingRightColor = new SolidColorBrush(Colors.ForestGreen);
         public Settings()
         {
             InitializeComponent();
-            DbSave.Text = Path.GetFullPath("..\\..\\..\\..\\DBHandler");
+            DbLocalSave.Text = Path.GetFullPath("..\\..\\..\\..\\DBHandler");
+            SkizzeLocalSave.Text = Path.GetFullPath("..\\..\\..\\..\\DBHandler");
         }
 
         public void saveAuth()
@@ -40,34 +43,34 @@ namespace GUI
             string errorMessage = SPHandler.Handler.TestConnection(out hasConnection);
 
             if (hasConnection)
-                mSender.Background = new SolidColorBrush(Color.FromRgb(20, 200, 20));
+                mSender.Background = _settingRightColor;
             else
-                mSender.Background = new SolidColorBrush(Color.FromRgb(200,20,20));
+                mSender.Background = _settingWrongColor;
         }
 
-        private void TexBoxLinkEnter(object sender, RoutedEventArgs e)
-        {
-            var children = ((DockPanel) ((Button) sender).Parent).Children;
-            foreach (var child in children)
-            {
-                var pSender = child as TextBox;
-                if (pSender == null)
-                    continue;
+        //private void TexBoxLinkEnter(object sender, RoutedEventArgs e)
+        //{
+        //    var children = ((DockPanel) ((Button) sender).Parent).Children;
+        //    foreach (var child in children)
+        //    {
+        //        var pSender = child as TextBox;
+        //        if (pSender == null)
+        //            continue;
 
-                var dir = Path.GetFullPath(pSender.Text);
-                if (Directory.Exists(dir))
-                {
-                    pSender.Foreground = new SolidColorBrush(Colors.ForestGreen);
-                    return;
-                }
-                else
-                {
-                    pSender.Foreground = new SolidColorBrush(Colors.Red);
-                    MessageBox.Show("Kein gültiger Pfad", "Bitte gib einen gültigen Pfad ein", MessageBoxButton.OK);
-                    return;
-                }
-            }
-        }
+        //        var dir = Path.GetFullPath(pSender.Text);
+        //        if (Directory.Exists(dir))
+        //        {
+        //            pSender.Foreground = new SolidColorBrush(Colors.ForestGreen);
+        //            return;
+        //        }
+        //        else
+        //        {
+        //            pSender.Foreground = new SolidColorBrush(Colors.Red);
+        //            MessageBox.Show("Kein gültiger Pfad", "Bitte gib einen gültigen Pfad ein", MessageBoxButton.OK);
+        //            return;
+        //        }
+        //    }
+        //}
 
         private void SelectDirectory(object sender, RoutedEventArgs e)
         {
@@ -77,6 +80,56 @@ namespace GUI
             //{
             //    System.Windows.Forms.DialogResult result = dialog.ShowDialog();
             //}
+        }
+
+        private bool TextBoxPathIsValid(TextBox tb)
+        {
+            string dir;
+            try
+            {
+                dir = Path.GetFullPath(tb.Text);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+
+            if (Directory.Exists(dir))
+            {
+                tb.Foreground = _settingRightColor;
+                return true;
+            }
+            else
+            {
+                tb.Foreground = _settingWrongColor;
+                //MessageBox.Show("Kein gültiger Pfad", "Bitte gib einen gültigen Pfad ein", MessageBoxButton.OK);
+                return false;
+            }
+        }
+
+        private void TextBoxTextChangedLinkPath(object sender, TextChangedEventArgs e)
+        {
+            var pSender = sender as TextBox;
+            if (pSender == null)
+                return;
+
+            TextBoxPathIsValid(pSender);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var checkElementsList = new List<TextBox>{SpSave, SkizzeSpSave, DbLocalSave, DbSpSave, SkizzeLocalSave};
+            foreach (var textBox in checkElementsList)
+            {
+                if (!TextBoxPathIsValid(textBox))
+                {
+                    MessageBox.Show("Bitte geben Sie überall gültige Pfade ein um fortzufahren", "Kein gültiger Pfad", MessageBoxButton.OK, MessageBoxImage.Error);
+                    e.Cancel = true;
+                    return;
+                }
+            }
+            Properties.Settings1.Default.Save();
         }
     }
 }
