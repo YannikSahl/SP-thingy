@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Security;
 using Microsoft.SharePoint.Client;
+using SPHandlerTest;
 
 namespace SharePointTryOut
 {
@@ -20,23 +21,33 @@ namespace SharePointTryOut
 
         private static void Main(string[] args)
         {
-            username = "";
-            password = "";
+            username = "s0568476@htw-berlin.de";
+            password = "G1ftnude/";
             SecureString knox = ToSecureString(password);
+            Uri site = new Uri(rootSite+sourceSite);
+
+            // Note: The PnP Sites Core AuthenticationManager class also supports this
+            using (AuthentificationManagerCSOM Auth = new AuthentificationManagerCSOM())
+            using (var context = Auth.GetContext(site, username, knox))
+            {
+                context.Load(context.Web, p => p.Title);
+                context.ExecuteQuery();
+                Console.WriteLine($"Title: {context.Web.Title}");
+            }
 
             //using (var client = new WebClient())
             //{
-            //    SharePointOnlineCredentials Creds = new SharePointOnlineCredentials(username, password);
-                
+
+
             //    client.UseDefaultCredentials = true;
             //    client.Headers.Add("X-FORMS_BASED_AUTH_ACCEPTED", "f");
             //    client.Headers.Add("User-Agent: Other");
             //    client.Credentials = Creds;
             //    Console.WriteLine(rootSite + sourceSite + folderSite + fileSite);
-            //    client.DownloadFile(rootSite+sourceSite+folderSite+fileSite, destinationPath);
+            //    client.DownloadFile(rootSite + sourceSite + folderSite + fileSite, destinationPath);
 
             //}
-            //Console.ReadLine();
+            Console.ReadLine();
             GetIntfromPAD("6020CZ 2303");
         }
 
@@ -79,5 +90,6 @@ namespace SharePointTryOut
 
             return (int)forPath;
         }
+       
     }
 }
