@@ -30,10 +30,10 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0">Name</TextBlock>
                 <DockPanel Margin="2" LastChildFill="True" Grid.Row="0" Grid.Column="1">
-                    <TextBox x:Name="sp_name" Height="20"></TextBox>
+                    <TextBox x:Name="SpUserName" Height="20"></TextBox>
                 </DockPanel>
                 <DockPanel Margin="2" LastChildFill="True" Grid.Row="1" Grid.Column="1">
-                    <PasswordBox x:Name="sp_pw" Height="20"></PasswordBox>
+                    <PasswordBox x:Name="SpUserPw" Height="20"></PasswordBox>
                 </DockPanel>
                 <TextBlock Grid.Row="1" Grid.Column="0">Password</TextBlock>
                 <DockPanel Grid.Row="2" Grid.ColumnSpan="2" LastChildFill="True">

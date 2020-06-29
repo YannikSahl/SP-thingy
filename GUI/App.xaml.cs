@@ -16,7 +16,7 @@ namespace GUI
     {
         private void App_OnExit(object sender, ExitEventArgs e)
         {
-            Settings1.Default.Save();
+            //Settings1.Default.Save();
         }
     }
 }

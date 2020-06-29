@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -23,7 +24,9 @@ namespace GUI
     /// </summary>
     public partial class Abfragen : Window
     {
-        private enum abfrageTypen
+        #region statics
+
+        private enum QueryTypes
         {
             [Description("SQL")]
             Sql = 1,
@@ -31,7 +34,21 @@ namespace GUI
             Parameter = 2
         }
 
+        private enum SqlOperators
+        {
+            Or,
+            And
+        }
+
+        #endregion
+
+        #region members
+
         private MainWindow _mainWindow;
+
+        #endregion
+
+        #region constructors
 
         public Abfragen(MainWindow mw)
         {
@@ -40,6 +57,13 @@ namespace GUI
             _mainWindow = mw;
         }
 
+        #endregion
+
+        #region methods
+
+        /// <summary>
+        /// set up columns for saved queries table
+        /// </summary>
         private void InitSavedQueriesTable()
         {
             DataTable dt = new DataTable("SavedQueries");
@@ -54,12 +78,19 @@ namespace GUI
             dt.Columns.Add(new DataColumn("bis_Blatt", typeof(string)));
             dt.Columns.Add(new DataColumn("Operator", typeof(string)));
             dt.Columns.Add(new DataColumn("SQL", typeof(string)));
-            dt.Columns.Add(new DataColumn("AbfrageTyp", typeof(abfrageTypen)));
+            dt.Columns.Add(new DataColumn("AbfrageTyp", typeof(string)));
+            dt.Columns.Add(new DataColumn("erstellt", typeof(DateTime)));
             dt.Columns.Add(new DataColumn("Hash", typeof(string)));
             SavedQueriesGrid.DataContext = dt;
+            SavedQueriesGrid.ItemsSource = dt.DefaultView;
         }
 
-        // https://docs.microsoft.com/de-de/dotnet/api/system.security.cryptography.hashalgorithm.computehash?view=netcore-3.1
+        /// <summary>
+        /// generates hash from hashing algorithm and message
+        /// </summary>
+        /// <param name="hashAlgorithm"></param>
+        /// <param name="input"></param>
+        /// <returns>string</returns>
         private static string GetHash(HashAlgorithm hashAlgorithm, string input)
         {
 
@@ -81,11 +112,18 @@ namespace GUI
             return sBuilder.ToString();
         }
 
+        /// <summary>
+        /// generates a hash from a whole dataRow
+        /// </summary>
+        /// <param name="dr"></param>
+        /// <returns>string</returns>
         private string HashFromRow(DataRow dr)
         {
             StringBuilder s = new StringBuilder();
             foreach (var item in dr.ItemArray)
             {
+                if (item.Equals(dr["Hash"]))
+                    continue;
                 s.Append(item.ToString());
             }
 
@@ -94,49 +132,67 @@ namespace GUI
             return hash;
         }
 
+        /// <summary>
+        /// checks if a saved query exists by comparing hashes
+        /// </summary>
+        /// <param name="hash"></param>
+        /// <param name="equalRowReference"></param>
+        /// <returns></returns>
+        private bool SavedQueryExists(string hash, ref DataRow equalRowReference)
+        {
+            DataTable dt = (DataTable)SavedQueriesGrid.DataContext;
+            foreach (DataRow row in dt.Rows)
+            {
+                if (row["Hash"].Equals(hash))
+                {
+                    equalRowReference = row;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // TODO: Saving
+        /// <summary>
+        /// adds current query "session" to table
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddSavedQueryButton_Click(object sender, RoutedEventArgs e)
         {
-            //string hashMessage = $"{StreckeInput.Text}{AuftragInput.Text}{PunktartInput.Text}{}";
-            //if ("".Equals(hashMessage))
-            //    return;
-            //string hash = GetHash(MD5.Create(), hashMessage);
             DataTable dt = (DataTable) SavedQueriesGrid.DataContext;
             DataRow dr = dt.NewRow();
             // TODO: Das alles muss in methoiden verpackt werden
-            dr[0] = StreckeInput.Text;
-            dr[1] = AuftragInput.Text;
-            dr[2] = PunktartInput.Text;
+            dr["Strecke"] = StreckeInput.Text;
+            dr["Auftrag"] = AuftragInput.Text;
+            dr["Punktart"] = PunktartInput.Text;
             // von km
-            dr[3] = VonKm.Text;
-            dr[4] = BisKm.Text;
+            dr["von_km"] = VonKm.Text;
+            dr["bis_km"] = BisKm.Text;
             // Punkt
-            dr[5] = VonPunkt.Text;
-            dr[6] = BisPunkt.Text;
+            dr["von_Punkt"] = VonPunkt.Text;
+            dr["bis_Punkt"] = BisPunkt.Text;
             // Blatt
-            dr[7] = VonBlatt.Text;
-            dr[8] = BisBlatt.Text;
+            dr["von_Blatt"] = VonBlatt.Text;
+            dr["bis_Blatt"] = BisBlatt.Text;
             // Operator
             var isAndOperator = AndOp.IsChecked.HasValue ? AndOp.IsChecked.Value : false;
-            dr[9] = isAndOperator ? "AND" : "OR";
+            //dr["Operator"] = isAndOperator ? SqlOperators.And : SqlOperators.Or;
+            dr["Operator"] = isAndOperator ? "and" : "or";
             // SQL Text
-            dr[10] = RawQuery.Text;
+            dr["SQL"] = RawQuery.Text;
             // Query Typ
             var queryByText = QueryInA.IsChecked.HasValue ? QueryInA.IsChecked.Value : false;
-            dr.ItemArray[11] = queryByText ? abfrageTypen.Parameter : abfrageTypen.Sql;
+            //dr["AbfrageTyp"] = queryByText ? QueryTypes.Parameter : QueryTypes.Sql;
+            dr["AbfrageTyp"] = queryByText ? "param" : "code";
             // Hash
-            string hash = HashFromRow(dr);
-            dr[12] = hash;
+            var hash = HashFromRow(dr);
+            dr["Hash"] = hash;
+            dr["erstellt"] = DateTime.UtcNow;
 
-            var exists = false;
-            // check if row exists
-            foreach (DataRow row in dt.Rows)
-            {
-                if (row.ItemArray[12].Equals(hash))
-                {
-                    exists = true;
-                    break;
-                }
-            }
+            DataRow sameRow = null;
+            var exists = SavedQueryExists(hash, ref sameRow);
 
             if (!exists)
             {
@@ -146,6 +202,11 @@ namespace GUI
             }
         }
 
+        /// <summary>
+        /// splits string by separator chars and returns list as hashlist
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         private HashSet<string> TextToHashSet(string text)
         {
             char[] separators = {',', ';'};
@@ -163,6 +224,11 @@ namespace GUI
             return attributeSet;
         }
 
+        /// <summary>
+        /// starts query and redirects to mainwindow if query successful
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AbfrageStartButton_Click(object sender, RoutedEventArgs e)
         {
             DBHandler.DbHandler dbh = new DBHandler.DbHandler("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
@@ -195,11 +261,15 @@ namespace GUI
             }
             else
             {
-                // TODO: Oleddbexcpetion im DBHandler wenn falsche Query!
                 MessageBox.Show(Enum.GetName(typeof(StatusCode), queryExecuted), "Query Fehlgeschlagen");
             }
         }
 
+        /// <summary>
+        /// removes current selected saved queries (as rows) and removes them from table
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DeleteSavedQueryButton_Click(object sender, RoutedEventArgs e)
         {
             /// geht alles niucht :(
@@ -210,30 +280,33 @@ namespace GUI
             //}
         }
 
+        /// <summary>
+        /// loads currently selected row as query from table
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LoadSavedQueryButton_Click(object sender, RoutedEventArgs e)
         {
-            //DataTable dt = (DataTable)SavedQueriesGrid.DataContext;
             var selected = SavedQueriesGrid.SelectedItem as DataRowView;
             if (selected == null)
                 return;
             DataRow dr = selected.Row;
-            // TODO: string conversion error wenn cell = null
-            // TODO: nach jedem Cell edit muss der hash neu berechnet werden
-            StreckeInput.Text = (string)dr[0];
-            AuftragInput.Text = (string)dr[1];
-            PunktartInput.Text = (string)dr[2];
+
+            StreckeInput.Text = dr["Strecke"] as string ?? "";
+            AuftragInput.Text = dr["Auftrag"] as string ?? "";
+            PunktartInput.Text =dr["Punktart"] as string ?? "";
             // von km
-            VonKm.Text = (string)dr[3];
-            BisKm.Text = (string)dr[4];
+            VonKm.Text = dr["von_km"] as string ?? "";
+            BisKm.Text = dr["bis_km"] as string ?? "";
             // Punkt
-            VonPunkt.Text = (string)dr[5];
-            BisPunkt.Text = (string)dr[6];
+            VonPunkt.Text = dr["von_Punkt"] as string ?? "";
+            BisPunkt.Text = dr["bis_Punkt"] as string ?? "";
             // Blatt
-            VonBlatt.Text = (string)dr[7];
-            BisBlatt.Text = (string)dr[8];
+            VonBlatt.Text = dr["von_Blatt"] as string ?? "";
+            BisBlatt.Text = dr["bis_Blatt"] as string ?? "";
             // Operator
-            var isAndOperator = AndOp.IsChecked.HasValue ? AndOp.IsChecked.Value : false;
-            if ("or".Equals(dr.ItemArray[9].ToString().ToLower()))
+            var op = dr["Operator"] as string ?? "";
+            if ("or".Equals(op.ToLower()))
             {
                 OrOp.IsChecked = true;
             }
@@ -242,9 +315,10 @@ namespace GUI
                 AndOp.IsChecked = true;
             }
             // SQL Text
-            RawQuery.Text = (string)dr[10];
+            RawQuery.Text = dr["SQL"] as string ?? "";
             // Query Typ
-            if (abfrageTypen.Parameter.Equals((abfrageTypen)dr[11]))
+            //if (QueryTypes.Parameter.Equals((QueryTypes)dr["AbfrageTyp"]))
+            if ("param".Equals(dr["AbfrageTyp"] as string))
             {
                 QueryInA.IsChecked = true;
             }
@@ -254,6 +328,11 @@ namespace GUI
             }
         }
 
+        /// <summary>
+        /// updates on cell editing ended (calculates hash again)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SavedQueriesGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             var pSender = sender as DataGrid;
@@ -262,7 +341,17 @@ namespace GUI
             var dr = pSender.SelectedItem as DataRowView;
             if (dr == null)
                 return;
-            dr.Row[12] = HashFromRow(dr.Row);
+            var hash = HashFromRow(dr.Row);
+            DataRow sameRowReference = null;
+            var exists = SavedQueryExists(hash, ref sameRowReference);
+            // clear duplicates by removing first row with same hash if exists
+            if (sameRowReference != null)
+                ((DataTable)pSender.DataContext).Rows.Remove(sameRowReference);
+
+            // set hash AFTER SavedQueryExists so that the current row wont be detected
+            dr.Row["Hash"] = hash;
         }
+
+        #endregion
     }
 }
