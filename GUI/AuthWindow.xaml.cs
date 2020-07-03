@@ -73,8 +73,12 @@ namespace GUI
             else
             {
                 // display error message
-                ErrorMessageContainer.Visibility = Visibility.Visible;
-                ErrorMessage.Text = errorMessage;
+
+                MessageBox.Show(errorMessage, "Fehler bei der Anmeldung", MessageBoxButton.OK,
+                    MessageBoxImage.Information, MessageBoxResult.OK);
+
+                ////ErrorMessageContainer.Visibility = Visibility.Visible;
+                ////ErrorMessage.Text = errorMessage;
             }
                 
         }

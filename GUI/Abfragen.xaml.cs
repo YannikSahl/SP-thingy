@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.Eventing.Reader;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -25,20 +26,6 @@ namespace GUI
     public partial class Abfragen : Window
     {
         #region statics
-
-        private enum QueryTypes
-        {
-            [Description("SQL")]
-            Sql = 1,
-            [Description("Text Parameter")]
-            Parameter = 2
-        }
-
-        private enum SqlOperators
-        {
-            Or,
-            And
-        }
 
         #endregion
 
@@ -122,7 +109,7 @@ namespace GUI
             StringBuilder s = new StringBuilder();
             foreach (var item in dr.ItemArray)
             {
-                if (item.Equals(dr["Hash"]))
+                if (item.Equals(dr["Hash"]) || item.Equals(dr["erstellt"]))
                     continue;
                 s.Append(item.ToString());
             }
@@ -138,19 +125,20 @@ namespace GUI
         /// <param name="hash"></param>
         /// <param name="equalRowReference"></param>
         /// <returns></returns>
-        private bool SavedQueryExists(string hash, ref DataRow equalRowReference)
+        private DataRow SavedQueryExists(string hash)
         {
+            if (string.IsNullOrWhiteSpace(hash))
+                return null;
             DataTable dt = (DataTable)SavedQueriesGrid.DataContext;
             foreach (DataRow row in dt.Rows)
             {
                 if (row["Hash"].Equals(hash))
                 {
-                    equalRowReference = row;
-                    return true;
+                    return row;
                 }
             }
 
-            return false;
+            return null;
         }
 
         // TODO: Saving
@@ -191,10 +179,10 @@ namespace GUI
             dr["Hash"] = hash;
             dr["erstellt"] = DateTime.UtcNow;
 
-            DataRow sameRow = null;
-            var exists = SavedQueryExists(hash, ref sameRow);
+            DataRow sameRow = SavedQueryExists(hash);
 
-            if (!exists)
+            // if no same row, meaning that no such row exists
+            if (sameRow == null)
             {
                 dt.Rows.Add(dr);
                 SavedQueriesGrid.DataContext = dt;
@@ -209,10 +197,13 @@ namespace GUI
         /// <returns></returns>
         private HashSet<string> TextToHashSet(string text)
         {
-            char[] separators = {',', ';'};
-            var arr = text.Split(separators);
-
             var attributeSet = new HashSet<string>();
+
+            if (string.IsNullOrWhiteSpace(text))
+                return attributeSet;
+
+            char[] separators = { ',', ';' };
+            var arr = text.Split(separators);
             foreach (var att in arr)
             {
                 if (!"".Equals(att))
@@ -261,23 +252,12 @@ namespace GUI
             }
             else
             {
-                MessageBox.Show(Enum.GetName(typeof(StatusCode), queryExecuted), "Query Fehlgeschlagen");
+                MessageBox.Show(
+                    $"Die eingegebene SQL Abfrage konnte nicht ausgeführt werden ({Enum.GetName(typeof(StatusCode), queryExecuted)})", 
+                    "Abfrage Fehlgeschlagen", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Error);
             }
-        }
-
-        /// <summary>
-        /// removes current selected saved queries (as rows) and removes them from table
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void DeleteSavedQueryButton_Click(object sender, RoutedEventArgs e)
-        {
-            /// geht alles niucht :(
-            //var selected = SavedQueriesGrid.SelectedItems;
-            //foreach (DataRowView row in selected)
-            //{
-            //    return;
-            //}
         }
 
         /// <summary>
@@ -329,27 +309,28 @@ namespace GUI
         }
 
         /// <summary>
-        /// updates on cell editing ended (calculates hash again)
+        /// Lost Cell focus Event (calculates hash again)
+        /// has to be lost focus so that changes to cell can be committed before calculating hash again
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void SavedQueriesGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        private void OnCellLostFocus(object sender, RoutedEventArgs e)
         {
-            var pSender = sender as DataGrid;
-            if (pSender == null)
+            var cell = sender as DataGridCell;
+            if (cell == null)
                 return;
-            var dr = pSender.SelectedItem as DataRowView;
+            if (!cell.IsEditing)
+                SavedQueriesGrid.CommitEdit();
+            var dr = SavedQueriesGrid.SelectedItem as DataRowView;
             if (dr == null)
                 return;
             var hash = HashFromRow(dr.Row);
-            DataRow sameRowReference = null;
-            var exists = SavedQueryExists(hash, ref sameRowReference);
-            // clear duplicates by removing first row with same hash if exists
-            if (sameRowReference != null)
-                ((DataTable)pSender.DataContext).Rows.Remove(sameRowReference);
-
-            // set hash AFTER SavedQueryExists so that the current row wont be detected
             dr.Row["Hash"] = hash;
+            DataRow sameRowReference = SavedQueryExists(hash);
+            // clear duplicates by removing first row with same hash if exists
+            if (sameRowReference != null && sameRowReference != dr.Row)
+                ((DataTable)SavedQueriesGrid.DataContext).Rows.Remove(sameRowReference);
+
         }
 
         #endregion

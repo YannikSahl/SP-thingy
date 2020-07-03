@@ -7,7 +7,8 @@
         xmlns:settings="clr-namespace:GUI.Properties"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="Anmeldung" Height="380" Width="400" Background="White" Foreground="Black">
+        WindowStartupLocation="CenterScreen"
+        Title="Anmeldung" Height="320" Width="400" Background="White" Foreground="Black">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

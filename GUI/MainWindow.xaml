@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
-        Title="Hauptformular" Height="450" Width="800" Closing="Window_Closing">
+        Title="Hauptformular" Height="450" Width="800" 
+        Closing="Window_Closing"
+        WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top" Background="#FF444444" Foreground="White" >
             <MenuItem Header="_Datei" Background="#FF444444">
@@ -27,11 +29,13 @@
             </MenuItem>
         </Menu>
         <DockPanel DockPanel.Dock="Bottom" Background="#FF444444" Height="16" LastChildFill="True">
-            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" Foreground="LightGray" Margin="2,0,2,0" FontSize="10">Verbindung:</TextBlock>
-            <TextBlock VerticalAlignment="Center" x:Name="ConnectionStatus" DockPanel.Dock="Left" Foreground="#FFFF9429" Margin="2,0,2,0" FontSize="10"></TextBlock>
+            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" Foreground="LightGray" Margin="2,0,2,0">Verbindung:</TextBlock>
+            <Border CornerRadius="10" BorderThickness="1">
+                <TextBlock VerticalAlignment="Center" x:Name="ConnectionStatus" DockPanel.Dock="Left" Foreground="White" Margin="2,0,2,0" Padding="2,0,2,0" FontWeight="Bold"/>
+            </Border>
 
-            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" Foreground="LightGray" Margin="2,0,2,0" FontSize="10">| Bearbeitung:</TextBlock>
-            <TextBlock VerticalAlignment="Center" x:Name="EditStatus" DockPanel.Dock="Left" Foreground="#FFFF9429" Margin="2,0,2,0" FontSize="10"></TextBlock>
+            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" Foreground="LightGray" Margin="2,0,2,0">| Bearbeitung:</TextBlock>
+            <TextBlock VerticalAlignment="Center" x:Name="EditStatus" DockPanel.Dock="Left" Foreground="#FFFF9429" Margin="2,0,2,0" FontWeight="Bold"/>
         </DockPanel>
         <TextBlock x:Name="ConnectionStatusBar" Height="20" DockPanel.Dock="Bottom" Background="#FF21C947" Visibility="Collapsed" TextAlignment="Center">Verbunden</TextBlock>
         <DockPanel>
@@ -50,7 +54,7 @@
                 <DockPanel Margin="5,0,5,5">
                     <DockPanel DockPanel.Dock="Top" Margin="5,0,5,0">
                         <TextBox x:Name="SearchPpTextfield" Width="200" DockPanel.Dock="Left" VerticalContentAlignment="Center" BorderBrush="{x:Null}" Background="#FFF0F0F0"/>
-                        <Button DockPanel.Dock="Left" Padding="5" BorderBrush="{x:Null}" Click="SearchButton_Click">Suchen</Button>
+                        <Button DockPanel.Dock="Left" Padding="5" BorderBrush="{x:Null}" Click="SearchButton_Click">PAD Suchen</Button>
                         <Button DockPanel.Dock="Left" Padding="8,4,8,4" BorderBrush="{x:Null}" Background="#FFE8E8E8" FontWeight="Bold" Click="ClearPpSearchButton_Click">
                             <Button.Foreground>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -76,17 +80,17 @@
                         </Grid.RowDefinitions>
                         <DockPanel Grid.Row="0" Margin="0,0,0,5">
                             <DockPanel DockPanel.Dock="Top" LastChildFill="False">
-                                <TextBlock DockPanel.Dock="Left" Text="PP Tabelle" FontWeight="Bold" Foreground="#FF686868" FontStyle="Italic"></TextBlock>
+                                <TextBlock DockPanel.Dock="Left" Text="PP Tabelle" FontWeight="Bold" Foreground="#FF686868" FontStyle="Normal"></TextBlock>
                                 <TextBlock DockPanel.Dock="Right" Text="Einträge" Foreground="#FF686868" Margin="5,0,0,0"></TextBlock>
                                 <TextBlock x:Name="PpCount" DockPanel.Dock="Right" Text="0" Foreground="#FF686868" FontWeight="Bold" ></TextBlock>
                             </DockPanel>
-                            <DataGrid x:Name="PpTable" ItemsSource="{Binding}" RowEditEnding="PP_TABELLE_RowEditEnding" SelectionChanged="PP_TABELLE_SelectionChanged"></DataGrid>
+                            <DataGrid x:Name="PpTable" ItemsSource="{Binding}" RowEditEnding="PpTable_RowEditEnding" SelectionChanged="PpTable_SelectionChanged"></DataGrid>
                         </DockPanel>
-                        <TextBlock x:Name="PpTableEmptyMessage" Grid.Row="0" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" Foreground="#FFFF1313" Margin="0,10,0,0">Keine Auswahl</TextBlock>
+                        <TextBlock x:Name="PpTableEmptyMessage" Grid.Row="0" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" Foreground="#FFFF5E13" Margin="0,10,0,0">Keine Auswahl</TextBlock>
                         <GridSplitter Grid.Row="1"  Height="5"  HorizontalAlignment="Stretch"/>
                         <DockPanel Grid.Row="2" Margin="0,5,0,5">
                             <DockPanel DockPanel.Dock="Top" LastChildFill="False">
-                                <TextBlock DockPanel.Dock="Left" Text="PL Tabelle" FontWeight="Bold" Foreground="#FF686868" FontStyle="Italic"></TextBlock>
+                                <TextBlock DockPanel.Dock="Left" Text="PL Tabelle" FontWeight="Bold" Foreground="#FF686868" FontStyle="Normal"></TextBlock>
                                 <TextBlock DockPanel.Dock="Right" Text="Einträge" Foreground="#FF686868" Margin="5,0,0,0"></TextBlock>
                                 <TextBlock DockPanel.Dock="Right" x:Name="PlCount" Text="0" Foreground="#FF686868" FontWeight="Bold" ></TextBlock>
                             </DockPanel>
@@ -96,7 +100,7 @@
                         <GridSplitter Grid.Row="3" Height="5" HorizontalAlignment="Stretch" />
                         <DockPanel Grid.Row="4" Margin="0,5,0,0">
                             <DockPanel DockPanel.Dock="Top" LastChildFill="False">
-                                <TextBlock DockPanel.Dock="Left" Text="PH Tabelle" FontWeight="Bold" Foreground="#FF686868" FontStyle="Italic"></TextBlock>
+                                <TextBlock DockPanel.Dock="Left" Text="PH Tabelle" FontWeight="Bold" Foreground="#FF686868" FontStyle="Normal"></TextBlock>
                                 <TextBlock DockPanel.Dock="Right" Text="Einträge" Foreground="#FF686868" Margin="5,0,0,0"></TextBlock>
                                 <TextBlock DockPanel.Dock="Right" x:Name="PhCount" Text="0" Foreground="#FF686868" FontWeight="Bold" ></TextBlock>
                             </DockPanel>

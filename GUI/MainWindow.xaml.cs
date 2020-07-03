@@ -45,6 +45,10 @@ namespace GUI
             LostConnection
         }
 
+        private readonly SolidColorBrush _lostConnectionColor = new SolidColorBrush(Colors.Red);
+        private readonly SolidColorBrush _onlineColor = new SolidColorBrush(Colors.ForestGreen);
+        private readonly SolidColorBrush _offlineColor = new SolidColorBrush(Colors.DarkOrange);
+
         private static readonly string m_ppTableName = "PP";
         private static readonly string m_phTableName = "PH";
         private static readonly string m_plTableName = "PL";
@@ -57,7 +61,8 @@ namespace GUI
         
         //ConnectionStatus
         private DbHandler m_databaseConnection;
-        private bool m_isEditable = false;
+        private bool m_isEditable;
+        private bool m_viewModeOnly;
 
         private Settings _settingsWindow;
         public Abfragen _abfrageWindow;
@@ -70,16 +75,7 @@ namespace GUI
         {
             InitializeComponent();
             SetConnectionStatus(conMod);
-            PopoutConnectionStatusBar();
 
-            if (m_connectionModus == ConnectionModus.Online)
-            {
-                SetEditable(true);
-            }
-            else
-            {
-                SetEditable(false);
-            }
             //LoadTables();
             //_abfrageWindow = new Abfragen(this);
             //_abfrageWindow.Show();
@@ -114,9 +110,9 @@ namespace GUI
             {
                 table.DefaultView.RowFilter = $"{padColumnName} LIKE '%{filter}%'";
             }
-            catch (EvaluateException E)
+            catch (EvaluateException e)
             {
-                MessageBox.Show(E.ToString(), $"Interner Fehler", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                MessageBox.Show(e.ToString(), $"Interner Fehler", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             }
 
             PpCount.Text = table.DefaultView.Count.ToString();
@@ -224,11 +220,10 @@ namespace GUI
             DocumentView.Children.Add(new FileView(path));
         }
 
-        private void SetConnectionStatusBarStyle(string text, Color color)
+        private void SetConnectionStatusBarStyle(string text, SolidColorBrush color)
         {
             ConnectionStatusBar.Text = text;
-            var brush = new SolidColorBrush(color);
-            ConnectionStatusBar.Background = brush;
+            ConnectionStatusBar.Background = color;
             ConnectionStatusBar.Visibility = Visibility.Visible;
             StartTimer(5d);
             m_connectionStatusBarActive = true;
@@ -258,17 +253,17 @@ namespace GUI
             {
                 case ConnectionModus.Online:
                 {
-                    SetConnectionStatusBarStyle("Verbunden!", Colors.ForestGreen);
+                    SetConnectionStatusBarStyle("Verbunden!", _onlineColor);
                     break;
                 }
                 case ConnectionModus.Offline:
                 {
-                    SetConnectionStatusBarStyle("Offline Modus", Colors.DarkOrange);
+                    SetConnectionStatusBarStyle("Offline Modus", _offlineColor);
                     break;
                 }
                 case ConnectionModus.LostConnection:
                 {
-                    SetConnectionStatusBarStyle("Verbindung Fehlgeschlagen!", Colors.Red);
+                    SetConnectionStatusBarStyle("Verbindung Fehlgeschlagen!", _lostConnectionColor);
                     break;
                 }
                 default: break;
@@ -328,11 +323,35 @@ namespace GUI
             EditStatus.Text = editable ? "AN" : "AUS";
         }
 
-        private void SetConnectionStatus(ConnectionModus mode)
+        private void SetConnectionStatusTextInStatusBar()
+        {
+            ConnectionStatus.Text = Enum.GetName(typeof(ConnectionModus), m_connectionModus);
+        }
+
+        public void SetConnectionStatus(ConnectionModus mode)
         {
             this.m_connectionModus = mode;
             // Statusanzeige (unten)
-            ConnectionStatus.Text = Enum.GetName(typeof(ConnectionModus), mode);
+            SetConnectionStatusTextInStatusBar();
+            PopoutConnectionStatusBar();
+            switch (mode)
+            {
+                case ConnectionModus.LostConnection:
+                    m_viewModeOnly = true;
+                    SetEditable(false);
+                    ConnectionStatus.Background = _lostConnectionColor;
+                    break;
+                case ConnectionModus.Offline:
+                    m_viewModeOnly = true;
+                    SetEditable(false);
+                    ConnectionStatus.Background = _offlineColor;
+                    break;
+                case ConnectionModus.Online:
+                    m_viewModeOnly = false;
+                    SetEditable(true);
+                    ConnectionStatus.Background = _onlineColor;
+                    break;
+            }
         }
 
         #endregion
@@ -362,7 +381,7 @@ namespace GUI
                 return;
             }
 
-            _settingsWindow = new Settings();
+            _settingsWindow = new Settings(this);
             _settingsWindow.Show();
         }
 
@@ -390,7 +409,7 @@ namespace GUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void PP_TABELLE_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        private void PpTable_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
         {
             // update after row was edited
             m_databaseConnection.UpdateDatabases();
@@ -401,7 +420,7 @@ namespace GUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void PP_TABELLE_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void PpTable_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // get RowView
             DataRowView dataRowView = null;
@@ -426,6 +445,8 @@ namespace GUI
             SetPlOrPhTableByPad(m_phTableName, pad);
             SetPlOrPhTableByPad(m_plTableName, pad);
         }
+
+        #region expander events
 
         private void Expander_Collapsed(object sender, RoutedEventArgs e)
         {
@@ -454,8 +475,15 @@ namespace GUI
             }
         }
 
+        #endregion
+
         private void EditModeButton_Click(object sender, RoutedEventArgs e)
         {
+            if (m_viewModeOnly)
+            {
+                PopoutConnectionStatusBar();
+                return;
+            }
             SetEditable(!m_isEditable);
         }
 
@@ -469,31 +497,13 @@ namespace GUI
             CloseApplication();
         }
 
+        #region search table events
+
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
             if (SearchPpTextfield.Text == "")
                 return;
             SetPpSearchFilter(SearchPpTextfield.Text);
-            //DataTable pp = _ppOriginal;
-            //DataTable replace = new DataTable("PpSearched");
-            //// Refractoring!
-            //foreach (DataColumn column in pp.Columns)
-            //{
-            //    replace.Columns.Add(new DataColumn(column.ColumnName));
-            //}
-            //_ppOriginal = pp;
-            //foreach (DataRow row in pp.Rows)
-            //{
-            //    var pad = row.ItemArray[0] as string;
-            //    if (pad == null)
-            //        continue;
-
-            //    if (pad.Trim().Contains(SearchPpTextfield.Text.Trim()))
-            //    {
-            //        replace.ImportRow(row);
-            //        PpTable.DataContext = replace;
-            //    }
-            //}
         }
 
         private void ClearPpSearchButton_Click(object sender, RoutedEventArgs e)
@@ -503,6 +513,8 @@ namespace GUI
             SetPpSearchFilter("");
             SearchPpTextfield.Text = "";
         }
+
+        #endregion
 
         #endregion
     }

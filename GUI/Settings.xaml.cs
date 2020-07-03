@@ -22,6 +22,8 @@ namespace GUI
     {
         #region members
 
+        // reference to mainwindow
+        private MainWindow _mainWindow;
         private readonly SolidColorBrush _settingWrongColor = new SolidColorBrush(Colors.Red);
         private readonly SolidColorBrush _settingRightColor = new SolidColorBrush(Colors.ForestGreen);
 
@@ -29,16 +31,42 @@ namespace GUI
 
         #region constructors
 
-        public Settings()
+        public Settings(MainWindow mainWin)
         {
             InitializeComponent();
             DbLocalSave.Text = Path.GetFullPath("..\\..\\..\\..\\DBHandler");
             SkizzeLocalSave.Text = Path.GetFullPath("..\\..\\..\\..\\DBHandler");
+            InitLicenseText();
+            _mainWindow = mainWin;
         }
 
         #endregion
 
         #region methods
+
+        /// <summary>
+        /// Licensetext setter
+        /// </summary>
+        private void InitLicenseText()
+        {
+            string text = "MIT License\n" +
+                          "Copyright (c) 2020 Softwareentwicklungsprojekt / SoSe2020\n\n" +
+                          "Permission is hereby granted, free of charge, to any person obtaining a copy" +
+                          "of this software and associated documentation files (the \"Software\"), to deal" +
+                          "in the Software without restriction, including without limitation the rights" +
+                          "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell" +
+                          "copies of the Software, and to permit persons to whom the Software is" +
+                          "furnished to do so, subject to the following conditions: " +
+                          "The above copyright notice and this permission notice shall be included in all " +
+                          "copies or substantial portions of the Software.\n" +
+                          "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR " +
+                          "IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, " +
+                          "FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE " +
+                          "AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER " +
+                          "LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, " +
+                          "OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.";
+            LizenzTextBox.Text = text;
+        }
 
         /// <summary>
         /// set SP pw and username
@@ -66,6 +94,7 @@ namespace GUI
             {
                 mSender.Background = _settingRightColor;
                 Properties.Settings1.Default.SpUserName = SpUserName.Text;
+                _mainWindow.SetConnectionStatus(MainWindow.ConnectionModus.Online);
             }
             else
                 mSender.Background = _settingWrongColor;
@@ -139,7 +168,10 @@ namespace GUI
             {
                 if (!TextBoxPathIsValid(textBox))
                 {
-                    MessageBox.Show("Bitte geben Sie überall gültige Pfade ein um fortzufahren", "Kein gültiger Pfad", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Bitte geben Sie überall gültige Pfade ein um fortzufahren", 
+                        "Kein gültiger Pfad", 
+                        MessageBoxButton.OK, 
+                        MessageBoxImage.Warning);
                     e.Cancel = true;
                     return;
                 }
