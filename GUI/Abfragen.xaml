@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
-        Title="Abfragen" Height="550" Width="800">
+        Title="Abfragen" Height="600" Width="800">
     <DockPanel Margin="10,5,10,5" Background="#FFE8E8E8" LastChildFill="True">
 
         <DockPanel DockPanel.Dock="Top">
@@ -122,11 +122,16 @@
             <DockPanel Margin="5">
 
                 <DockPanel DockPanel.Dock="Right" LastChildFill="False">
-                    <Button DockPanel.Dock="Top" Width="40" Height="40" FontWeight="Bold" FontSize="24" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="AddSavedQueryButton_Click" BorderBrush="{x:Null}" Background="#FF6A6A6A" Foreground="White">+</Button>
-                    <Button DockPanel.Dock="Top" Width="40" Height="40" FontWeight="Bold" FontSize="24" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="DeleteSavedQueryButton_Click" BorderBrush="{x:Null}" Foreground="White" Background="#FF6A6A6A">-</Button>
-                    <Button DockPanel.Dock="Top" Width="40" Height="40" FontWeight="Bold" FontSize="24" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="LoadSavedQueryButton_Click" BorderBrush="{x:Null}" Foreground="White" Background="#FF6A6A6A">-></Button>
+                    <Button DockPanel.Dock="Top" Width="35" Height="35" FontWeight="Bold" FontSize="24" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="AddSavedQueryButton_Click" BorderBrush="{x:Null}" Background="#FF6A6A6A" Foreground="White">+</Button>
+                    <Button DockPanel.Dock="Top" Width="35" Height="35" FontWeight="Bold" FontSize="24" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="LoadSavedQueryButton_Click" BorderBrush="{x:Null}" Foreground="White" Background="#FF6A6A6A">🡆</Button>
                 </DockPanel>
-                <DataGrid x:Name="SavedQueriesGrid" DockPanel.Dock="Left" BorderBrush="{x:Null}" CellEditEnding="SavedQueriesGrid_CellEditEnding"></DataGrid>
+                <DataGrid x:Name="SavedQueriesGrid" DockPanel.Dock="Left" BorderBrush="{x:Null}">
+                    <DataGrid.CellStyle>
+                        <Style>
+                            <EventSetter Event="FocusManager.LostFocus" Handler="OnCellLostFocus"></EventSetter>
+                        </Style>
+                    </DataGrid.CellStyle>
+                </DataGrid>
             </DockPanel>
         </DockPanel>
     </DockPanel>

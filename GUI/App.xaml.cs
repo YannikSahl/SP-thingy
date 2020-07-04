@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using GUI.Properties;
 
 namespace GUI
 {
@@ -13,5 +14,9 @@ namespace GUI
     /// </summary>
     public partial class App : Application
     {
+        private void App_OnExit(object sender, ExitEventArgs e)
+        {
+            //Settings1.Default.Save();
+        }
     }
 }

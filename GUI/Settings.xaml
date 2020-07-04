@@ -4,118 +4,127 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
+        xmlns:settings="clr-namespace:GUI.Properties"
         mc:Ignorable="d"
-        Title="Einstellungen" Height="450" Width="800">
-    <StackPanel Margin="15,5,15,10">
-        <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
-            <Label.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FFFF782A" Offset="0"/>
-                    <GradientStop Color="#FFFFAD1E" Offset="1"/>
-                </LinearGradientBrush>
-            </Label.Background>
-            Sharepoint Authentifizierung
-        </Label>
-        <Grid Background="#FFF7F7F7">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="3*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0">Name</TextBlock>
-            <DockPanel Margin="2" LastChildFill="True" Grid.Row="0" Grid.Column="1">
-                <TextBox x:Name="sp_name" Height="20"></TextBox>
-            </DockPanel>
-            <DockPanel Margin="2" LastChildFill="True" Grid.Row="1" Grid.Column="1">
-                <PasswordBox x:Name="sp_pw" Height="20"></PasswordBox>
-            </DockPanel>
-            <TextBlock Grid.Row="1" Grid.Column="0">Password</TextBlock>
-            <DockPanel Grid.Row="2" Grid.ColumnSpan="2" LastChildFill="True">
-                <Button DockPanel.Dock="Left" Margin="2" Click="Button_Click" BorderBrush="{x:Null}" MinHeight="25">Test Connection</Button>
-            </DockPanel>
-        </Grid>
+        Title="Einstellungen" Height="450" Width="800" Closing="Window_Closing">
+    <ScrollViewer>
+        <StackPanel Margin="15,5,15,10">
+            <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
+                <Label.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFFF782A" Offset="0"/>
+                        <GradientStop Color="#FFFFAD1E" Offset="1"/>
+                    </LinearGradientBrush>
+                </Label.Background>
+                Sharepoint Authentifizierung
+            </Label>
+            <Grid Background="#FFF7F7F7">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0">Name</TextBlock>
+                <DockPanel Margin="2" LastChildFill="True" Grid.Row="0" Grid.Column="1">
+                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=SpUserName, Mode=Default}" x:Name="SpUserName" Height="30" VerticalContentAlignment="Center"></TextBox>
+                </DockPanel>
+                <DockPanel Margin="2" LastChildFill="True" Grid.Row="1" Grid.Column="1">
+                    <PasswordBox x:Name="SpUserPw" Height="30" VerticalContentAlignment="Center"></PasswordBox>
+                </DockPanel>
+                <TextBlock Grid.Row="1" Grid.Column="0">Password</TextBlock>
+                <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True">
+                    <Button DockPanel.Dock="Left" Click="Button_Click" BorderBrush="{x:Null}" Height="30">Verbindung Testen</Button>
+                </DockPanel>
+            </Grid>
 
-        <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
-            <Label.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="1">
-                    <GradientStop Color="#FFFF782A" Offset="0"/>
-                    <GradientStop Color="#FFFFAD1E" Offset="1"/>
-                </LinearGradientBrush>
-            </Label.Background>
-            Pfade
-        </Label>
-        <Grid Background="#FFF7F7F7">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+            <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
+                <Label.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="1">
+                        <GradientStop Color="#FFFF782A" Offset="0"/>
+                        <GradientStop Color="#FFFFAD1E" Offset="1"/>
+                    </LinearGradientBrush>
+                </Label.Background>
+                Pfade
+            </Label>
+            <Grid Background="#FFF7F7F7">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Sharepoint</TextBlock>
-            <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True" Margin="2">
-                <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
-                <TextBox VerticalContentAlignment="Center" Height="20"/>
-            </DockPanel>
+                <TextBlock Grid.Row="0" Grid.Column="0">Sharepoint</TextBlock>
+                <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True" Margin="2">
+                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSp, Mode=TwoWay}" x:Name="SpSave" VerticalContentAlignment="Center" Height="30" TextChanged="TextBoxTextChangedLinkPath"/>
+                </DockPanel>
 
-            <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Datenbank im Sharepoint</TextBlock>
-            <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True" Margin="2">
-                <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
-                <TextBox VerticalContentAlignment="Center" Height="20"></TextBox>
-            </DockPanel>
+                <TextBlock Grid.Row="1" Grid.Column="0">Datenbank im Sharepoint</TextBlock>
+                <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True" Margin="2">
+                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbInSp, Mode=TwoWay}" x:Name="DbSpSave" VerticalContentAlignment="Center" Height="30" TextChanged="TextBoxTextChangedLinkPath"></TextBox>
+                </DockPanel>
 
-            <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Skizzen im Sharepoint</TextBlock>
-            <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True" Margin="2">
-                <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
-                <TextBox VerticalContentAlignment="Center" Height="20"></TextBox>
-            </DockPanel>
+                <TextBlock Grid.Row="2" Grid.Column="0">Skizzen im Sharepoint</TextBlock>
+                <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True" Margin="2">
+                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSkizzenInSp, Mode=TwoWay}" x:Name="SkizzeSpSave" VerticalContentAlignment="Center" Height="30" TextChanged="TextBoxTextChangedLinkPath"></TextBox>
+                </DockPanel>
 
-            <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Export DB</TextBlock>
-            <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="True" Margin="2">
-                <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
-                <TextBox x:Name="DbSave" VerticalContentAlignment="Center" Height="20"/>
-            </DockPanel>
+                <TextBlock Grid.Row="3" Grid.Column="0">Export DB</TextBlock>
+                <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="True" Margin="2">
+                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbLocal, Mode=TwoWay}" x:Name="DbLocalSave" VerticalContentAlignment="Center" Height="30" TextChanged="TextBoxTextChangedLinkPath"/>
+                </DockPanel>
 
-            <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Export Skizzen</TextBlock>
-            <DockPanel Grid.Row="4" Grid.Column="1" LastChildFill="True" Margin="2">
-                <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
-                <TextBox VerticalContentAlignment="Center" Height="20"></TextBox>
-            </DockPanel>
-        </Grid>
+                <TextBlock Grid.Row="4" Grid.Column="0">Export Skizzen</TextBlock>
+                <DockPanel Grid.Row="4" Grid.Column="1" LastChildFill="True" Margin="2">
+                    <TextBox x:Name="SkizzeLocalSave" VerticalContentAlignment="Center" Height="30" TextChanged="TextBoxTextChangedLinkPath"></TextBox>
+                </DockPanel>
+            </Grid>
 
-        <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
-            <Label.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FFFF782A" Offset="0"/>
-                    <GradientStop Color="#FFFFAD1E" Offset="1"/>
-                </LinearGradientBrush>
-            </Label.Background>
-            Design
-        </Label>
-        <TextBlock Background="#FFF7F7F7">
-            Darkmode / Lightmode
-        </TextBlock>
+            <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
+                <Label.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFFF782A" Offset="0"/>
+                        <GradientStop Color="#FFFFAD1E" Offset="1"/>
+                    </LinearGradientBrush>
+                </Label.Background>
+                Design
+            </Label>
+            <TextBlock Background="#FFF7F7F7">
+                Darkmode / Lightmode
+            </TextBlock>
 
-        <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
-            <Label.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FFFF782A" Offset="0"/>
-                    <GradientStop Color="#FFFFAD1E" Offset="1"/>
-                </LinearGradientBrush>
-            </Label.Background>
-            Sprache
-        </Label>
-        <TextBlock Background="#FFF7F7F7">
-            Deutsch / Englisch
-        </TextBlock>
-    </StackPanel>
+            <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
+                <Label.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFFF782A" Offset="0"/>
+                        <GradientStop Color="#FFFFAD1E" Offset="1"/>
+                    </LinearGradientBrush>
+                </Label.Background>
+                Sprache
+            </Label>
+            <TextBlock Background="#FFF7F7F7">
+                Deutsch / Englisch
+            </TextBlock>
+            <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
+                <Label.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFFF782A" Offset="0"/>
+                        <GradientStop Color="#FFFFAD1E" Offset="1"/>
+                    </LinearGradientBrush>
+                </Label.Background>
+                Lizenz
+            </Label>
+            <TextBlock x:Name="LizenzTextBox" Background="#FFF7F7F7" TextWrapping="Wrap"></TextBlock>
+            
+        </StackPanel>
+    </ScrollViewer>
 </Window>
