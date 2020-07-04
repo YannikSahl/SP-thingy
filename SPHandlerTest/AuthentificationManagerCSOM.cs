@@ -16,7 +16,7 @@ namespace SPHandlerTest
         private static readonly HttpClient httpClient = new HttpClient();
         private const string tokenEndpoint = "https://login.microsoftonline.com/common/oauth2/token";
 
-        private const string defaultAADAppId = "aa49f0a5-2b99-48d7-914e-cf143ad08cd4"; 
+        private const string defaultAADAppId = "94b3fcd8-7a82-4004-a237-2a6bf10864ec";
 
         // Token cache handling
         private static readonly SemaphoreSlim semaphoreSlimTokens = new SemaphoreSlim(1);
@@ -32,16 +32,20 @@ namespace SPHandlerTest
         public ClientContext GetContext(Uri web, string userPrincipalName, SecureString userPassword)
         {
             var context = new ClientContext(web);
+             // Important to turn off FormDigestHandling when using access tokens
+             context.FormDigestHandlingEnabled = false;
+            
 
             context.ExecutingWebRequest += (sender, e) =>
             {
+                // Get an access token using your preferred approach
                 string accessToken = EnsureAccessTokenAsync(new Uri($"{web.Scheme}://{web.DnsSafeHost}"), userPrincipalName, new System.Net.NetworkCredential(string.Empty, userPassword).Password).GetAwaiter().GetResult();
+                // Insert the access token in the request
                 e.WebRequestExecutor.RequestHeaders["Authorization"] = "Bearer " + accessToken;
             };
 
             return context;
         }
-
 
         public async Task<string> EnsureAccessTokenAsync(Uri resourceUri, string userPrincipalName, string userPassword)
         {
@@ -193,7 +197,7 @@ namespace SPHandlerTest
 
         public void Dispose()
         {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            //Do not change this code.Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
