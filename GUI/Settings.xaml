@@ -63,24 +63,24 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0">Sharepoint</TextBlock>
+                <TextBlock Grid.Row="0" Grid.Column="0">Sharepoint Url</TextBlock>
                 <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True" Margin="2">
-                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSp, Mode=TwoWay}" x:Name="SpSave" VerticalContentAlignment="Center" Height="30" TextChanged="TextBoxTextChangedLinkPath"/>
+                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSp, Mode=Default}" x:Name="SpSave" VerticalContentAlignment="Center" Height="30"/>
                 </DockPanel>
 
                 <TextBlock Grid.Row="1" Grid.Column="0">Datenbank im Sharepoint</TextBlock>
                 <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True" Margin="2">
-                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbInSp, Mode=TwoWay}" x:Name="DbSpSave" VerticalContentAlignment="Center" Height="30" TextChanged="TextBoxTextChangedLinkPath"></TextBox>
+                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbInSp, Mode=Default}" x:Name="DbSpSave" VerticalContentAlignment="Center" Height="30"></TextBox>
                 </DockPanel>
 
                 <TextBlock Grid.Row="2" Grid.Column="0">Skizzen im Sharepoint</TextBlock>
                 <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True" Margin="2">
-                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSkizzenInSp, Mode=TwoWay}" x:Name="SkizzeSpSave" VerticalContentAlignment="Center" Height="30" TextChanged="TextBoxTextChangedLinkPath"></TextBox>
+                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSkizzenInSp, Mode=Default}" x:Name="SkizzeSpSave" VerticalContentAlignment="Center" Height="30"></TextBox>
                 </DockPanel>
 
                 <TextBlock Grid.Row="3" Grid.Column="0">Export DB</TextBlock>
                 <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="True" Margin="2">
-                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbLocal, Mode=TwoWay}" x:Name="DbLocalSave" VerticalContentAlignment="Center" Height="30" TextChanged="TextBoxTextChangedLinkPath"/>
+                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbLocal, Mode=Default}" x:Name="DbLocalSave" VerticalContentAlignment="Center" Height="30" TextChanged="TextBoxTextChangedLinkPath"/>
                 </DockPanel>
 
                 <TextBlock Grid.Row="4" Grid.Column="0">Export Skizzen</TextBlock>

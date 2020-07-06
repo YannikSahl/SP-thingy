@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -43,6 +44,33 @@ namespace GUI
         #endregion
 
         #region methods
+
+        /// <summary>
+        /// Checks the file exists or not
+        /// source: https://stackoverflow.com/questions/924679/c-sharp-how-can-i-check-if-a-url-exists-is-valid
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        private bool RemoteFileExists(string url)
+        {
+            try
+            {
+                //Creating the HttpWebRequest
+                HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+                //Setting the Request method HEAD, you can also use GET too.
+                request.Method = "HEAD";
+                //Getting the Web Response.
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+                //Returns TRUE if the Status code == 200
+                response.Close();
+                return (response.StatusCode == HttpStatusCode.OK);
+            }
+            catch
+            {
+                //Any exception will returns false.
+                return false;
+            }
+        }
 
         /// <summary>
         /// Licensetext setter
@@ -163,7 +191,7 @@ namespace GUI
         /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var checkElementsList = new List<TextBox>{SpSave, SkizzeSpSave, DbLocalSave, DbSpSave, SkizzeLocalSave};
+            var checkElementsList = new List<TextBox>{DbLocalSave, SkizzeLocalSave};
             foreach (var textBox in checkElementsList)
             {
                 if (!TextBoxPathIsValid(textBox))
@@ -176,7 +204,14 @@ namespace GUI
                     return;
                 }
             }
+
+            Properties.Settings1.Default.PathSp = SpSave.Text;
+            Properties.Settings1.Default.PathDbInSp = DbSpSave.Text;
+            Properties.Settings1.Default.PathDbLocal = DbLocalSave.Text;
+            Properties.Settings1.Default.PathSkizzenInSp = SkizzeSpSave.Text;
+            Properties.Settings1.Default.PathSkizzenLocal = SkizzeLocalSave.Text;
             Properties.Settings1.Default.Save();
+            _mainWindow._settingsWindow = null;
         }
 
         #endregion

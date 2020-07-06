@@ -23,6 +23,15 @@ namespace GUI
         public AuthWindow()
         {
             InitializeComponent();
+            // TODO: falls noch kein SP pfad übergeben: settings öffnen
+            //if (string.IsNullOrEmpty(Properties.Settings1.Default.PathSp))
+            //{
+            //    Settings s = new Settings(null);
+            //    s.Show();
+            //    s.Activate();
+            //    s.Topmost = true;
+            //    this.Hide();
+            //}
         }
 
         #endregion
@@ -59,8 +68,7 @@ namespace GUI
         {
             SPHandler.Handler.SetPassword(PasswordBox.Password);
             SPHandler.Handler.SetUsername(NameBox.Text);
-            bool hasConnection;
-            string errorMessage = SPHandler.Handler.TestConnection(out hasConnection);
+            string errorMessage = SPHandler.Handler.TestConnection(out var hasConnection);
 
             if (hasConnection)
             {

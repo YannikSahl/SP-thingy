@@ -333,6 +333,12 @@ namespace GUI
 
         }
 
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            _mainWindow._abfrageWindow = null;
+        }
+
         #endregion
     }
 }

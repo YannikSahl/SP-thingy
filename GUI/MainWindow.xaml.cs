@@ -64,7 +64,7 @@ namespace GUI
         private bool m_isEditable;
         private bool m_viewModeOnly;
 
-        private Settings _settingsWindow;
+        public Settings _settingsWindow;
         public Abfragen _abfrageWindow;
 
         #endregion

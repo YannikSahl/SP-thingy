@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
-        Title="Abfragen" Height="600" Width="800">
+        Title="Abfragen" Height="600" Width="800" Closing="Window_Closing">
     <DockPanel Margin="10,5,10,5" Background="#FFE8E8E8" LastChildFill="True">
 
         <DockPanel DockPanel.Dock="Top">
             <TextBlock DockPanel.Dock="Left" FontSize="16" Padding="5" FontWeight="Bold" >Neue Abfrage</TextBlock>
-            <Button DockPanel.Dock="Right" Margin="5" Height="30" Width="120" HorizontalAlignment="Right" Click="AbfrageStartButton_Click" BorderBrush="#FF959595" Foreground="White">
+            <Button DockPanel.Dock="Right" IsDefault="True" Margin="5" Height="30" Width="120" HorizontalAlignment="Right" Click="AbfrageStartButton_Click" BorderBrush="#FF959595" Foreground="White">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="#FFFF8E1D"/>

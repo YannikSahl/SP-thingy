@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="SpUserName" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)"> </Value>
     </Setting>
     <Setting Name="PathSp" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:</Value>
