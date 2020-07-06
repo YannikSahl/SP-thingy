@@ -84,12 +84,12 @@ namespace GUI
 
             CollapseExpander();
             AddFilePreview("..\\..\\..\\..\\README.md");
-            //AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
-            //AddFilePreview("..\\..\\..\\test_images\\png_test.png");
-            //AddFilePreview("..\\..\\..\\test_images\\jpeg_test.jpeg");
-            //AddFilePreview("..\\..\\..\\test_images\\pdf_test.pdf");
-            //AddFilePreview("..\\..\\..\\test_images\\txt_test.txt");
-            //AddFilePreview("..\\..\\..\\test_images\\pptx_test.pptx");
+            AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            AddFilePreview("..\\..\\..\\test_images\\png_test.png");
+            AddFilePreview("..\\..\\..\\test_images\\jpeg_test.jpeg");
+            AddFilePreview("..\\..\\..\\test_images\\pdf_test.pdf");
+            AddFilePreview("..\\..\\..\\test_images\\txt_test.txt");
+            AddFilePreview("..\\..\\..\\test_images\\pptx_test.pptx");
         }
 
         #endregion

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using Color = System.Drawing.Color;
 using File = System.IO.File;
@@ -37,20 +39,25 @@ namespace GUI
         private string _displayText;
         private string _fileExtension;
         private string _filePath;
+        private string _directoryPath;
         private string _fileName;
+
+        private SolidColorBrush _baseColor = new SolidColorBrush(Colors.WhiteSmoke);
+        private SolidColorBrush _mouseOverColor = new SolidColorBrush(Colors.LightGray);
 
         public FileView(string path)
         {
-            _filePath = path;
-            if (File.Exists(path))
+            _filePath = Path.GetFullPath(path);
+            _directoryPath = Path.GetDirectoryName(_filePath);
+            if (File.Exists(_filePath))
             {
                 _presetList = new Dictionary<string, LinearGradientBrush>();
                 SetColorDict();
 
-                _fileExtension = Path.GetExtension(path);
+                _fileExtension = Path.GetExtension(_filePath);
                 if(! FileView._presetList.TryGetValue(_fileExtension, out _color))
                     _color = new LinearGradientBrush(Colors.Azure, Colors.Azure, 0);//_color = new SolidColorBrush(Colors.Azure);
-                _fileName = Path.GetFileName(path);
+                _fileName = Path.GetFileName(_filePath);
                 _fileName = _fileName.Remove(_fileName.Length - (_fileExtension.Length));
 
                 _displayText = _fileName;
@@ -163,7 +170,7 @@ namespace GUI
         private void SetupSelf()
         {
             this.LastChildFill = true;
-            this.Background = new SolidColorBrush(Colors.WhiteSmoke);
+            this.Background = _baseColor;
             this.Margin = new Thickness(5);
         }
 
@@ -196,10 +203,11 @@ namespace GUI
             var fView = new Button();
             fView.Width = 50;
             fView.Height = fView.Width * 1.414d;
-            fView.BorderThickness = new Thickness(0);
+            fView.BorderThickness = new Thickness(2);
             fView.BorderBrush = new SolidColorBrush(Colors.DarkGray);
             fView.Margin = new Thickness(5);
             fView.Background = _color;
+            fView.IsHitTestVisible = false;
             grid.Children.Add(fView);
 
             // setup and add text to grid
@@ -224,6 +232,28 @@ namespace GUI
             //System.Diagnostics.Process.Start(@"D:\");
             base.OnClick();
         }*/
+
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        {
+            // File.Exists() for file
+            if (Directory.Exists(_directoryPath))
+            {
+                Process.Start("explorer.exe", _directoryPath);
+            }
+            base.OnMouseLeftButtonUp(e);
+        }
+
+        protected override void OnMouseEnter(MouseEventArgs e)
+        {
+            this.Background = _mouseOverColor;
+            base.OnMouseEnter(e);
+        }
+
+        protected override void OnMouseLeave(MouseEventArgs e)
+        {
+            this.Background = _baseColor;
+            base.OnMouseLeave(e);
+        }
 
         public string GetFileName()
         {
