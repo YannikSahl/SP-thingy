@@ -1,22 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using System.Xml.Schema;
 using DBHandler;
 
 /*
@@ -36,7 +24,7 @@ namespace GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        #region Statics
+        #region statics
 
         public enum ConnectionModus
         {
@@ -55,7 +43,7 @@ namespace GUI
 
         #endregion
 
-        #region Members
+        #region members
 
         private ConnectionModus m_connectionModus;
         
@@ -69,7 +57,7 @@ namespace GUI
 
         #endregion
 
-        #region Constructors
+        #region constructors
 
         public MainWindow(ConnectionModus conMod = ConnectionModus.Online)
         {
@@ -96,6 +84,10 @@ namespace GUI
 
         #region Custom Methods
 
+        /// <summary>
+        /// sets the filter by string for column PAD in the PP table
+        /// </summary>
+        /// <param name="filter"></param>
         private void SetPpSearchFilter(string filter)
         {
             if (filter == null)
@@ -164,6 +156,12 @@ namespace GUI
             PhTable.DataContext = phColumnsOnly;
         }
 
+        /// <summary>
+        /// displays rows that have the input pad
+        /// sets either PL or PH table
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="pad"></param>
         private void SetPlOrPhTableByPad(string tableName, string pad)
         {
             DataGrid dg;
@@ -215,11 +213,20 @@ namespace GUI
             counter.Text = rows.Length.ToString();
         }
 
+        /// <summary>
+        /// adds FileView class elements as child of file preview frame
+        /// </summary>
+        /// <param name="path"></param>
         private void AddFilePreview(string path)
         {
             DocumentView.Children.Add(new FileView(path));
         }
 
+        /// <summary>
+        /// sets style parameters for connection status bar popout
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="color"></param>
         private void SetConnectionStatusBarStyle(string text, SolidColorBrush color)
         {
             ConnectionStatusBar.Text = text;
@@ -229,6 +236,9 @@ namespace GUI
             m_connectionStatusBarActive = true;
         }
 
+        /// <summary>
+        /// hides connection status bar popout
+        /// </summary>
         private void HideConnectionStatusBar()
         {
             ConnectionStatusBar.Visibility = Visibility.Collapsed;
@@ -236,7 +246,11 @@ namespace GUI
         }
 
         // TODO: use this to determine whether timer should be reset when popout during popout
-        private bool m_connectionStatusBarActive;
+        //private bool m_connectionStatusBarActive;
+        /// <summary>
+        /// starts time for popout visibility
+        /// </summary>
+        /// <param name="seconds"></param>
         private void StartTimer(double seconds)
         {
             DispatcherTimer timer = new DispatcherTimer
@@ -247,6 +261,9 @@ namespace GUI
             timer.Start();
         }
 
+        /// <summary>
+        /// pops out connection status bar according to connection mode
+        /// </summary>
         private void PopoutConnectionStatusBar()
         {
             switch (m_connectionModus)
@@ -298,6 +315,10 @@ namespace GUI
             ViewSplitter.Visibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// set whether tables should be editable or not
+        /// </summary>
+        /// <param name="editable"></param>
         private void SetEditable(bool editable)
         {
             m_isEditable = editable;
@@ -323,11 +344,19 @@ namespace GUI
             EditStatus.Text = editable ? "AN" : "AUS";
         }
 
+        /// <summary>
+        /// sets status bar connection mode
+        /// </summary>
         private void SetConnectionStatusTextInStatusBar()
         {
             ConnectionStatus.Text = Enum.GetName(typeof(ConnectionModus), m_connectionModus);
         }
 
+        /// <summary>
+        /// modify basic parameters based on connection mode
+        /// accessible from outside so connection status can be modified
+        /// </summary>
+        /// <param name="mode"></param>
         public void SetConnectionStatus(ConnectionModus mode)
         {
             this.m_connectionModus = mode;
@@ -358,6 +387,11 @@ namespace GUI
 
         #region Events
 
+        /// <summary>
+        /// stops the currently running timer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TimerTick(object sender, EventArgs e)
         {
             DispatcherTimer timer = (DispatcherTimer)sender;
@@ -477,6 +511,11 @@ namespace GUI
 
         #endregion
 
+        /// <summary>
+        /// editmode button clicked event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EditModeButton_Click(object sender, RoutedEventArgs e)
         {
             if (m_viewModeOnly)
@@ -487,11 +526,21 @@ namespace GUI
             SetEditable(!m_isEditable);
         }
 
+        /// <summary>
+        /// window closing event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             CloseApplication();
         }
 
+        /// <summary>
+        /// menu exit app click event closes the entire app
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MenuCloseApp_Click(object sender, RoutedEventArgs e)
         {
             CloseApplication();

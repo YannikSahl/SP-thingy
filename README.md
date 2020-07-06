@@ -1,3 +1,4 @@
+
 ## Front-End Festpunktfelddatenbank für die DB Netz AG
 Ein Projekt für die DB Netz AG im Rahmen des Software Entwicklungsprojektes der HTW Berlin für das SoSe 2020.
 
@@ -9,6 +10,10 @@ Alle Projekte laufen unter [.NET Core Version 3.1](https://dotnet.microsoft.com/
 #### 1.1 Voraussetzungen: GUI
 Die GUI beansprucht keine externen Frameworks oder NuGet Pakete.
 Im Ordner `GUI/gui_resources` befinden sich Resourcen, wie Icons zur Visualisierung.
+Folgende Icons werden verwendet:
+- [sperren.png](https://www.flaticon.com/de/kostenloses-icon/sperren_483408?term=lock&page=1&position=7)
+- [entsperren.png](https://www.flaticon.com/de/kostenloses-icon/vorhangeschloss_126479)
+- [auge.png](https://www.flaticon.com/de/kostenloses-icon/auge_609494?term=view&page=1&position=67)
 
 #### 1.2 Voraussetzungen: DBHandler
 Damit der DBHandler seine Arbeit erledigen kann, werden folgende Technologien benötigt:

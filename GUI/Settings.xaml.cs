@@ -105,7 +105,41 @@ namespace GUI
             SPHandler.Handler.SetPassword(SpUserPw.Password);
         }
 
-        // TODO: falls im offline modus kann man hier seine verbindung auf online stellen müssen
+        /// <summary>
+        /// check if TextBox.Text is a valid path and color box accordingly
+        /// </summary>
+        /// <param name="tb"></param>
+        /// <returns></returns>
+        private bool TextBoxPathIsValid(TextBox tb)
+        {
+            string dir;
+            try
+            {
+                dir = Path.GetFullPath(tb.Text);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+
+            if (Directory.Exists(dir))
+            {
+                tb.Foreground = _settingRightColor;
+                return true;
+            }
+            else
+            {
+                tb.Foreground = _settingWrongColor;
+                //MessageBox.Show("Kein gültiger Pfad", "Bitte gib einen gültigen Pfad ein", MessageBoxButton.OK);
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region events
+
         /// <summary>
         /// test credidentials and connection to SP
         /// </summary>
@@ -137,37 +171,6 @@ namespace GUI
         {
             // https://stackoverflow.com/questions/1922204/open-directory-dialog
             return;
-        }
-
-        /// <summary>
-        /// check if TextBox.Text is a valid path and color box accordingly
-        /// </summary>
-        /// <param name="tb"></param>
-        /// <returns></returns>
-        private bool TextBoxPathIsValid(TextBox tb)
-        {
-            string dir;
-            try
-            {
-                dir = Path.GetFullPath(tb.Text);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e);
-                return false;
-            }
-
-            if (Directory.Exists(dir))
-            {
-                tb.Foreground = _settingRightColor;
-                return true;
-            }
-            else
-            {
-                tb.Foreground = _settingWrongColor;
-                //MessageBox.Show("Kein gültiger Pfad", "Bitte gib einen gültigen Pfad ein", MessageBoxButton.OK);
-                return false;
-            }
         }
 
         /// <summary>
