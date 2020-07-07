@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="Hauptformular" Height="450" Width="800" 
         Closing="Window_Closing"
+        LostFocus="MainWindow_OnLostFocus"
         WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top" Background="#FF444444" Foreground="White" >
@@ -28,7 +29,7 @@
                 <MenuItem Header="Einstellungen" Foreground="Black" Click="OpenSettingsWindow"/>
             </MenuItem>
         </Menu>
-        <DockPanel DockPanel.Dock="Bottom" Background="#FF444444" Height="16" LastChildFill="True">
+        <DockPanel DockPanel.Dock="Bottom" Background="#FF444444" Height="16" LastChildFill="False">
             <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" Foreground="LightGray" Margin="2,0,2,0">Verbindung:</TextBlock>
             <Border CornerRadius="10" BorderThickness="1">
                 <TextBlock VerticalAlignment="Center" x:Name="ConnectionStatus" DockPanel.Dock="Left" Foreground="White" Margin="2,0,2,0" Padding="2,0,2,0" FontWeight="Bold"/>
@@ -36,12 +37,22 @@
 
             <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" Foreground="LightGray" Margin="2,0,2,0">| Bearbeitung:</TextBlock>
             <TextBlock VerticalAlignment="Center" x:Name="EditStatus" DockPanel.Dock="Left" Foreground="#FFFF9429" Margin="2,0,2,0" FontWeight="Bold"/>
+
+            <TextBlock VerticalAlignment="Center" x:Name="SavedStatus" DockPanel.Dock="Right" Foreground="#FFFF9429" Margin="2,0,2,0" FontWeight="Bold"/>
+            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Right" Foreground="LightGray" Margin="2,0,2,0">gespeichert um </TextBlock>
         </DockPanel>
         <TextBlock x:Name="ConnectionStatusBar" Height="20" DockPanel.Dock="Bottom" Background="#FF21C947" Visibility="Collapsed" TextAlignment="Center">Verbunden</TextBlock>
         <DockPanel>
 
             <DockPanel DockPanel.Dock="Top" Background="#FFE8E8E8">
-                <TextBlock DockPanel.Dock="Left" Padding="5" FontWeight="Bold" Margin="15,0,0,0" VerticalAlignment="Center">Ausgewähltes Dokument (nach PAD):</TextBlock>
+                <TextBlock DockPanel.Dock="Left" Padding="5" FontWeight="Bold" VerticalAlignment="Center">Ausgewähltes Dokument (nach PAD):</TextBlock>
+                <Button DockPanel.Dock="Right" Padding="5" Foreground="White" Margin="2" BorderBrush="#FF959595" Click="SaveChangesButton_Click">
+                    <Button.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFFF8E1D"/>
+                            <GradientStop Color="#FFFF3D2A" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background> Änderungen Speichern</Button>
                 <TextBlock x:Name="SelectedPad" VerticalAlignment="Center" DockPanel.Dock="Left" Padding="5" FontWeight="Bold" FontStyle="Normal" FontSize="16"></TextBlock>
             </DockPanel>
 
@@ -84,7 +95,7 @@
                                 <TextBlock DockPanel.Dock="Right" Text="Einträge" Foreground="#FF686868" Margin="5,0,0,0"></TextBlock>
                                 <TextBlock x:Name="PpCount" DockPanel.Dock="Right" Text="0" Foreground="#FF686868" FontWeight="Bold" ></TextBlock>
                             </DockPanel>
-                            <DataGrid x:Name="PpTable" ItemsSource="{Binding}" RowEditEnding="PpTable_RowEditEnding" SelectionChanged="PpTable_SelectionChanged"></DataGrid>
+                            <DataGrid x:Name="PpTable" ItemsSource="{Binding}" SelectionChanged="PpTable_SelectionChanged"></DataGrid>
                         </DockPanel>
                         <TextBlock x:Name="PpTableEmptyMessage" Grid.Row="0" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" Foreground="#FFFF5E13" Margin="0,10,0,0">Keine Auswahl</TextBlock>
                         <GridSplitter Grid.Row="1"  Height="5"  HorizontalAlignment="Stretch"/>
