@@ -84,6 +84,27 @@ namespace GUI
 
         #region Custom Methods
 
+        private bool UpdateDatabases()
+        {
+            if (m_databaseConnection == null)
+                return true;
+            var result = m_databaseConnection.UpdateDatabases();
+            if (result != StatusCode.CommandOk && result != StatusCode.NoDatabaseChanges)
+            {
+                MessageBox.Show($"Status Code: {Enum.GetName(result.GetType(), result)}", "Speichern Fehlgeschlagen", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                return false;
+            }
+
+            SetStatusBarLastSaved();
+            return true;
+        }
+
+        //private DateTime _lastSaved;
+        private void SetStatusBarLastSaved()
+        {
+            SavedStatus.Text = DateTime.Now.ToLongTimeString();
+        }
+
         /// <summary>
         /// sets the filter by string for column PAD in the PP table
         /// </summary>
@@ -246,7 +267,7 @@ namespace GUI
         }
 
         // TODO: use this to determine whether timer should be reset when popout during popout
-        //private bool m_connectionStatusBarActive;
+        private bool m_connectionStatusBarActive;
         /// <summary>
         /// starts time for popout visibility
         /// </summary>
@@ -439,17 +460,6 @@ namespace GUI
         }
 
         /// <summary>
-        /// Do something after row editing
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void PpTable_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
-        {
-            // update after row was edited
-            m_databaseConnection.UpdateDatabases();
-        }
-
-        /// <summary>
         /// Row selection changed
         /// </summary>
         /// <param name="sender"></param>
@@ -533,6 +543,22 @@ namespace GUI
         /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            var updated = UpdateDatabases();
+            if (!updated)
+            {
+                MessageBoxResult result = MessageBox.Show(
+                    "Es sind noch ungespeicherte Änderungen vorhanden\nMöchten Sie die App trotzdem schließen?",
+                    "Schließen wird verhindert",
+                    MessageBoxButton.OKCancel,
+                    MessageBoxImage.Exclamation,
+                    MessageBoxResult.Cancel
+                    );
+                if (result == MessageBoxResult.Cancel)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
             CloseApplication();
         }
 
@@ -543,6 +569,19 @@ namespace GUI
         /// <param name="e"></param>
         private void MenuCloseApp_Click(object sender, RoutedEventArgs e)
         {
+            var updated = UpdateDatabases();
+            if (!updated)
+            {
+                MessageBoxResult result = MessageBox.Show(
+                    "Es sind noch ungespeicherte Änderungen vorhanden\nMöchten Sie die App trotzdem schließen?",
+                    "Schließen wird verhindert",
+                    MessageBoxButton.OKCancel,
+                    MessageBoxImage.Exclamation,
+                    MessageBoxResult.Cancel
+                );
+                if (result == MessageBoxResult.Cancel)
+                    return;
+            }
             CloseApplication();
         }
 
@@ -564,6 +603,17 @@ namespace GUI
         }
 
         #endregion
+
+        private void SaveChangesButton_Click(object sender, RoutedEventArgs e)
+        {
+            PpTable.CommitEdit();
+            UpdateDatabases();
+        }
+
+        private void MainWindow_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            //UpdateDatabases();
+        }
 
         #endregion
     }
