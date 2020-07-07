@@ -126,7 +126,13 @@ namespace DBHandler
             return queryString;
         }
 
-        // Builds filter queries
+        /// <summary>
+        /// Builds filter queries used for building the dataset according to GUI settings.
+        /// </summary>
+        /// <param name="filterSet">Multiple values for a variable.</param>
+        /// <param name="filterVariable">Value to be filtered by.</param>
+        /// <param name="queryString">Query string already built.</param>
+        /// <param name="queryConnector">AND or OR connector.</param>
         public void BuildFilter(HashSet<string> filterSet, string filterVariable, ref string queryString, string queryConnector)
         {
 
@@ -140,7 +146,6 @@ namespace DBHandler
                 }
                 queryString += " (";
             }
-            
 
             // Prepare connector
             var innerQueryConnector = "";
@@ -155,7 +160,10 @@ namespace DBHandler
             if (filterSet.Count != 0) queryString += ") ";
         }
 
-        // Update databases (e.g. to be used on "save changed" click)
+        /// <summary>
+        /// Updates database file according to DataSet changes.
+        /// </summary>
+        /// <returns>StatusCode: 'CommandOk' when rows were changed, 'NoDatabaseChanges' when no rows were affected.</returns>
         public StatusCode UpdateDatabases()
         {
 
@@ -175,7 +183,13 @@ namespace DBHandler
         }
 
         // Source: https://docs.microsoft.com/en-us/dotnet/api/system.data.oledb.oledbdataadapter?view=dotnet-plat-ext-3.1
-        // Initializes DataAdapter
+        /// <summary>
+        /// Initializes DataAdapter used to generate SQL queries.
+        /// </summary>
+        /// <param name="tableName">Table to </param>
+        /// <param name="connection"></param>
+        /// <param name="selectCommand"></param>
+        /// <returns>OleDbAdapter</returns>
         public OleDbDataAdapter CreateDataAdapter(string tableName, OleDbConnection connection, string selectCommand)
         {
 
