@@ -239,13 +239,23 @@ namespace GUI
                 _mainWindow._abfrageWindow = null;
                 this.Close();
             }
+            else if (queryExecuted == StatusCode.OleDbNotRegistered)
+            {
+                MessageBox.Show(
+                    $"Access Runtime ist nicht installiert\nBitte hier runterladen: https://www.microsoft.com/en-us/download/confirmation.aspx?id=13255", 
+                    "Abfrage Fehlgeschlagen", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Error,
+                    MessageBoxResult.OK);
+            }
             else
             {
                 MessageBox.Show(
-                    $"Die eingegebene SQL Abfrage konnte nicht ausgeführt werden ({Enum.GetName(typeof(StatusCode), queryExecuted)})", 
-                    "Abfrage Fehlgeschlagen", 
-                    MessageBoxButton.OK, 
-                    MessageBoxImage.Error);
+                    $"Die eingegebene SQL Abfrage konnte nicht ausgeführt werden ({Enum.GetName(typeof(StatusCode), queryExecuted)})",
+                    "Abfrage Fehlgeschlagen",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information,
+                    MessageBoxResult.OK);
             }
         }
 
@@ -319,7 +329,6 @@ namespace GUI
             // clear duplicates by removing first row with same hash if exists
             if (sameRowReference != null && sameRowReference != dr.Row)
                 ((DataTable)SavedQueriesGrid.DataContext).Rows.Remove(sameRowReference);
-
         }
 
 

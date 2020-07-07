@@ -28,7 +28,7 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Grid.Column="0">Name</TextBlock>
+                <TextBlock Grid.Row="0" Grid.Column="0">E-Mail</TextBlock>
                 <DockPanel Margin="2" LastChildFill="True" Grid.Row="0" Grid.Column="1">
                     <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=SpUserName, Mode=Default}" x:Name="SpUserName" Height="30" VerticalContentAlignment="Center"></TextBox>
                 </DockPanel>
