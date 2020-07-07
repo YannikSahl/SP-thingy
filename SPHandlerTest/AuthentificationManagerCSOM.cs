@@ -11,12 +11,17 @@ using System.Web;
 
 namespace SPHandlerTest
 {
+    /// <summary>
+    /// The AuthentificationManagerCSOM is a handler for the authentification with AccessTokens, which is the only way to authenticate in the new Version of the CSOM
+    /// <Source>https://docs.microsoft.com/en-us/sharepoint/dev/sp-add-ins/using-csom-for-dotnet-standard</Source>
+    /// </summary>
     public class AuthentificationManagerCSOM : IDisposable
     {
         private static readonly HttpClient httpClient = new HttpClient();
         private const string tokenEndpoint = "https://login.microsoftonline.com/common/oauth2/token";
 
-        private const string defaultAADAppId = "94b3fcd8-7a82-4004-a237-2a6bf10864ec";
+        //get defaultAADAppId from Azure 
+        private const string defaultAADAppId = "94b3fcd8-7a82-4004-a237-2a6bf10864ec"; 
 
         // Token cache handling
         private static readonly SemaphoreSlim semaphoreSlimTokens = new SemaphoreSlim(1);
@@ -32,8 +37,9 @@ namespace SPHandlerTest
         public ClientContext GetContext(Uri web, string userPrincipalName, SecureString userPassword)
         {
             var context = new ClientContext(web);
-             // Important to turn off FormDigestHandling when using access tokens
-             context.FormDigestHandlingEnabled = false;
+             
+            // Important to turn off FormDigestHandling when using access tokens
+             //context.FormDigestHandlingEnabled = false;
             
 
             context.ExecutingWebRequest += (sender, e) =>

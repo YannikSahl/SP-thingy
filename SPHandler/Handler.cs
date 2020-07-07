@@ -10,12 +10,15 @@ using System.Globalization;
 
 namespace SPHandler
 {
+    /// <summary>
+    /// The SPHandler namespace contains functions for the current GUI version.
+    /// Only working with TTCUE.NetCore.SharePointCSOM
+    /// </summary>
     public class Handler
     {
-        const string rootSite = "https://htwberlinde.sharepoint.com";
-        const string sourceSite = "https://htwberlinde.sharepoint.com/sites/SWE";
-        static string sourceLibrary = "Dokumente";
-        static string destinationPath = "Pfad aus Settings";
+        private const string rootSite = "https://htwberlinde.sharepoint.com";
+        private const string sourceSite = "https://htwberlinde.sharepoint.com/sites/SWE";
+        private static readonly string sourceLibrary = "Dokumente";
         private static string username;
         private static string password;
 
@@ -29,68 +32,67 @@ namespace SPHandler
             password = pw;
         }
 
-        public static string TestConnection(out bool success)
+        public static string TestConnection(out bool success) //async 
         {
             try
             {
-                SharePointOnlineCredentials Credentials = new SharePointOnlineCredentials(username, password);
+                var Credentials = new SharePointOnlineCredentials(username, password);
 
-                ClientContext context = new ClientContext(sourceSite); //create context
+                var context = new ClientContext(sourceSite); //create context
                 context.Credentials = Credentials;
 
-                List list = context.Web.Lists.GetByTitle(sourceLibrary); //retrieve list
+                var list = context.Web.Lists.GetByTitle(sourceLibrary); //retrieve list
                 context.Load(list);
                 context.ExecuteQueryAsync().Wait();
 
-                CamlQuery query = new CamlQuery(); //retrieve all items
-                ListItemCollection ListItems = list.GetItems(query);
+                var query = new CamlQuery(); //retrieve all items
+                var ListItems = list.GetItems(query);
                 context.Load(ListItems);
                 context.ExecuteQueryAsync().Wait();
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 success = false;
                 return e.Message;
             }
+
             success = true;
             return null;
         }
-        public static string GetFileUrlFromDb(int entry, bool type)
+
+        /// <summary>Returns FileRelativUrl for Files on SharePoint
+        /// <param name="pad">PAD</param>
+        /// <param name="type">true=PDF, false=JPG</param>
+        /// </summary>
+        public static string GetFileUrlFromPad(string pad, bool type)
         {
+            var entry = GetIntfromPad(pad);
             string fileRelativUrl;
 
             var thousands = entry / 1000 % 10 * 1000;
             var hundreds = thousands + entry / 100 % 10 * 100;
 
             if (type)
-                fileRelativUrl = "/04321_DB_Festp/03_Skizzen/PDF/" + thousands + "/" + hundreds + "/" + entry;
+                fileRelativUrl = "/04321_DB_Festp/03_Skizzen/PDF/" + thousands + "/" + hundreds + "/" + entry + "/" + pad + ".pdf";
             else
-                fileRelativUrl = "/04321_DB_Festp/03_Skizzen/JPG/" + thousands + "/" + hundreds + "/" + entry;
+                fileRelativUrl = "/04321_DB_Festp/03_Skizzen/JPG/" + thousands + "/" + hundreds + "/" + entry + "/" + pad + ".jpg";
 
             return fileRelativUrl;
         }
 
-        public static int GetIntfromPAD(string PAD)
+        /// <summary>Returns Int to handle PAD
+        /// <param name="pad">PAD</param>
+        /// </summary>
+        public static int GetIntfromPad(string pad)
         {
             double forPath = 0;
 
-            char[] ar = PAD.ToCharArray();
+            var ar = pad.ToCharArray();
 
-            forPath = char.GetNumericValue(ar[0]) * 1000 + char.GetNumericValue(ar[1]) * 100 + char.GetNumericValue(ar[2]) * 10 + char.GetNumericValue(ar[3]);
+            forPath = char.GetNumericValue(ar[0]) * 1000 + char.GetNumericValue(ar[1]) * 100 +
+                      char.GetNumericValue(ar[2]) * 10 + char.GetNumericValue(ar[3]);
 
-            Console.WriteLine(forPath);
-
-            return (int)forPath;
+            return (int) forPath;
         }
-
-
-
-
-
-
-
-
-
-
-
     }
 }
