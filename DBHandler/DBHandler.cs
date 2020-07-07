@@ -49,7 +49,15 @@ namespace DBHandler
             Dispose(false);
         }
 
-        // Fill in data from .accdb file
+        /// <summary>
+        /// Fills in data from .accdb file by building query from passed parameter values.
+        /// </summary>
+        /// <param name="Pad">Values for 'PAD' to be filtered by.</param>
+        /// <param name="PStrecke">Values for 'PStrecke' to be filtered by.</param>
+        /// <param name="PArt">Values for 'PArt' to be filtered by.</param>
+        /// <param name="PAuftr">Values for 'PAuftr' to be filtered by.</param>
+        /// <param name="isAndConnector">Whether queries should be AND or OR connected.</param>
+        /// <returns></returns>
         public StatusCode FillInData(HashSet<string> Pad, HashSet<string> PStrecke, HashSet<string> PArt, HashSet<string> PAuftr, bool isAndConnector)
         {
 
@@ -75,7 +83,11 @@ namespace DBHandler
 
         }
 
-        // Fill in data from .accdb file with custom query
+        /// <summary>
+        /// Fills in data from .accdb file with custom query.
+        /// </summary>
+        /// <param name="queryString">Custom query string that user may input in GUI settings.</param>
+        /// <returns>StatusCode: 'OleDbNotRegistered' when OleDbProvider was not found on system, 'SqlError' when SQL errors were found in custom query, else 'CommandOk'.</returns>
         public StatusCode FillInData(string queryString)
         {
 
@@ -102,7 +114,15 @@ namespace DBHandler
 
         }
 
-        // Builds query string for pp table based on GUI input
+        /// <summary>
+        /// Builds query string for PP table based on GUI input.
+        /// </summary>
+        /// <param name="PAD">Values for 'PAD' to be filtered by.</param>
+        /// <param name="PStrecke">Values for 'PStrecke' to be filtered by.</param>
+        /// <param name="PArt">Values for 'PArt' to be filtered by.</param>
+        /// <param name="PAuftr">Values for 'PAuftr' to be filtered by.</param>
+        /// <param name="isAndConnector">Whether queries should be AND or OR connected.</param>
+        /// <returns>Built query string.</returns>
         public string BuildQueryString(HashSet<string> PAD, HashSet<string> PStrecke, HashSet<string> PArt, HashSet<string> PAuftr, bool isAndConnector)
         {
 
@@ -126,7 +146,13 @@ namespace DBHandler
             return queryString;
         }
 
-        // Builds filter queries
+        /// <summary>
+        /// Builds filter queries used for building the dataset according to GUI settings.
+        /// </summary>
+        /// <param name="filterSet">Multiple values for a variable.</param>
+        /// <param name="filterVariable">Value to be filtered by.</param>
+        /// <param name="queryString">Query string already built.</param>
+        /// <param name="queryConnector">AND or OR connector.</param>
         public void BuildFilter(HashSet<string> filterSet, string filterVariable, ref string queryString, string queryConnector)
         {
 
@@ -140,7 +166,6 @@ namespace DBHandler
                 }
                 queryString += " (";
             }
-            
 
             // Prepare connector
             var innerQueryConnector = "";
@@ -155,7 +180,10 @@ namespace DBHandler
             if (filterSet.Count != 0) queryString += ") ";
         }
 
-        // Update databases (e.g. to be used on "save changed" click)
+        /// <summary>
+        /// Updates database file according to DataSet changes.
+        /// </summary>
+        /// <returns>StatusCode: 'CommandOk' when rows were changed, 'NoDatabaseChanges' when no rows were affected.</returns>
         public StatusCode UpdateDatabases()
         {
 
@@ -175,7 +203,13 @@ namespace DBHandler
         }
 
         // Source: https://docs.microsoft.com/en-us/dotnet/api/system.data.oledb.oledbdataadapter?view=dotnet-plat-ext-3.1
-        // Initializes DataAdapter
+        /// <summary>
+        /// Initializes DataAdapter used to generate SQL queries.
+        /// </summary>
+        /// <param name="tableName">Name of corresponding table [PH, PL or PP].</param>
+        /// <param name="connection">Connection to be used.</param>
+        /// <param name="selectCommand">Command to be used for Select to initially query data.</param>
+        /// <returns>OleDbAdapter</returns>
         public OleDbDataAdapter CreateDataAdapter(string tableName, OleDbConnection connection, string selectCommand)
         {
 
@@ -236,7 +270,7 @@ namespace DBHandler
 
         }
 
-        // 
+        
         /// <summary>
         /// Retrieves a DataRow from PH or PL Table by Primary Key values
         /// </summary>
