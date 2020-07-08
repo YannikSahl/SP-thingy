@@ -350,12 +350,10 @@ namespace GUI
             if (editable)
             {
                 icon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\entsperren.png", UriKind.Relative));
-                EditModeButton.Foreground = new SolidColorBrush(Colors.DarkGreen);
             }
             else
             {
                 icon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\sperren.png", UriKind.Relative));
-                EditModeButton.Foreground = new SolidColorBrush(Colors.Black);
             }
             ImageBrush ib = new ImageBrush(icon);
             ib.Stretch = Stretch.Uniform;

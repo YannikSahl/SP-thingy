@@ -218,5 +218,15 @@ namespace GUI
         }
 
         #endregion
+
+        private void ThemeChange_Checked(object sender, RoutedEventArgs e)
+        {
+            var radioButton = sender as RadioButton;
+            if (radioButton == null)
+                return;
+            
+            Enum.TryParse(typeof(App.Skins), (string)radioButton.Tag, out var index);
+            ((App)Application.Current).ChangeSkin((App.Skins)index);
+        }
     }
 }

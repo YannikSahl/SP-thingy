@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        Title="Anmeldung" Height="320" Width="400" Background="White" Foreground="Black">
+        Title="Anmeldung" Height="320" Width="400" Background="{DynamicResource BackgroundColor}">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -20,26 +20,14 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock FontWeight="Bold" FontSize="15" TextAlignment="Center" Margin="5">Sharepoint Anmeldung</TextBlock>
-        <TextBlock Grid.Row="1" TextAlignment="Center">E-Mail</TextBlock>
+        <TextBlock FontWeight="Bold" FontSize="15" TextAlignment="Center" Margin="5" Foreground="{DynamicResource ForegroundColor}">Sharepoint Anmeldung</TextBlock>
+        <TextBlock Grid.Row="1" TextAlignment="Center" Foreground="{DynamicResource ForegroundColor}">E-Mail</TextBlock>
         <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=SpUserName, Mode=Default}" x:Name="NameBox" Grid.Row="2" Height="40" Margin="5" Padding="10" FontSize="14" VerticalAlignment="Center"></TextBox>
-        <TextBlock Grid.Row="3" TextAlignment="Center">Password</TextBlock>
+        <TextBlock Grid.Row="3" TextAlignment="Center" Foreground="{DynamicResource ForegroundColor}">Password</TextBlock>
         <PasswordBox Grid.Row="4" x:Name="PasswordBox" Height="40" Margin="5,5,0,5" Padding="10" FontSize="14" VerticalAlignment="Center"></PasswordBox>
-        <Button Grid.Row="5" Margin="5" Height="40" Click="Connect_ButtonClick" BorderBrush="{x:Null}" Foreground="White" FontWeight="Bold" FontSize="14" IsDefault="True">
-            <Button.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FF2ED6FB"/>
-                    <GradientStop Color="#FF479BFF" Offset="1"/>
-                </LinearGradientBrush>
-            </Button.Background> Verbinden
+        <Button Grid.Row="5" Margin="5" Height="40" Click="Connect_ButtonClick" BorderBrush="{x:Null}" Foreground="{DynamicResource HighlightedTextColor}" FontWeight="Bold" FontSize="14" IsDefault="True" Background="{DynamicResource HighlightedButtonSecondaryColor}">Verbinden
         </Button>
-        <Button Grid.Row="6" Margin="5" Height="40" BorderBrush="{x:Null}" Click="OfflineMode_ButtonClick" FontWeight="Normal">
-            <Button.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FFFF8E40"/>
-                    <GradientStop Color="#FFFF4141" Offset="1"/>
-                </LinearGradientBrush>
-            </Button.Background> Offline Modus
+        <Button Grid.Row="6" Margin="5" Height="40" BorderBrush="{x:Null}" Click="OfflineMode_ButtonClick" FontWeight="Normal" Foreground="{DynamicResource HighlightedTextColor}" Background="{DynamicResource HighlightedButtonColor}">Offline Modus
         </Button>
         <DockPanel x:Name="ErrorMessageContainer" Grid.Row="7" Visibility="Hidden" Margin="5,0,5,5">
             <TextBlock x:Name="ErrorMessage" TextWrapping="Wrap" DockPanel.Dock="Bottom" Foreground="#FFFF3737" FontStyle="Italic" FontWeight="Normal" >FEHLER 001</TextBlock>
