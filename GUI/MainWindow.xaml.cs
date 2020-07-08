@@ -55,6 +55,9 @@ namespace GUI
         public Settings _settingsWindow;
         public Abfragen _abfrageWindow;
 
+        BitmapImage unlockedIcon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\entsperren.png", UriKind.Relative));
+        BitmapImage lockedIcon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\sperren.png", UriKind.Relative));
+
         #endregion
 
         #region constructors
@@ -78,6 +81,8 @@ namespace GUI
             AddFilePreview("..\\..\\..\\test_images\\pdf_test.pdf");
             AddFilePreview("..\\..\\..\\test_images\\txt_test.txt");
             AddFilePreview("..\\..\\..\\test_images\\pptx_test.pptx");
+
+            SetStatusBarLastSaved();
         }
 
         #endregion
@@ -89,14 +94,16 @@ namespace GUI
             if (m_databaseConnection == null)
                 return true;
             var result = m_databaseConnection.UpdateDatabases();
-            if (result != StatusCode.CommandOk)
+            if (result == StatusCode.CommandOk || result == StatusCode.NoDatabaseChanges)
+            {
+                SetStatusBarLastSaved();
+                return true;
+            }
+            else
             {
                 MessageBox.Show($"Status Code: {Enum.GetName(result.GetType(), result)}", "Speichern Fehlgeschlagen", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 return false;
             }
-
-            SetStatusBarLastSaved();
-            return true;
         }
 
         //private DateTime _lastSaved;
@@ -349,11 +356,11 @@ namespace GUI
             BitmapImage icon;
             if (editable)
             {
-                icon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\entsperren.png", UriKind.Relative));
+                icon = unlockedIcon;
             }
             else
             {
-                icon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\sperren.png", UriKind.Relative));
+                icon = lockedIcon;
             }
             ImageBrush ib = new ImageBrush(icon);
             ib.Stretch = Stretch.Uniform;

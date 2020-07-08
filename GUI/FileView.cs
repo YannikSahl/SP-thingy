@@ -40,8 +40,8 @@ namespace GUI
         private string _directoryPath;
         private string _fileName;
 
-        private SolidColorBrush _baseColor = (SolidColorBrush)((App)App.Current).Resources["BackgroundSecondaryColor"];
-        private SolidColorBrush _mouseOverColor = (SolidColorBrush)((App)App.Current).Resources["ButtonColor"];
+        private SolidColorBrush _baseColor = (SolidColorBrush)((Application)Application.Current).Resources["BackgroundSecondaryColor"];
+        private SolidColorBrush _mouseOverColor = (SolidColorBrush)((Application)Application.Current).Resources["ButtonColor"];
 
         #endregion
 
@@ -211,7 +211,7 @@ namespace GUI
             tView.Width = 100;
             tView.TextWrapping = TextWrapping.Wrap;
             tView.Text = _displayText;
-            tView.Foreground = (SolidColorBrush) ((App) App.Current).Resources["ForegroundColor"];
+            tView.Foreground = (SolidColorBrush) ((Application) Application.Current).Resources["ForegroundColor"];
             tView.VerticalAlignment = VerticalAlignment.Center;
             tView.HorizontalAlignment = HorizontalAlignment.Left;
             tView.Padding = new Thickness(10,0,0,0);

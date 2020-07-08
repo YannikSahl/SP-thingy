@@ -24,14 +24,14 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}">E-Mail</TextBlock>
                 <DockPanel Margin="2" LastChildFill="True" Grid.Row="0" Grid.Column="1">
-                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=SpUserName, Mode=Default}" x:Name="SpUserName" Height="30" VerticalContentAlignment="Center"></TextBox>
+                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=SpUserName, Mode=Default}" x:Name="SpUserName" Height="30" VerticalContentAlignment="Center" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" SelectionBrush="{DynamicResource HighlightedButtonColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"></TextBox>
                 </DockPanel>
                 <DockPanel Margin="2" LastChildFill="True" Grid.Row="1" Grid.Column="1">
-                    <PasswordBox x:Name="SpUserPw" Height="30" VerticalContentAlignment="Center"></PasswordBox>
+                    <PasswordBox x:Name="SpUserPw" Height="30" VerticalContentAlignment="Center" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" SelectionBrush="{DynamicResource HighlightedButtonColor}"></PasswordBox>
                 </DockPanel>
                 <TextBlock Grid.Row="1" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}">Password</TextBlock>
                 <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True">
-                    <Button DockPanel.Dock="Left" Click="Button_Click" BorderBrush="{x:Null}" Height="30" Background="{DynamicResource ButtonColor}" Foreground="{DynamicResource HighlightedTextColor}">Verbindung Testen</Button>
+                    <Button DockPanel.Dock="Left" Click="Button_Click" BorderBrush="{x:Null}" Height="30" Background="{DynamicResource BackgroundTernaryColor}" Foreground="{DynamicResource UiElementForegroundColor}">Verbindung Testen</Button>
                 </DockPanel>
             </Grid>
 
@@ -53,27 +53,27 @@
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}">Sharepoint Url</TextBlock>
                 <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True" Margin="2">
-                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSp, Mode=Default}" x:Name="SpSave" VerticalContentAlignment="Center" Height="30"/>
+                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSp, Mode=Default}" x:Name="SpSave" VerticalContentAlignment="Center" Height="30" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" SelectionBrush="{DynamicResource HighlightedButtonColor}"/>
                 </DockPanel>
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}">Datenbank im Sharepoint</TextBlock>
                 <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True" Margin="2">
-                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbInSp, Mode=Default}" x:Name="DbSpSave" VerticalContentAlignment="Center" Height="30"></TextBox>
+                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbInSp, Mode=Default}" x:Name="DbSpSave" VerticalContentAlignment="Center" Height="30" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" SelectionBrush="{DynamicResource HighlightedButtonColor}"></TextBox>
                 </DockPanel>
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}">Skizzen im Sharepoint</TextBlock>
                 <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True" Margin="2">
-                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSkizzenInSp, Mode=Default}" x:Name="SkizzeSpSave" VerticalContentAlignment="Center" Height="30"></TextBox>
+                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSkizzenInSp, Mode=Default}" x:Name="SkizzeSpSave" VerticalContentAlignment="Center" Height="30" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" SelectionBrush="{DynamicResource HighlightedButtonColor}"></TextBox>
                 </DockPanel>
 
                 <TextBlock Grid.Row="3" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}">Export DB</TextBlock>
                 <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="True" Margin="2">
-                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbLocal, Mode=Default}" x:Name="DbLocalSave" VerticalContentAlignment="Center" Height="30" TextChanged="TextBoxTextChangedLinkPath"/>
+                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbLocal, Mode=Default}" x:Name="DbLocalSave" VerticalContentAlignment="Center" Height="30" TextChanged="TextBoxTextChangedLinkPath" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" SelectionBrush="{DynamicResource HighlightedButtonColor}"/>
                 </DockPanel>
 
                 <TextBlock Grid.Row="4" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}">Export Skizzen</TextBlock>
                 <DockPanel Grid.Row="4" Grid.Column="1" LastChildFill="True" Margin="2">
-                    <TextBox x:Name="SkizzeLocalSave" VerticalContentAlignment="Center" Height="30" TextChanged="TextBoxTextChangedLinkPath"></TextBox>
+                    <TextBox x:Name="SkizzeLocalSave" VerticalContentAlignment="Center" Height="30" TextChanged="TextBoxTextChangedLinkPath" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" SelectionBrush="{DynamicResource HighlightedButtonColor}"></TextBox>
                 </DockPanel>
             </Grid>
 
@@ -81,12 +81,12 @@
                 Design
             </Label>
             <DockPanel Background="{DynamicResource BackgroundSecondaryColor}">
-                <RadioButton x:Name="LightSkinButton" Tag="Light" GroupName="Skins" Margin="5" Checked="ThemeChange_Checked" Background="White" Foreground="{DynamicResource ForegroundColor}">Light
-                </RadioButton>
-                <RadioButton x:Name="DarkSkinButton" Tag="Dark" GroupName="Skins" Margin="5" Checked="ThemeChange_Checked" Background="White" Foreground="{DynamicResource ForegroundColor}">Dark
-                </RadioButton>
-                <RadioButton x:Name="ColorlessSkinButton" Tag="ColorLess" GroupName="Skins" Margin="5" Checked="ThemeChange_Checked" Background="White" Foreground="{DynamicResource ForegroundColor}">Colorless
-                </RadioButton>
+                <TextBlock Margin="5" Foreground="{DynamicResource ForegroundColor}">Theme auswählen</TextBlock>
+                <ComboBox x:Name="ThemeSelector" Height="30" Margin="2" SelectionChanged="ThemeSelector_OnSelectionChanged" Background="#FFE2E2E2" Foreground="#FF474747">
+                    <ComboBoxItem Tag="Light">Light Skin</ComboBoxItem>
+                    <ComboBoxItem Tag="Dark">Dark Skin</ComboBoxItem>
+                    <ComboBoxItem Tag="ColorLess">Colorless Skin</ComboBoxItem>
+                </ComboBox>
             </DockPanel>
 
             <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5" Background="{DynamicResource HighlightedButtonColor}">

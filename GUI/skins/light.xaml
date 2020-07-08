@@ -18,6 +18,12 @@
         <GradientStop Color="#FF479BFF" Offset="1"/>
     </LinearGradientBrush>
     <SolidColorBrush x:Key="ButtonColor" Color="#FF8B8B8B"></SolidColorBrush>
+
     <SolidColorBrush x:Key="MenuBackgroundColor" Color="#FF444444"></SolidColorBrush>
     <SolidColorBrush x:Key="MenuForegroundColor" Color="WhiteSmoke"></SolidColorBrush>
+
+    <SolidColorBrush x:Key="UiElementBackgroundColor" Color="WhiteSmoke"></SolidColorBrush>
+    <SolidColorBrush x:Key="UiElementBackgroundSecondaryColor" Color="#FFE0E0E0"></SolidColorBrush>
+    <SolidColorBrush x:Key="UiElementForegroundColor" Color="Black"></SolidColorBrush>
+    <SolidColorBrush x:Key="UiElementForegroundSecondaryColor" Color="#FF323232"></SolidColorBrush>
 </ResourceDictionary>
