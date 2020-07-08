@@ -94,5 +94,17 @@ namespace GUI.Properties {
                 this["PathSkizzenLocal"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SkinId {
+            get {
+                return ((int)(this["SkinId"]));
+            }
+            set {
+                this["SkinId"] = value;
+            }
+        }
     }
 }
