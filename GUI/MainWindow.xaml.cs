@@ -89,7 +89,7 @@ namespace GUI
             if (m_databaseConnection == null)
                 return true;
             var result = m_databaseConnection.UpdateDatabases();
-            if (result != StatusCode.CommandOk && result != StatusCode.NoDatabaseChanges)
+            if (result != StatusCode.CommandOk)
             {
                 MessageBox.Show($"Status Code: {Enum.GetName(result.GetType(), result)}", "Speichern Fehlgeschlagen", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 return false;

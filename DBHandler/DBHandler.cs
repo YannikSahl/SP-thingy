@@ -126,7 +126,7 @@ namespace DBHandler
         public string BuildQueryString(HashSet<string> PAD, HashSet<string> PStrecke, HashSet<string> PArt, HashSet<string> PAuftr, bool isAndConnector)
         {
 
-            var queryString = "SELECT DISTINCT * FROM PP";
+            var queryString = "SELECT * FROM PP";
             var queryConnector = isAndConnector ? "AND" : "OR";
 
             // Append where
