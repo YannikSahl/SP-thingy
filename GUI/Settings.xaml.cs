@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -112,7 +113,7 @@ namespace GUI
         /// <summary>
         /// set SP pw and username
         /// </summary>
-        public void SaveAuth()
+        public void SetCredidentials()
         {
             SPHandler.Handler.SetUsername(SpUserName.Text);
             SPHandler.Handler.SetPassword(SpUserPw.Password);
@@ -158,12 +159,16 @@ namespace GUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             Button mSender = (Button) sender;
-            SaveAuth();
-            bool hasConnection;
-            string errorMessage = SPHandler.Handler.TestConnection(out hasConnection);
+            SetCredidentials();
+            var errorMessage = await Task.Run(() =>
+            {
+                return SPHandler.Handler.TryUserLogin();
+            });
+
+            var hasConnection = errorMessage == null;
 
             if (hasConnection)
             {

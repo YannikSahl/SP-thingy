@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace GUI
@@ -49,17 +51,26 @@ namespace GUI
             RedirectToMainWindow(MainWindow.ConnectionModus.Offline);
         }
 
+        private void SetCredidentials()
+        {
+            SPHandler.Handler.SetPassword(PasswordBox.Password);
+            SPHandler.Handler.SetUsername(NameBox.Text);
+        }
+
         /// <summary>
         /// buttonclick event try to connect
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Connect_ButtonClick(object sender, RoutedEventArgs e)
+        private async void Connect_ButtonClick(object sender, RoutedEventArgs e)
         {
-            SPHandler.Handler.SetPassword(PasswordBox.Password);
-            SPHandler.Handler.SetUsername(NameBox.Text);
-            string errorMessage = SPHandler.Handler.TestConnection(out var hasConnection);
+            SetCredidentials();
+            var errorMessage = await Task.Run(() =>
+            {
+                return SPHandler.Handler.TryUserLogin();
+            });
 
+            var hasConnection = errorMessage == null;
             if (hasConnection)
             {
                 // redirect to mainwindow
