@@ -31,8 +31,11 @@ namespace SPHandler
         {
             password = pw;
         }
-
-        public static string TestConnection(out bool success) //async 
+/// <summary>
+/// testing connection to the SharePoint 
+/// </summary>
+/// <param name="success">used for displaying the result</param>
+public static Task<string> TestConnection(out bool success) //async 
         {
             try
             {
@@ -53,11 +56,20 @@ namespace SPHandler
             catch (Exception e)
             {
                 success = false;
-                return e.Message;
+                return Task.FromResult<String>(e.Message);
             }
-
             success = true;
             return null;
+        }
+
+/// <summary>
+/// Async Method to test the connection, while the programm is already displaying the database
+/// </summary>
+public async Task<String> TestConnectionAsync()
+        {
+            string ret = await TestConnection(out bool success);
+
+            return ret;
         }
 
         /// <summary>Returns FileRelativUrl for Files on SharePoint
