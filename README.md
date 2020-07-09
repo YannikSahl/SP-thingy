@@ -1,4 +1,5 @@
 
+
 ## Front-End Festpunktfelddatenbank für die DB Netz AG
 Ein Projekt für die DB Netz AG im Rahmen des Software Entwicklungsprojektes der HTW Berlin für das SoSe 2020.
 
@@ -34,14 +35,21 @@ Damit der DBHandler seine Arbeit erledigen kann, werden folgende Technologien be
 Beim Start der Applikation öffnet sich ein Authentifizierungs Formular. Durch Anmeldung oder durch den Offline Modus, wird man ins Hauptformular weitergeleitet
 Um über weiteres navigieren innerhalb der GUI zu erfahren, lesen Sie bitte die Dokumentation zur GUI (2.1)
 #### 2.1 Dokumentation: GUI
+#### 2.1.1 Ablauf
 Im Hauptformular sind folgende optionen zum Navigieren durch die einzelnen Formulare möglich.
 Im oberen Menü gibt es bis jetzt folgende, bis jetzt funktionierende Reiter: 
-- Datei/Neue Abfrage
+ 1. Datei/Neue Abfrage
 Wenn hier rauf geklickt wird, öffnet sich das Abfrageformular
-- Extras/Einstellungen
+ 2. Extras/Einstellungen
 Wenn hier rauf geklickt wird, öffnet sich das Einstellungen-Formular
-- Datei/Schließen
+ 3. Datei/Schließen
 Wenn hier rauf geklickt wird, schließen sich alle Fenster und die Applikation wird beendet
+#### 2.1.2 Code Dokumentation
+##### 2.1.2.1 Skins/Themes
+In der `App.xaml` befindet sich ein Resource Dictionary, welches Parameter beinhaltet. Skin/Theme Dateien sind auch eigenstehende Resource Dictionaries im `.xaml` Format.
+Falls neue Skins/Themes hinzugefügt werden wollen, müssen folgende Schritte durchgeführt werden:
+ 1. In dem Resource Dictionary der Skin/Theme `.xaml` Datei müssen genau die gleichen Parameter mit dem gleichem Key (in WPF Resource Dictionaries `x:Key`) gegeben sein. 
+ 2.  In der `App.xaml.cs` Datei befindet sich ein Dictionary member namens skinReferenceDictionary, welches über einen als Enum Wert gegebenen Key, einen String mit dem relativen Pfad zur Skin/Theme Datei beinhaltet. In das Enum muss ein neuer Skin registriert werden. Danach muss auch im genannten Dictionary ein neuer Eintrag, der als Key den eben eingefügten Enum Wert und als Value den Pfad zur Datei hat, eingefügt werden.
 
 #### 2.2 Dokumentation: DBHandler
 Die Datenbankdatei "Datenmodell.accdb" ist zurzeit noch im Repository enthalten in dem Projekt DBHandler. 

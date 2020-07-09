@@ -8,52 +8,45 @@
         Title="Hauptformular" Height="450" Width="800" 
         Closing="Window_Closing"
         LostFocus="MainWindow_OnLostFocus"
-        WindowStartupLocation="CenterScreen" WindowState="Maximized">
+        WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="{DynamicResource BackgroundColor}">
     <DockPanel LastChildFill="True">
-        <Menu DockPanel.Dock="Top" Background="#FF444444" Foreground="White" >
-            <MenuItem Header="_Datei" Background="#FF444444">
-                <MenuItem Header="_Im-/Export" Foreground="Black">
-                    <MenuItem Header="_Auswahl exportieren" Foreground="Black"/>
-                    <MenuItem Header="_Importieren" Foreground="Black"/>
+        <Menu DockPanel.Dock="Top" Background="{DynamicResource MenuBackgroundColor}" Foreground="{DynamicResource MenuForegroundColor}" >
+            <MenuItem Header="_Datei" Foreground="{DynamicResource MenuForegroundColor}">
+                <MenuItem Header="_Im-/Export" Foreground="{DynamicResource MenuBackgroundColor}">
+                    <MenuItem Header="_Auswahl exportieren" Foreground="{DynamicResource MenuBackgroundColor}"/>
+                    <MenuItem Header="_Importieren" Foreground="{DynamicResource MenuBackgroundColor}"/>
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="_Schließen" Foreground="Black" Click="MenuCloseApp_Click"/>
+                <MenuItem Header="_Schließen" Click="MenuCloseApp_Click" Foreground="{DynamicResource MenuBackgroundColor}"/>
             </MenuItem>
-            <MenuItem Header="_Datenbank" Background="#FF444444">
-                <MenuItem Header="_DB Pflege" Foreground="Black"/>
-                <MenuItem Header="_Pfade" Foreground="Black"/>
-                <MenuItem Header="_Neue Abfrage" Foreground="Black" Click="OpenAbfrageWindow"/>
-                <MenuItem Header="_Aktualisieren" Foreground="Black"/>
+            <MenuItem Header="_Datenbank" Foreground="{DynamicResource MenuForegroundColor}">
+                <MenuItem Header="_DB Pflege" Foreground="{DynamicResource MenuBackgroundColor}"/>
+                <MenuItem Header="_Pfade" Foreground="{DynamicResource MenuBackgroundColor}"/>
+                <MenuItem Header="_Neue Abfrage" Click="OpenAbfrageWindow" Foreground="{DynamicResource MenuBackgroundColor}"/>
+                <MenuItem Header="_Aktualisieren" Foreground="{DynamicResource MenuBackgroundColor}"/>
             </MenuItem>
-            <MenuItem Header="Extras" Background="#FF444444">
-                <MenuItem Header="Einstellungen" Foreground="Black" Click="OpenSettingsWindow"/>
+            <MenuItem Header="Extras">
+                <MenuItem Header="Einstellungen" Click="OpenSettingsWindow" Foreground="{DynamicResource MenuBackgroundColor}"/>
             </MenuItem>
         </Menu>
-        <DockPanel DockPanel.Dock="Bottom" Background="#FF444444" Height="16" LastChildFill="False">
-            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" Foreground="LightGray" Margin="2,0,2,0">Verbindung:</TextBlock>
+        <DockPanel DockPanel.Dock="Bottom" Background="{DynamicResource MenuBackgroundColor}" Height="16" LastChildFill="False">
+            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" Foreground="{DynamicResource ForegroundSecondaryColor}" Margin="2,0,2,0">Verbindung:</TextBlock>
             <Border CornerRadius="10" BorderThickness="1">
-                <TextBlock VerticalAlignment="Center" x:Name="ConnectionStatus" DockPanel.Dock="Left" Foreground="White" Margin="2,0,2,0" Padding="2,0,2,0" FontWeight="Bold"/>
+                <TextBlock VerticalAlignment="Center" x:Name="ConnectionStatus" DockPanel.Dock="Left" Foreground="{DynamicResource HighlightedTextColor}" Margin="2,0,2,0" Padding="2,0,2,0" FontWeight="Bold"/>
             </Border>
 
-            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" Foreground="LightGray" Margin="2,0,2,0">| Bearbeitung:</TextBlock>
-            <TextBlock VerticalAlignment="Center" x:Name="EditStatus" DockPanel.Dock="Left" Foreground="#FFFF9429" Margin="2,0,2,0" FontWeight="Bold"/>
+            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" Foreground="{DynamicResource ForegroundSecondaryColor}" Margin="2,0,2,0">| Bearbeitung:</TextBlock>
+            <TextBlock VerticalAlignment="Center" x:Name="EditStatus" DockPanel.Dock="Left" Foreground="{DynamicResource HighlightedTextSecondaryColor}" Margin="2,0,2,0" FontWeight="Bold"/>
 
-            <TextBlock VerticalAlignment="Center" x:Name="SavedStatus" DockPanel.Dock="Right" Foreground="#FFFF9429" Margin="2,0,2,0" FontWeight="Bold"/>
-            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Right" Foreground="LightGray" Margin="2,0,2,0">gespeichert um </TextBlock>
+            <TextBlock VerticalAlignment="Center" x:Name="SavedStatus" DockPanel.Dock="Right" Foreground="{DynamicResource HighlightedTextSecondaryColor}" Margin="2,0,2,0" FontWeight="Bold"/>
+            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Right" Foreground="{DynamicResource ForegroundSecondaryColor}" Margin="2,0,2,0">gespeichert um</TextBlock>
         </DockPanel>
-        <TextBlock x:Name="ConnectionStatusBar" Height="20" DockPanel.Dock="Bottom" Background="#FF21C947" Visibility="Collapsed" TextAlignment="Center">Verbunden</TextBlock>
+        <TextBlock x:Name="ConnectionStatusBar" Height="20" DockPanel.Dock="Bottom" Background="#FF21C947" Foreground="{DynamicResource HighlightedTextColor}" Visibility="Collapsed" TextAlignment="Center" FontSize="14" FontWeight="Bold">Verbunden</TextBlock>
         <DockPanel>
 
-            <DockPanel DockPanel.Dock="Top" Background="#FFE8E8E8">
-                <TextBlock DockPanel.Dock="Left" Padding="5" FontWeight="Bold" VerticalAlignment="Center">Ausgewähltes Dokument (nach PAD):</TextBlock>
-                <Button DockPanel.Dock="Right" Padding="5" Foreground="White" Margin="2" BorderBrush="#FF959595" Click="SaveChangesButton_Click">
-                    <Button.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FFFF8E1D"/>
-                            <GradientStop Color="#FFFF3D2A" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Button.Background> Änderungen Speichern</Button>
-                <TextBlock x:Name="SelectedPad" VerticalAlignment="Center" DockPanel.Dock="Left" Padding="5" FontWeight="Bold" FontStyle="Normal" FontSize="16"></TextBlock>
+            <DockPanel DockPanel.Dock="Top" Background="{DynamicResource BackgroundSecondaryColor}" Margin="10,5,10,0">
+                <TextBlock DockPanel.Dock="Left" Padding="5" FontWeight="Bold" VerticalAlignment="Center" Foreground="{DynamicResource ForegroundColor}">Ausgewähltes Dokument (nach PAD):</TextBlock>
+                <TextBlock x:Name="SelectedPad" VerticalAlignment="Center" DockPanel.Dock="Left" Padding="5" FontWeight="Bold" FontStyle="Normal" FontSize="16" Foreground="{DynamicResource ForegroundColor}"></TextBlock>
             </DockPanel>
 
             <Grid Margin="5">
@@ -62,24 +55,19 @@
                     <ColumnDefinition Width="5" />
                     <ColumnDefinition x:Name="DocumentViewContainer" Width="34" MinWidth="33" MaxWidth="500"/>
                 </Grid.ColumnDefinitions>
-                <DockPanel Margin="5,0,5,5">
-                    <DockPanel DockPanel.Dock="Top" Margin="5,0,5,0">
-                        <TextBox x:Name="SearchPpTextfield" Width="200" DockPanel.Dock="Left" VerticalContentAlignment="Center" BorderBrush="{x:Null}" Background="#FFF0F0F0"/>
-                        <Button DockPanel.Dock="Left" Padding="5" BorderBrush="{x:Null}" Click="SearchButton_Click">PAD Suchen</Button>
-                        <Button DockPanel.Dock="Left" Padding="8,4,8,4" BorderBrush="{x:Null}" Background="#FFE8E8E8" FontWeight="Bold" Click="ClearPpSearchButton_Click">
-                            <Button.Foreground>
-                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                    <GradientStop Color="#FFFF2020"/>
-                                    <GradientStop Color="#FFFF8B18" Offset="1"/>
-                                </LinearGradientBrush>
-                            </Button.Foreground> X
-                        </Button>
+                <DockPanel Margin="5,0,5,5" Background="{DynamicResource BackgroundSecondaryColor}">
+                    <DockPanel DockPanel.Dock="Top" Margin="5,5,5,0" LastChildFill="False">
+                        <TextBox x:Name="SearchPpTextfield" Width="200" DockPanel.Dock="Left" VerticalContentAlignment="Center" BorderBrush="{x:Null}" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" Height="30"/>
+                        <Button DockPanel.Dock="Left" Padding="5" BorderBrush="{x:Null}" Click="SearchButton_Click" Background="{DynamicResource BackgroundTernaryColor}" Foreground="{DynamicResource ForegroundColor}">PAD Suchen</Button>
+                        <Button DockPanel.Dock="Left" Padding="8,4,8,4" BorderBrush="{x:Null}" Background="{DynamicResource BackgroundTernaryColor}" FontWeight="Bold" Click="ClearPpSearchButton_Click" Foreground="{DynamicResource HighlightedButtonColor}" Width="30" Height="30">X</Button>
                         <Button x:Name="EditModeIcon" IsHitTestVisible="False" DockPanel.Dock="Right" HorizontalAlignment="Right" Width="20"  Padding="5" BorderBrush="{x:Null}">
                             <Button.Background>
                                 <ImageBrush ImageSource="/gui_resources/sperren.png" Stretch="Uniform" TileMode="None"/>
                             </Button.Background>
                         </Button>
-                        <Button x:Name="EditModeButton" DockPanel.Dock="Right" HorizontalAlignment="Right" Padding="5" BorderBrush="{x:Null}" Click="EditModeButton_Click" Background="#FFDDDDDD">Bearbeitungsansicht</Button>
+                        <Button x:Name="EditModeButton" DockPanel.Dock="Right" HorizontalAlignment="Right" Padding="5" BorderBrush="{x:Null}" Click="EditModeButton_Click" Background="{DynamicResource BackgroundTernaryColor}" Foreground="{DynamicResource ForegroundColor}">Bearbeitungsansicht</Button>
+                        <TextBlock DockPanel.Dock="Right" Background="{DynamicResource BackgroundTernaryColor}" Width="1.5" Margin="5,0,5,0"></TextBlock>
+                        <Button DockPanel.Dock="Right" Padding="5" Foreground="{DynamicResource HighlightedTextColor}" BorderBrush="{x:Null}" Click="SaveChangesButton_Click" Background="{DynamicResource HighlightedButtonColor}">Änderungen Speichern</Button>
                     </DockPanel>
                     <Grid Margin="5">
                         <Grid.RowDefinitions>
@@ -89,43 +77,82 @@
                             <RowDefinition Height="5"/>
                             <RowDefinition MinHeight="50"/>
                         </Grid.RowDefinitions>
-                        <DockPanel Grid.Row="0" Margin="0,0,0,5">
+                        <DockPanel Grid.Row="0" Margin="0,0,0,5" >
                             <DockPanel DockPanel.Dock="Top" LastChildFill="False">
-                                <TextBlock DockPanel.Dock="Left" Text="PP Tabelle" FontWeight="Bold" Foreground="#FF686868" FontStyle="Normal"></TextBlock>
-                                <TextBlock DockPanel.Dock="Right" Text="Einträge" Foreground="#FF686868" Margin="5,0,0,0"></TextBlock>
-                                <TextBlock x:Name="PpCount" DockPanel.Dock="Right" Text="0" Foreground="#FF686868" FontWeight="Bold" ></TextBlock>
+                                <TextBlock DockPanel.Dock="Left" Text="PP Tabelle" FontWeight="Bold" Foreground="{DynamicResource ForegroundTernaryColor}" FontStyle="Normal"></TextBlock>
+                                <TextBlock DockPanel.Dock="Right" Text="Einträge" Foreground="{DynamicResource ForegroundTernaryColor}" Margin="5,0,0,0"></TextBlock>
+                                <TextBlock x:Name="PpCount" DockPanel.Dock="Right" Text="0" Foreground="{DynamicResource ForegroundTernaryColor}" FontWeight="Bold" ></TextBlock>
                             </DockPanel>
-                            <DataGrid x:Name="PpTable" ItemsSource="{Binding}" SelectionChanged="PpTable_SelectionChanged"></DataGrid>
+                            <DataGrid x:Name="PpTable" ItemsSource="{Binding}" SelectionChanged="PpTable_SelectionChanged" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource HighlightedButtonColor}">
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="Background" Value="{DynamicResource UiElementBackgroundSecondaryColor}"></Setter>
+                                        <Setter Property="Foreground" Value="{DynamicResource UiElementForegroundColor}"></Setter>
+                                    </Style>
+                                </DataGrid.RowStyle>
+                                <DataGrid.Resources>
+                                    <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
+                                        <Setter Property="Background" Value="{DynamicResource UiElementBackgroundColor}" />
+                                        <Setter Property="Foreground" Value="{DynamicResource UiElementForegroundSecondaryColor}" />
+                                    </Style>
+                                </DataGrid.Resources>
+                            </DataGrid>
                         </DockPanel>
-                        <TextBlock x:Name="PpTableEmptyMessage" Grid.Row="0" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" Foreground="#FFFF5E13" Margin="0,10,0,0">Keine Auswahl</TextBlock>
-                        <GridSplitter Grid.Row="1"  Height="5"  HorizontalAlignment="Stretch"/>
+                        <TextBlock x:Name="PpTableEmptyMessage" Grid.Row="0" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" Foreground="{DynamicResource HighlightedTextSecondaryColor}" Margin="0,10,0,0">Keine Auswahl</TextBlock>
+                        <GridSplitter Grid.Row="1"  Height="4"  HorizontalAlignment="Stretch" Background="{DynamicResource BackgroundTernaryColor}"/>
                         <DockPanel Grid.Row="2" Margin="0,5,0,5">
                             <DockPanel DockPanel.Dock="Top" LastChildFill="False">
-                                <TextBlock DockPanel.Dock="Left" Text="PL Tabelle" FontWeight="Bold" Foreground="#FF686868" FontStyle="Normal"></TextBlock>
-                                <TextBlock DockPanel.Dock="Right" Text="Einträge" Foreground="#FF686868" Margin="5,0,0,0"></TextBlock>
-                                <TextBlock DockPanel.Dock="Right" x:Name="PlCount" Text="0" Foreground="#FF686868" FontWeight="Bold" ></TextBlock>
+                                <TextBlock DockPanel.Dock="Left" Text="PL Tabelle" FontWeight="Bold" Foreground="{DynamicResource ForegroundTernaryColor}" FontStyle="Normal"></TextBlock>
+                                <TextBlock DockPanel.Dock="Right" Text="Einträge" Foreground="{DynamicResource ForegroundTernaryColor}" Margin="5,0,0,0"></TextBlock>
+                                <TextBlock DockPanel.Dock="Right" x:Name="PlCount" Text="0" Foreground="{DynamicResource ForegroundTernaryColor}" FontWeight="Bold" ></TextBlock>
                             </DockPanel>
-                            <DataGrid x:Name="PlTable"/>
+                            <DataGrid x:Name="PlTable" ItemsSource="{Binding}" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource HighlightedButtonColor}">
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="Background" Value="{DynamicResource UiElementBackgroundSecondaryColor}"></Setter>
+                                        <Setter Property="Foreground" Value="{DynamicResource UiElementForegroundColor}"></Setter>
+                                    </Style>
+                                </DataGrid.RowStyle>
+                                <DataGrid.Resources>
+                                    <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
+                                        <Setter Property="Background" Value="{DynamicResource UiElementBackgroundColor}" />
+                                        <Setter Property="Foreground" Value="{DynamicResource UiElementForegroundSecondaryColor}" />
+                                    </Style>
+                                </DataGrid.Resources>
+                            </DataGrid>
                         </DockPanel>
-                        <TextBlock x:Name="PlTableEmptyMessage" Grid.Row="2" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" Foreground="#FF4D4D4D" Margin="0,10,0,0">Keine Auswahl</TextBlock>
-                        <GridSplitter Grid.Row="3" Height="5" HorizontalAlignment="Stretch" />
+                        <TextBlock x:Name="PlTableEmptyMessage" Grid.Row="2" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" Foreground="{DynamicResource ForegroundTernaryColor}" Margin="0,10,0,0">Keine Auswahl</TextBlock>
+                        <GridSplitter Grid.Row="3" Height="4" HorizontalAlignment="Stretch" Background="{DynamicResource BackgroundTernaryColor}"/>
                         <DockPanel Grid.Row="4" Margin="0,5,0,0">
                             <DockPanel DockPanel.Dock="Top" LastChildFill="False">
-                                <TextBlock DockPanel.Dock="Left" Text="PH Tabelle" FontWeight="Bold" Foreground="#FF686868" FontStyle="Normal"></TextBlock>
-                                <TextBlock DockPanel.Dock="Right" Text="Einträge" Foreground="#FF686868" Margin="5,0,0,0"></TextBlock>
-                                <TextBlock DockPanel.Dock="Right" x:Name="PhCount" Text="0" Foreground="#FF686868" FontWeight="Bold" ></TextBlock>
+                                <TextBlock DockPanel.Dock="Left" Text="PH Tabelle" FontWeight="Bold" Foreground="{DynamicResource ForegroundTernaryColor}" FontStyle="Normal"></TextBlock>
+                                <TextBlock DockPanel.Dock="Right" Text="Einträge" Foreground="{DynamicResource ForegroundTernaryColor}" Margin="5,0,0,0"></TextBlock>
+                                <TextBlock DockPanel.Dock="Right" x:Name="PhCount" Text="0" Foreground="{DynamicResource ForegroundTernaryColor}" FontWeight="Bold" ></TextBlock>
                             </DockPanel>
-                            <DataGrid x:Name="PhTable"/>
+                            <DataGrid x:Name="PhTable" ItemsSource="{Binding}" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource HighlightedButtonColor}">
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="Background" Value="{DynamicResource UiElementBackgroundSecondaryColor}"></Setter>
+                                        <Setter Property="Foreground" Value="{DynamicResource UiElementForegroundColor}"></Setter>
+                                    </Style>
+                                </DataGrid.RowStyle>
+                                <DataGrid.Resources>
+                                    <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
+                                        <Setter Property="Background" Value="{DynamicResource UiElementBackgroundColor}" />
+                                        <Setter Property="Foreground" Value="{DynamicResource UiElementForegroundSecondaryColor}" />
+                                    </Style>
+                                </DataGrid.Resources>
+                            </DataGrid>
                         </DockPanel>
-                        <TextBlock x:Name="PhTableEmptyMessage" Grid.Row="4" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" Foreground="#FF4D4D4D" Margin="0,10,0,0">Keine Auswahl</TextBlock>
+                        <TextBlock x:Name="PhTableEmptyMessage" Grid.Row="4" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" Foreground="{DynamicResource ForegroundTernaryColor}" Margin="0,10,0,0">Keine Auswahl</TextBlock>
                     </Grid>
                 </DockPanel>
 
-                <GridSplitter x:Name="ViewSplitter" Grid.Column="1" Grid.Row="0" Width="5" HorizontalAlignment="Stretch" />
+                <GridSplitter x:Name="ViewSplitter" Grid.Column="1" Grid.Row="0" Width="4" HorizontalAlignment="Stretch" Background="{DynamicResource BackgroundTernaryColor}" />
 
                 <Expander Grid.Column="2" Grid.Row="0" Margin="5,0,5,5" ExpandDirection="Left" Collapsed="Expander_Collapsed" Expanded="Expander_Expanded" SizeChanged="Expander_SizeChanged">
                     <DockPanel>
-                        <TextBlock DockPanel.Dock="Top" Padding="5" FontWeight="Bold">gefundene Dokumente</TextBlock>
+                        <TextBlock DockPanel.Dock="Top" Padding="5" FontWeight="Bold" Foreground="{DynamicResource ForegroundColor}">gefundene Dokumente</TextBlock>
                         <ScrollViewer>
                             <StackPanel x:Name="DocumentView"></StackPanel>
                         </ScrollViewer>

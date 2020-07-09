@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="SpUserName" Type="System.String" Scope="User">
-      <Value Profile="(Default)"> </Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="PathSp" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:</Value>
@@ -19,6 +19,9 @@
     </Setting>
     <Setting Name="PathSkizzenLocal" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SkinId" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

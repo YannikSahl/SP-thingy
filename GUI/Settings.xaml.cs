@@ -39,6 +39,19 @@ namespace GUI
             SkizzeLocalSave.Text = Path.GetFullPath("..\\..\\..\\..\\DBHandler");
             InitLicenseText();
             _mainWindow = mainWin;
+            SetSelectedThemeItem();
+        }
+
+        private void SetSelectedThemeItem()
+        {
+            foreach (var item in ThemeSelector.Items)
+            {
+                if (((ComboBoxItem)item).Tag.ToString().ToLower() == Enum.GetName(typeof(Application.Skins), ((Application)System.Windows.Application.Current).Skin).ToLower())
+                {
+                    ThemeSelector.SelectedItem = item;
+                    return;
+                }
+            }
         }
 
         #endregion
@@ -215,6 +228,21 @@ namespace GUI
             Properties.Settings1.Default.PathSkizzenLocal = SkizzeLocalSave.Text;
             Properties.Settings1.Default.Save();
             _mainWindow._settingsWindow = null;
+        }
+
+        private bool skipInitialSelection = true;
+        private void ThemeSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (skipInitialSelection)
+            {
+                skipInitialSelection = false;
+                return;
+            }
+            var selected = ThemeSelector.SelectedItem as ComboBoxItem;
+            if (selected == null)
+                return;
+            Enum.TryParse(typeof(Application.Skins), (string)selected.Tag, out var index);
+            ((Application)System.Windows.Application.Current).ChangeSkin((Application.Skins)index);
         }
 
         #endregion
