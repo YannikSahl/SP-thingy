@@ -14,7 +14,8 @@ namespace GUI
         {
             ColorLess,
             Light,
-            Dark
+            Dark,
+            Nebula
         }
         public Skins Skin { get; set; } = Skins.Light;
         private readonly Dictionary<Skins, string> skinReferencesDictionary = new Dictionary<Skins, string>
@@ -22,6 +23,7 @@ namespace GUI
             {Skins.ColorLess, "./skins/colorless.xaml"},
             {Skins.Light, "./skins/light.xaml"},
             {Skins.Dark, "./skins/dark.xaml"},
+            {Skins.Nebula, "./skins/nebula.xaml"},
         };
 
         private void App_OnExit(object sender, ExitEventArgs e)

@@ -40,8 +40,10 @@ namespace GUI
         private string _directoryPath;
         private string _fileName;
 
-        private SolidColorBrush _baseColor = (SolidColorBrush)((Application)Application.Current).Resources["BackgroundSecondaryColor"];
-        private SolidColorBrush _mouseOverColor = (SolidColorBrush)((Application)Application.Current).Resources["ButtonColor"];
+        //private SolidColorBrush _baseColor = (SolidColorBrush)((Application)Application.Current).Resources["BackgroundSecondaryColor"];
+        private string _baseColorName = "BackgroundTernaryColor";
+        //private SolidColorBrush _mouseOverColor = (SolidColorBrush)((Application)Application.Current).Resources["ButtonColor"];
+        private string _mouseOverColor = "BackgroundSecondaryColor";
 
         #endregion
 
@@ -198,7 +200,8 @@ namespace GUI
         private void SetupSelf()
         {
             this.LastChildFill = true;
-            this.Background = _baseColor;
+            //this.Background = _baseColor;
+            this.SetResourceReference(BackgroundProperty, _baseColorName);
             this.Margin = new Thickness(5);
         }
 
@@ -211,7 +214,8 @@ namespace GUI
             tView.Width = 100;
             tView.TextWrapping = TextWrapping.Wrap;
             tView.Text = _displayText;
-            tView.Foreground = (SolidColorBrush) ((Application) Application.Current).Resources["ForegroundColor"];
+            //tView.Foreground = (SolidColorBrush) ((Application) Application.Current).Resources["ForegroundColor"];
+            tView.SetResourceReference(BackgroundProperty, "ForegroundColor");
             tView.VerticalAlignment = VerticalAlignment.Center;
             tView.HorizontalAlignment = HorizontalAlignment.Left;
             tView.Padding = new Thickness(10,0,0,0);
@@ -283,7 +287,8 @@ namespace GUI
         /// <param name="e"></param>
         protected override void OnMouseEnter(MouseEventArgs e)
         {
-            this.Background = _mouseOverColor;
+            //this.Background = _mouseOverColor;
+            this.SetResourceReference(BackgroundProperty, _mouseOverColor);
             base.OnMouseEnter(e);
         }
 
@@ -293,7 +298,8 @@ namespace GUI
         /// <param name="e"></param>
         protected override void OnMouseLeave(MouseEventArgs e)
         {
-            this.Background = _baseColor;
+            //this.Background = _baseColor;
+            this.SetResourceReference(BackgroundProperty, _baseColorName);
             base.OnMouseLeave(e);
         }
 

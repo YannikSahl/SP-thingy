@@ -43,6 +43,9 @@
     <Page Update="skins\colorless.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="skins\nebula.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="skins\light.xaml">
       <SubType>Designer</SubType>
     </Page>
