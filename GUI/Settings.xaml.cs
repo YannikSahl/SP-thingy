@@ -43,6 +43,14 @@ namespace GUI
             SetSelectedThemeItem();
         }
 
+        #endregion
+
+        #region methods
+
+        /// <summary>
+        /// Set Combobox selection by current skin
+        /// should only be used initially
+        /// </summary>
         private void SetSelectedThemeItem()
         {
             foreach (var item in ThemeSelector.Items)
@@ -54,10 +62,6 @@ namespace GUI
                 }
             }
         }
-
-        #endregion
-
-        #region methods
 
         /// <summary>
         /// Checks the file exists or not
@@ -154,6 +158,7 @@ namespace GUI
 
         #region events
 
+        private bool userLoginInProgress;
         /// <summary>
         /// test credidentials and connection to SP
         /// </summary>
@@ -161,7 +166,10 @@ namespace GUI
         /// <param name="e"></param>
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            Button mSender = (Button) sender;
+            if (userLoginInProgress)
+                return;
+            userLoginInProgress = true;
+            var mSender = (Button) sender;
             SetCredidentials();
             var errorMessage = await Task.Run(() =>
             {
@@ -178,6 +186,7 @@ namespace GUI
             }
             else
                 mSender.Background = _settingWrongColor;
+            userLoginInProgress = false;
         }
 
         /// <summary>
@@ -236,6 +245,11 @@ namespace GUI
         }
 
         private bool skipInitialSelection = true;
+        /// <summary>
+        /// Skin/Theme Combobox selection changed event, sets selected skin
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ThemeSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (skipInitialSelection)

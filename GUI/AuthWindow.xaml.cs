@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using GUI.Properties;
+using SPHandler;
 
 namespace GUI
 {
@@ -42,6 +44,19 @@ namespace GUI
         }
 
         /// <summary>
+        /// set SP Credidentials
+        /// </summary>
+        private void SetCredidentials()
+        {
+            SPHandler.Handler.SetPassword(PasswordBox.Password);
+            SPHandler.Handler.SetUsername(NameBox.Text);
+        }
+
+        #endregion
+
+        #region events
+
+        /// <summary>
         /// buttonclick event redirect to mainwin in offline mode
         /// </summary>
         /// <param name="sender"></param>
@@ -51,12 +66,7 @@ namespace GUI
             RedirectToMainWindow(MainWindow.ConnectionModus.Offline);
         }
 
-        private void SetCredidentials()
-        {
-            SPHandler.Handler.SetPassword(PasswordBox.Password);
-            SPHandler.Handler.SetUsername(NameBox.Text);
-        }
-
+        private bool userLoginInProgress = false;
         /// <summary>
         /// buttonclick event try to connect
         /// </summary>
@@ -64,10 +74,13 @@ namespace GUI
         /// <param name="e"></param>
         private async void Connect_ButtonClick(object sender, RoutedEventArgs e)
         {
+            if (userLoginInProgress)
+                return;
+            userLoginInProgress = true;
             SetCredidentials();
             var errorMessage = await Task.Run(() =>
             {
-                return SPHandler.Handler.TryUserLogin();
+                return Handler.TryUserLogin();
             });
 
             var hasConnection = errorMessage == null;
@@ -76,8 +89,8 @@ namespace GUI
                 // redirect to mainwindow
                 RedirectToMainWindow(MainWindow.ConnectionModus.Online);
                 // store and save username
-                Properties.Settings1.Default.SpUserName = NameBox.Text;
-                Properties.Settings1.Default.Save();
+                Settings1.Default.SpUserName = NameBox.Text;
+                Settings1.Default.Save();
             }
             else
             {
@@ -89,7 +102,7 @@ namespace GUI
                 ////ErrorMessageContainer.Visibility = Visibility.Visible;
                 ////ErrorMessage.Text = errorMessage;
             }
-                
+            userLoginInProgress = true;
         }
 
         /// <summary>
