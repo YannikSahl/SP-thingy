@@ -15,14 +15,16 @@ namespace DBHandlerTest
             // Create object
             DBHandler.DbHandler dbHandler = new DBHandler.DbHandler(fileLocation);
 
+            // Fill in data
+            FillInData(dbHandler);
+
             // Add row
-            //AddRow(dbHandler);
+            AddRow(dbHandler);
 
             // Filter by id
             //FilterTable(dbHandler);
 
-            // Fill in data
-            FillInData(dbHandler);
+            
 
         }
 
