@@ -1,5 +1,6 @@
 
 
+
 ## Front-End Festpunktfelddatenbank für die DB Netz AG
 Ein Projekt für die DB Netz AG im Rahmen des Software Entwicklungsprojektes der HTW Berlin für das SoSe 2020.
 
@@ -50,6 +51,10 @@ In der `App.xaml` befindet sich ein Resource Dictionary, welches Parameter beinh
 Falls neue Skins/Themes hinzugefügt werden wollen, müssen folgende Schritte durchgeführt werden:
  1. In dem Resource Dictionary der Skin/Theme `.xaml` Datei müssen genau die gleichen Parameter mit dem gleichem Key (in WPF Resource Dictionaries `x:Key`) gegeben sein. 
  2.  In der `App.xaml.cs` Datei befindet sich ein Dictionary member namens skinReferenceDictionary, welches über einen als Enum Wert gegebenen Key, einen String mit dem relativen Pfad zur Skin/Theme Datei beinhaltet. In das Enum muss ein neuer Skin registriert werden. Danach muss auch im genannten Dictionary ein neuer Eintrag, der als Key den eben eingefügten Enum Wert und als Value den Pfad zur Datei hat, eingefügt werden.
+##### 2.1.2.2 GUI Dimensionen
+Einige GUI Elemente Eigenschaften sind auch im Resource Dictionary der App enthalten.
+Alle wichtigen Größen für GUI Elemente enthalten sich in dem Resource Dictionary und können auch von dort aus geändert werden.
+Für die Zukunft könnte man diese Eigenschaften in die Settings einbauen um sie von dort aus während der Laufzeit verändern zu können.
 
 #### 2.2 Dokumentation: DBHandler
 Die Datenbankdatei "Datenmodell.accdb" ist zurzeit noch im Repository enthalten in dem Projekt DBHandler. 
