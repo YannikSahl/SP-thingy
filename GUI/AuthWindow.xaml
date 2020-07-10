@@ -20,14 +20,14 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock FontWeight="Bold" FontSize="15" TextAlignment="Center" Margin="5" Foreground="{DynamicResource ForegroundColor}">Sharepoint Anmeldung</TextBlock>
-        <TextBlock Grid.Row="1" TextAlignment="Center" Foreground="{DynamicResource ForegroundColor}">E-Mail</TextBlock>
+        <TextBlock FontWeight="Bold" FontSize="{DynamicResource FontSizeLarger}" TextAlignment="Center" Margin="5" Foreground="{DynamicResource ForegroundColor}">Sharepoint Anmeldung</TextBlock>
+        <TextBlock Grid.Row="1" TextAlignment="Center" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}">E-Mail</TextBlock>
         <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=SpUserName, Mode=Default}" x:Name="NameBox" Grid.Row="2" Height="40" Margin="5" Padding="10" FontSize="14" VerticalAlignment="Center" Background="{DynamicResource UiElementBackgroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" Foreground="{DynamicResource UiElementForegroundColor}" SelectionTextBrush="{DynamicResource HighlightedButtonColor}"/>
-        <TextBlock Grid.Row="3" TextAlignment="Center" Foreground="{DynamicResource ForegroundColor}">Password</TextBlock>
-        <PasswordBox Grid.Row="4" x:Name="PasswordBox" Height="40" Margin="5,5,0,5" Padding="10" FontSize="14" VerticalAlignment="Center" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" Background="{DynamicResource UiElementBackgroundColor}"/>
-        <Button Grid.Row="5" Margin="5" Height="40" Click="Connect_ButtonClick" BorderBrush="{x:Null}" Foreground="{DynamicResource HighlightedTextColor}" FontWeight="Bold" FontSize="14" IsDefault="True" Background="{DynamicResource HighlightedButtonColor}">Verbinden
+        <TextBlock Grid.Row="3" TextAlignment="Center" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}">Password</TextBlock>
+        <PasswordBox Grid.Row="4" x:Name="PasswordBox" Height="40" Margin="5" Padding="10" FontSize="14" VerticalAlignment="Center" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" Background="{DynamicResource UiElementBackgroundColor}"/>
+        <Button Grid.Row="5" Margin="5" Height="40" Click="Connect_ButtonClick" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" Foreground="{DynamicResource HighlightedTextColor}" FontWeight="Bold" FontSize="{DynamicResource FontSizeLarger}" IsDefault="True" Background="{DynamicResource HighlightedButtonColor}">Verbinden
         </Button>
-        <Button Grid.Row="6" Margin="5" Height="40" BorderBrush="{x:Null}" Click="OfflineMode_ButtonClick" FontWeight="Normal" Foreground="{DynamicResource HighlightedTextColor}" Background="{DynamicResource HighlightedButtonSecondaryColor}">Offline Modus
+        <Button Grid.Row="6" Margin="5" Height="40" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" Click="OfflineMode_ButtonClick" FontWeight="Normal" Foreground="{DynamicResource HighlightedTextColor}" Background="{DynamicResource HighlightedButtonSecondaryColor}" FontSize="{DynamicResource FontSize}">Offline Modus
         </Button>
         <DockPanel x:Name="ErrorMessageContainer" Grid.Row="7" Visibility="Hidden" Margin="5,0,5,5">
             <TextBlock x:Name="ErrorMessage" TextWrapping="Wrap" DockPanel.Dock="Bottom" Foreground="#FFFF3737" FontStyle="Italic" FontWeight="Normal" >FEHLER 001</TextBlock>

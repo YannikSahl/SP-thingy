@@ -74,14 +74,6 @@ namespace GUI
             //_abfrageWindow.Focus();
 
             CollapseExpander();
-            AddFilePreview("..\\..\\..\\..\\README.md");
-            AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
-            AddFilePreview("..\\..\\..\\test_images\\png_test.png");
-            AddFilePreview("..\\..\\..\\test_images\\jpeg_test.jpeg");
-            AddFilePreview("..\\..\\..\\test_images\\pdf_test.pdf");
-            AddFilePreview("..\\..\\..\\test_images\\txt_test.txt");
-            AddFilePreview("..\\..\\..\\test_images\\pptx_test.pptx");
-
             SetStatusBarLastSaved();
         }
 
@@ -493,6 +485,17 @@ namespace GUI
             SelectedPad.Text = pad; //(DataGrid)sender;
             SetPlOrPhTableByPad(m_phTableName, pad);
             SetPlOrPhTableByPad(m_plTableName, pad);
+
+            // Dokumente anzeigen
+            // Nur testdokumente soweit
+            DocumentView.Children.Clear();
+            AddFilePreview("..\\..\\..\\..\\README.md");
+            AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            AddFilePreview("..\\..\\..\\test_images\\png_test.png");
+            AddFilePreview("..\\..\\..\\test_images\\jpeg_test.jpeg");
+            AddFilePreview("..\\..\\..\\test_images\\pdf_test.pdf");
+            AddFilePreview("..\\..\\..\\test_images\\txt_test.txt");
+            AddFilePreview("..\\..\\..\\test_images\\pptx_test.pptx");
         }
 
         #region expander events

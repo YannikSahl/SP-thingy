@@ -75,7 +75,7 @@ namespace GUI
             var skinDict = new ResourceDictionary() { Source = new Uri(src, UriKind.Relative) };
             var correctlyLoaded = true;
 
-            foreach (var key in Resources.Keys)
+            foreach (var key in Resources.MergedDictionaries[0].Keys)
             {
                 try
                 {

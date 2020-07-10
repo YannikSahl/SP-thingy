@@ -211,11 +211,12 @@ namespace GUI
         private void AddTextToView()
         {
             var tView = new TextBlock();
-            tView.Width = 100;
+            //tView.Width = 100;
             tView.TextWrapping = TextWrapping.Wrap;
             tView.Text = _displayText;
-            //tView.Foreground = (SolidColorBrush) ((Application) Application.Current).Resources["ForegroundColor"];
-            tView.SetResourceReference(BackgroundProperty, "ForegroundColor");
+            tView.Foreground = (SolidColorBrush) ((Application)System.Windows.Application.Current).Resources["ForegroundColor"];
+            //tView.SetResourceReference(B, "ForegroundColor");
+            tView.FontSize = (double)((Application)System.Windows.Application.Current).Resources["FontSizeLarger"];
             tView.VerticalAlignment = VerticalAlignment.Center;
             tView.HorizontalAlignment = HorizontalAlignment.Left;
             tView.Padding = new Thickness(10,0,0,0);

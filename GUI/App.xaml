@@ -1,36 +1,48 @@
 ﻿<Application x:Class="GUI.Application"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:GUI"
+             xmlns:local="clr-namespace:GUI" 
+             xmlns:sys1="clr-namespace:System;assembly=System.Runtime"
              Exit="App_OnExit"
              StartupUri="AuthWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <SolidColorBrush x:Key="BackgroundColor" Color="White"></SolidColorBrush>
-            <SolidColorBrush x:Key="BackgroundSecondaryColor" Color="#FFE8E8E8"></SolidColorBrush>
-            <SolidColorBrush x:Key="BackgroundTernaryColor" Color="LightGray"></SolidColorBrush>
-            <SolidColorBrush x:Key="ForegroundColor" Color="Black"></SolidColorBrush>
-            <SolidColorBrush x:Key="ForegroundSecondaryColor" Color="LightGray"></SolidColorBrush>
-            <SolidColorBrush x:Key="ForegroundTernaryColor" Color="#FF686868"></SolidColorBrush>
-            <SolidColorBrush x:Key="HighlightedTextColor" Color="White"></SolidColorBrush>
-            <SolidColorBrush x:Key="HighlightedTextSecondaryColor" Color="DarkOrange"></SolidColorBrush>
-            <LinearGradientBrush x:Key="HighlightedButtonColor" EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="#FFFF8E40"/>
-                <GradientStop Color="#FFFF4141" Offset="1"/>
-            </LinearGradientBrush>
-            <LinearGradientBrush x:Key="HighlightedButtonSecondaryColor" EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="#FF2ED6FB"/>
-                <GradientStop Color="#FF479BFF" Offset="1"/>
-            </LinearGradientBrush>
-            <SolidColorBrush x:Key="ButtonColor" Color="#FF8B8B8B"></SolidColorBrush>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <SolidColorBrush x:Key="BackgroundColor" Color="White"></SolidColorBrush>
+                    <SolidColorBrush x:Key="BackgroundSecondaryColor" Color="#FFE8E8E8"></SolidColorBrush>
+                    <SolidColorBrush x:Key="BackgroundTernaryColor" Color="LightGray"></SolidColorBrush>
+                    <SolidColorBrush x:Key="ForegroundColor" Color="Black"></SolidColorBrush>
+                    <SolidColorBrush x:Key="ForegroundSecondaryColor" Color="LightGray"></SolidColorBrush>
+                    <SolidColorBrush x:Key="ForegroundTernaryColor" Color="#FF686868"></SolidColorBrush>
+                    <SolidColorBrush x:Key="HighlightedTextColor" Color="White"></SolidColorBrush>
+                    <SolidColorBrush x:Key="HighlightedTextSecondaryColor" Color="DarkOrange"></SolidColorBrush>
+                    <LinearGradientBrush x:Key="HighlightedButtonColor" EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFFF8E40"/>
+                        <GradientStop Color="#FFFF4141" Offset="1"/>
+                    </LinearGradientBrush>
+                    <LinearGradientBrush x:Key="HighlightedButtonSecondaryColor" EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FF2ED6FB"/>
+                        <GradientStop Color="#FF479BFF" Offset="1"/>
+                    </LinearGradientBrush>
+                    <SolidColorBrush x:Key="ButtonColor" Color="#FF8B8B8B"></SolidColorBrush>
 
-            <SolidColorBrush x:Key="MenuBackgroundColor" Color="#FF444444"></SolidColorBrush>
-            <SolidColorBrush x:Key="MenuForegroundColor" Color="WhiteSmoke"></SolidColorBrush>
+                    <SolidColorBrush x:Key="MenuBackgroundColor" Color="#FF444444"></SolidColorBrush>
+                    <SolidColorBrush x:Key="MenuForegroundColor" Color="WhiteSmoke"></SolidColorBrush>
 
-            <SolidColorBrush x:Key="UiElementBackgroundColor" Color="WhiteSmoke"></SolidColorBrush>
-            <SolidColorBrush x:Key="UiElementBackgroundSecondaryColor" Color="#FFE0E0E0"></SolidColorBrush>
-            <SolidColorBrush x:Key="UiElementForegroundColor" Color="Black"></SolidColorBrush>
-            <SolidColorBrush x:Key="UiElementForegroundSecondaryColor" Color="#FF323232"></SolidColorBrush>
+                    <SolidColorBrush x:Key="UiElementBackgroundColor" Color="WhiteSmoke"></SolidColorBrush>
+                    <SolidColorBrush x:Key="UiElementBackgroundSecondaryColor" Color="#FFE0E0E0"></SolidColorBrush>
+                    <SolidColorBrush x:Key="UiElementForegroundColor" Color="Black"></SolidColorBrush>
+                    <SolidColorBrush x:Key="UiElementForegroundSecondaryColor" Color="#FF323232"></SolidColorBrush>
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <sys1:Double x:Key="UiElementHeight">30</sys1:Double>
+                    <sys1:Double x:Key="UiElementFontSize">14</sys1:Double>
+                    <sys1:Double x:Key="FontSize">12</sys1:Double>
+                    <sys1:Double x:Key="FontSizeSmaller">11</sys1:Double>
+                    <sys1:Double x:Key="FontSizeLarger">14</sys1:Double>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
