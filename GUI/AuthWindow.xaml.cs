@@ -110,7 +110,7 @@ namespace GUI
                 ////ErrorMessage.Text = errorMessage;
             }
 
-            _userLoginInProgress = true;
+            _userLoginInProgress = false;
         }
 
         /// <summary>
