@@ -7,22 +7,19 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using DBHandler;
 using GUI.Properties;
 
 namespace GUI
 {
     /// <summary>
-    /// Interaction logic for Abfragen.xaml
+    ///     Interaction logic for Abfragen.xaml
     /// </summary>
     public partial class Abfragen : Window
     {
-        #region statics
-
-        #endregion
-
         #region members
 
-        private MainWindow _mainWindow;
+        private readonly MainWindow _mainWindow;
 
         #endregion
 
@@ -37,14 +34,18 @@ namespace GUI
 
         #endregion
 
+        #region statics
+
+        #endregion
+
         #region methods
 
         /// <summary>
-        /// set up columns for saved queries table
+        ///     set up columns for saved queries table
         /// </summary>
         private void InitSavedQueriesTable()
         {
-            DataTable dt = new DataTable("SavedQueries");
+            var dt = new DataTable("SavedQueries");
             dt.Columns.Add(new DataColumn("Strecke", typeof(string)));
             dt.Columns.Add(new DataColumn("Auftrag", typeof(string)));
             dt.Columns.Add(new DataColumn("Punktart", typeof(string)));
@@ -74,16 +75,15 @@ namespace GUI
         }
 
         /// <summary>
-        /// generates hash from hashing algorithm and message
+        ///     generates hash from hashing algorithm and message
         /// </summary>
         /// <param name="hashAlgorithm"></param>
         /// <param name="input"></param>
         /// <returns>string</returns>
         private static string GetHash(HashAlgorithm hashAlgorithm, string input)
         {
-
             // Convert the input string to a byte array and compute the hash.
-            byte[] data = hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(input));
+            var data = hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(input));
 
             // Create a new Stringbuilder to collect the bytes
             // and create a string.
@@ -91,28 +91,25 @@ namespace GUI
 
             // Loop through each byte of the hashed data
             // and format each one as a hexadecimal string.
-            for (int i = 0; i < data.Length; i++)
-            {
-                sBuilder.Append(data[i].ToString("x2"));
-            }
+            for (var i = 0; i < data.Length; i++) sBuilder.Append(data[i].ToString("x2"));
 
             // Return the hexadecimal string.
             return sBuilder.ToString();
         }
 
         /// <summary>
-        /// generates a hash from a whole dataRow
+        ///     generates a hash from a whole dataRow
         /// </summary>
         /// <param name="dr"></param>
         /// <returns>string</returns>
         private string HashFromRow(DataRow dr)
         {
-            StringBuilder s = new StringBuilder();
+            var s = new StringBuilder();
             foreach (var item in dr.ItemArray)
             {
                 if (item.Equals(dr["Hash"]) || item.Equals(dr["erstellt"]))
                     continue;
-                s.Append(item.ToString());
+                s.Append(item);
             }
 
             var msg = s.ToString();
@@ -121,7 +118,7 @@ namespace GUI
         }
 
         /// <summary>
-        /// checks if a saved query exists by comparing hashes
+        ///     checks if a saved query exists by comparing hashes
         /// </summary>
         /// <param name="hash"></param>
         /// <param name="equalRowReference"></param>
@@ -130,29 +127,80 @@ namespace GUI
         {
             if (string.IsNullOrWhiteSpace(hash))
                 return null;
-            DataTable dt = (DataTable)SavedQueriesGrid.DataContext;
+            var dt = (DataTable) SavedQueriesGrid.DataContext;
             foreach (DataRow row in dt.Rows)
-            {
                 if (row["Hash"].Equals(hash))
-                {
                     return row;
-                }
-            }
 
             return null;
         }
 
-        // TODO: Saving
         /// <summary>
-        /// adds current query "session" to table
+        ///     splits string by separator chars and returns list as hashlist
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        private HashSet<string> TextToHashSet(string text)
+        {
+            var attributeSet = new HashSet<string>();
+
+            if (string.IsNullOrWhiteSpace(text))
+                return attributeSet;
+
+            char[] separators = {',', ';'};
+            var arr = text.Split(separators);
+            foreach (var att in arr)
+                if (!"".Equals(att))
+                    attributeSet.Add(att.Trim());
+
+            return attributeSet;
+        }
+
+        /// <summary>
+        ///     creates setting property for a savedquery row
+        ///     TODO: currently not working. instead of using settings file, normal xml should be used
+        ///     TODO: also, in the create hash method, a separator like ";;" should be used between cells so that only the hash
+        ///     TODO: can be stored in the xml settings. When loading it can be decrypted and split into an array by separator to
+        ///     get cell values
+        ///     Sources: https://stackoverflow.com/questions/175726/c-create-new-settings-at-run-time
+        /// </summary>
+        /// <param name="hash"></param>
+        /// <param name="dr"></param>
+        private void CreateSetting(string hash, DataRow dr)
+        {
+            ApplicationSettingsBase settings = SavedQueries.Default;
+            var sp = settings.Providers["LocalFileSettingsProvider"];
+            var p = new SettingsProperty(hash);
+            DataRow conf = null;
+            p.PropertyType = typeof(DataRow);
+            p.Attributes.Add(typeof(UserScopedSettingAttribute), new UserScopedSettingAttribute());
+            p.Provider = sp;
+            p.SerializeAs = SettingsSerializeAs.Xml;
+            var v = new SettingsPropertyValue(p);
+            settings.Properties.Add(p);
+
+            settings.Reload();
+            conf = (DataRow) settings[hash];
+            if (conf == null)
+            {
+                settings[hash] = conf = dr;
+                settings.Save();
+            }
+        }
+
+        #endregion
+
+        #region events
+
+        /// <summary>
+        ///     adds current query "session" to table
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void AddSavedQueryButton_Click(object sender, RoutedEventArgs e)
         {
-            DataTable dt = (DataTable) SavedQueriesGrid.DataContext;
-            DataRow dr = dt.NewRow();
-            // TODO: Das alles muss in methoiden verpackt werden
+            var dt = (DataTable) SavedQueriesGrid.DataContext;
+            var dr = dt.NewRow();
             dr["Strecke"] = StreckeInput.Text;
             dr["Auftrag"] = AuftragInput.Text;
             dr["Punktart"] = PunktartInput.Text;
@@ -167,20 +215,18 @@ namespace GUI
             dr["bis_Blatt"] = BisBlatt.Text;
             // Operator
             var isAndOperator = AndOp.IsChecked.HasValue ? AndOp.IsChecked.Value : false;
-            //dr["Operator"] = isAndOperator ? SqlOperators.And : SqlOperators.Or;
             dr["Operator"] = isAndOperator ? "and" : "or";
             // SQL Text
             dr["SQL"] = RawQuery.Text;
             // Query Typ
             var queryByText = QueryInA.IsChecked.HasValue ? QueryInA.IsChecked.Value : false;
-            //dr["AbfrageTyp"] = queryByText ? QueryTypes.Parameter : QueryTypes.Sql;
             dr["AbfrageTyp"] = queryByText ? "param" : "code";
             // Hash
             var hash = HashFromRow(dr);
             dr["Hash"] = hash;
             dr["erstellt"] = DateTime.UtcNow;
 
-            DataRow sameRow = SavedQueryExists(hash);
+            var sameRow = SavedQueryExists(hash);
 
             // if no same row, meaning that no such row exists
             if (sameRow == null)
@@ -192,44 +238,19 @@ namespace GUI
         }
 
         /// <summary>
-        /// splits string by separator chars and returns list as hashlist
-        /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        private HashSet<string> TextToHashSet(string text)
-        {
-            var attributeSet = new HashSet<string>();
-
-            if (string.IsNullOrWhiteSpace(text))
-                return attributeSet;
-
-            char[] separators = { ',', ';' };
-            var arr = text.Split(separators);
-            foreach (var att in arr)
-            {
-                if (!"".Equals(att))
-                {
-                    attributeSet.Add(att.Trim());
-                }
-            }
-
-            return attributeSet;
-        }
-
-        /// <summary>
-        /// starts query and redirects to mainwindow if query successful
+        ///     starts query and redirects to mainwindow if query successful
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void AbfrageStartButton_Click(object sender, RoutedEventArgs e)
         {
-            DBHandler.DbHandler dbh = new DBHandler.DbHandler("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
-            StatusCode queryExecuted = StatusCode.CommandFailed;
-            bool queryByText = QueryInA.IsChecked.HasValue ? QueryInA.IsChecked.Value : false;
+            var dbh = new DbHandler("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            var queryExecuted = StatusCode.CommandFailed;
+            var queryByText = QueryInA.IsChecked.HasValue ? QueryInA.IsChecked.Value : false;
             if (queryByText)
             {
                 // Query by Parameters from textboxes
-                bool isAndOperator = AndOp.IsChecked.HasValue ? AndOp.IsChecked.Value : false;
+                var isAndOperator = AndOp.IsChecked.HasValue ? AndOp.IsChecked.Value : false;
                 queryExecuted = dbh.FillInData(
                     new HashSet<string>(),
                     TextToHashSet(StreckeInput.Text),
@@ -237,7 +258,8 @@ namespace GUI
                     TextToHashSet(AuftragInput.Text),
                     isAndOperator
                 );
-            }else
+            }
+            else
             {
                 // Query by raw SQL
                 queryExecuted = dbh.FillInData(RawQuery.Text);
@@ -248,15 +270,15 @@ namespace GUI
                 _mainWindow.SetDatabase(dbh);
                 _mainWindow.LoadTables();
                 _mainWindow.Activate();
-                _mainWindow._abfrageWindow = null;
-                this.Close();
+                _mainWindow.AbfrageWindow = null;
+                Close();
             }
             else if (queryExecuted == StatusCode.OleDbNotRegistered)
             {
                 MessageBox.Show(
-                    $"Access Runtime ist nicht installiert\nBitte hier runterladen: https://www.microsoft.com/en-us/download/confirmation.aspx?id=13255", 
-                    "Abfrage Fehlgeschlagen", 
-                    MessageBoxButton.OK, 
+                    "Access Runtime ist nicht installiert\nBitte hier runterladen: https://www.microsoft.com/en-us/download/confirmation.aspx?id=13255",
+                    "Abfrage Fehlgeschlagen",
+                    MessageBoxButton.OK,
                     MessageBoxImage.Error,
                     MessageBoxResult.OK);
             }
@@ -272,7 +294,7 @@ namespace GUI
         }
 
         /// <summary>
-        /// loads currently selected row as query from table
+        ///     loads currently selected row as query from table
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -281,11 +303,11 @@ namespace GUI
             var selected = SavedQueriesGrid.SelectedItem as DataRowView;
             if (selected == null)
                 return;
-            DataRow dr = selected.Row;
+            var dr = selected.Row;
 
             StreckeInput.Text = dr["Strecke"] as string ?? "";
             AuftragInput.Text = dr["Auftrag"] as string ?? "";
-            PunktartInput.Text =dr["Punktart"] as string ?? "";
+            PunktartInput.Text = dr["Punktart"] as string ?? "";
             // von km
             VonKm.Text = dr["von_km"] as string ?? "";
             BisKm.Text = dr["bis_km"] as string ?? "";
@@ -298,30 +320,21 @@ namespace GUI
             // Operator
             var op = dr["Operator"] as string ?? "";
             if ("or".Equals(op.ToLower()))
-            {
                 OrOp.IsChecked = true;
-            }
             else
-            {
                 AndOp.IsChecked = true;
-            }
             // SQL Text
             RawQuery.Text = dr["SQL"] as string ?? "";
             // Query Typ
-            //if (QueryTypes.Parameter.Equals((QueryTypes)dr["AbfrageTyp"]))
             if ("param".Equals(dr["AbfrageTyp"] as string))
-            {
                 QueryInA.IsChecked = true;
-            }
             else
-            {
                 QueryInB.IsChecked = true;
-            }
         }
 
         /// <summary>
-        /// Lost Cell focus Event (calculates hash again)
-        /// has to be lost focus so that changes to cell can be committed before calculating hash again
+        ///     Lost Cell focus Event (calculates hash again)
+        ///     has to be lost focus so that changes to cell can be committed before calculating hash again
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -337,45 +350,17 @@ namespace GUI
                 return;
             var hash = HashFromRow(dr.Row);
             dr.Row["Hash"] = hash;
-            DataRow sameRowReference = SavedQueryExists(hash);
+            var sameRowReference = SavedQueryExists(hash);
             // clear duplicates by removing first row with same hash if exists
             if (sameRowReference != null && sameRowReference != dr.Row)
-                ((DataTable)SavedQueriesGrid.DataContext).Rows.Remove(sameRowReference);
+                ((DataTable) SavedQueriesGrid.DataContext).Rows.Remove(sameRowReference);
         }
 
-        private void CreateSetting(string hash, DataRow dr)
-        {
-            //// create new setting from a base setting:
-            //var property = new SettingsProperty(hash);
-            ////property.Name = hash;
-            //property.PropertyType = typeof(DataRow);
-            //property.SerializeAs = SettingsSerializeAs.Xml;
-            //SavedQueries.Default.Properties.Add(property);
-            //SavedQueries.Default.Save();
-            //// will have the stored value:
-            ////var dynamicSetting = SavedQueries.Default[hash];
-            ///
-            ApplicationSettingsBase settings = SavedQueries.Default;
-            SettingsProvider sp = settings.Providers["LocalFileSettingsProvider"];
-            SettingsProperty p = new SettingsProperty(hash);
-            DataRow conf = null;
-            p.PropertyType = typeof(DataRow);
-            p.Attributes.Add(typeof(UserScopedSettingAttribute), new UserScopedSettingAttribute());
-            p.Provider = sp;
-            p.SerializeAs = SettingsSerializeAs.Xml;
-            SettingsPropertyValue v = new SettingsPropertyValue(p);
-            settings.Properties.Add(p);
-
-            settings.Reload();
-            conf = (DataRow)settings[hash];
-            if (conf == null)
-            {
-                settings[hash] = conf = dr;
-                settings.Save();
-            }
-        }
-
-
+        /// <summary>
+        ///     window closing event, saves queries and resets mainwin reference
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             var dt = SavedQueriesGrid.DataContext as DataTable;
@@ -383,7 +368,7 @@ namespace GUI
                 return;
             foreach (DataRow row in dt.Rows)
             {
-                var hash = (string)row["Hash"];
+                var hash = (string) row["Hash"];
                 try
                 {
                     SavedQueries.Default[hash] = row;
@@ -395,9 +380,8 @@ namespace GUI
                 }
             }
 
-            var sq = SavedQueries.Default;
-            //SavedQueries.Default.Save();
-            _mainWindow._abfrageWindow = null;
+            SavedQueries.Default.Save();
+            _mainWindow.AbfrageWindow = null;
         }
 
         #endregion

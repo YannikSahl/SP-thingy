@@ -6,83 +6,171 @@
         xmlns:local="clr-namespace:GUI"
         xmlns:settings="clr-namespace:GUI.Properties"
         mc:Ignorable="d"
-        Title="Einstellungen" Height="800" Width="800" Closing="Window_Closing" Background="{DynamicResource BackgroundColor}">
+        Title="Einstellungen" Height="600" Width="800" Closing="Window_Closing"
+        Background="{DynamicResource BackgroundColor}">
     <ScrollViewer>
         <StackPanel Margin="15,5,15,10">
-            <Label FontSize="{DynamicResource FontSizeLarger}" FontWeight="Bold" Padding="15,0,0,0" Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5" Background="{DynamicResource HighlightedButtonColor}">
+            <Label FontSize="{DynamicResource FontSizeLarger}" FontWeight="Bold" Padding="15,0,0,0"
+                   Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30"
+                   VerticalContentAlignment="Center" Margin="0,5,0,5"
+                   Background="{DynamicResource HighlightedButtonColor}">
                 Sharepoint Authentifizierung
             </Label>
             <Grid Background="{DynamicResource BackgroundSecondaryColor}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBlock Margin="5" Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}">E-Mail</TextBlock>
+                <TextBlock Margin="5" Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    E-Mail
+                </TextBlock>
                 <DockPanel Margin="2" LastChildFill="True" Grid.Row="0" Grid.Column="1">
-                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=SpUserName, Mode=Default}" x:Name="SpUserName" Height="{DynamicResource UiElementHeight}" VerticalContentAlignment="Center" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" FontSize="{DynamicResource UiElementFontSize}"/>
+                    <TextBox
+                        Text="{Binding Source={x:Static settings:Settings1.Default}, Path=SpUserName, Mode=Default}"
+                        x:Name="SpUserName" Height="{DynamicResource UiElementHeight}"
+                        VerticalContentAlignment="Center" Background="{DynamicResource UiElementBackgroundColor}"
+                        Foreground="{DynamicResource UiElementForegroundColor}"
+                        BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                        FontSize="{DynamicResource UiElementFontSize}" />
                 </DockPanel>
                 <DockPanel Margin="2" LastChildFill="True" Grid.Row="1" Grid.Column="1">
-                    <PasswordBox x:Name="SpUserPw" Height="{DynamicResource UiElementHeight}" VerticalContentAlignment="Center" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" FontSize="{DynamicResource UiElementFontSize}"/>
+                    <PasswordBox x:Name="SpUserPw" Height="{DynamicResource UiElementHeight}"
+                                 VerticalContentAlignment="Center"
+                                 Background="{DynamicResource UiElementBackgroundColor}"
+                                 Foreground="{DynamicResource UiElementForegroundColor}"
+                                 BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                                 FontSize="{DynamicResource UiElementFontSize}" />
                 </DockPanel>
-                <TextBlock Margin="5" Grid.Row="1" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}">Password</TextBlock>
+                <TextBlock Margin="5" Grid.Row="1" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    Password
+                </TextBlock>
                 <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True">
-                    <Button DockPanel.Dock="Left" Click="Button_Click" BorderBrush="{x:Null}" Height="{DynamicResource UiElementHeight}" Background="{DynamicResource BackgroundTernaryColor}" Foreground="{DynamicResource UiElementForegroundColor}" FontSize="{DynamicResource UiElementFontSize}">Verbindung Testen</Button>
+                    <Button DockPanel.Dock="Left" Click="Button_Click" BorderBrush="{x:Null}"
+                            Height="{DynamicResource UiElementHeight}"
+                            Background="{DynamicResource BackgroundTernaryColor}"
+                            Foreground="{DynamicResource UiElementForegroundColor}"
+                            FontSize="{DynamicResource UiElementFontSize}">
+                        Verbindung Testen
+                    </Button>
                 </DockPanel>
             </Grid>
 
-            <Label FontSize="{DynamicResource FontSizeLarger}" FontWeight="Bold" Padding="15,0,0,0" Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5" Background="{DynamicResource HighlightedButtonColor}">
+            <Label FontSize="{DynamicResource FontSizeLarger}" FontWeight="Bold" Padding="15,0,0,0"
+                   Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30"
+                   VerticalContentAlignment="Center" Margin="0,5,0,5"
+                   Background="{DynamicResource HighlightedButtonColor}">
                 Pfade
             </Label>
             <Grid Background="{DynamicResource BackgroundSecondaryColor}">
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Margin="5" Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}">Sharepoint Url</TextBlock>
+                <TextBlock Margin="5" Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    Sharepoint Url
+                </TextBlock>
                 <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True" Margin="2">
-                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSp, Mode=Default}" x:Name="SpSave" VerticalContentAlignment="Center" Height="{DynamicResource UiElementHeight}" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" FontSize="{DynamicResource UiElementFontSize}"/>
+                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSp, Mode=Default}"
+                             x:Name="SpSave" VerticalContentAlignment="Center"
+                             Height="{DynamicResource UiElementHeight}"
+                             Background="{DynamicResource UiElementBackgroundColor}"
+                             Foreground="{DynamicResource UiElementForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                             FontSize="{DynamicResource UiElementFontSize}" />
                 </DockPanel>
 
-                <TextBlock Margin="5" Grid.Row="1" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}">Datenbank im Sharepoint</TextBlock>
+                <TextBlock Margin="5" Grid.Row="1" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    Datenbank im Sharepoint
+                </TextBlock>
                 <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True" Margin="2">
-                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbInSp, Mode=Default}" x:Name="DbSpSave" VerticalContentAlignment="Center" Height="{DynamicResource UiElementHeight}" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" FontSize="{DynamicResource UiElementFontSize}"/>
+                    <TextBox
+                        Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbInSp, Mode=Default}"
+                        x:Name="DbSpSave" VerticalContentAlignment="Center" Height="{DynamicResource UiElementHeight}"
+                        Background="{DynamicResource UiElementBackgroundColor}"
+                        Foreground="{DynamicResource UiElementForegroundColor}"
+                        BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                        FontSize="{DynamicResource UiElementFontSize}" />
                 </DockPanel>
 
-                <TextBlock Margin="5" Grid.Row="2" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}">Skizzen im Sharepoint</TextBlock>
+                <TextBlock Margin="5" Grid.Row="2" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    Skizzen im Sharepoint
+                </TextBlock>
                 <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True" Margin="2">
-                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSkizzenInSp, Mode=Default}" x:Name="SkizzeSpSave" VerticalContentAlignment="Center" Height="{DynamicResource UiElementHeight}" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" FontSize="{DynamicResource UiElementFontSize}"/>
+                    <TextBox
+                        Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSkizzenInSp, Mode=Default}"
+                        x:Name="SkizzeSpSave" VerticalContentAlignment="Center"
+                        Height="{DynamicResource UiElementHeight}"
+                        Background="{DynamicResource UiElementBackgroundColor}"
+                        Foreground="{DynamicResource UiElementForegroundColor}"
+                        BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                        FontSize="{DynamicResource UiElementFontSize}" />
                 </DockPanel>
 
-                <TextBlock Margin="5" Grid.Row="3" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}">Export DB</TextBlock>
+                <TextBlock Margin="5" Grid.Row="3" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    Export DB
+                </TextBlock>
                 <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="True" Margin="2">
-                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbLocal, Mode=Default}" x:Name="DbLocalSave" VerticalContentAlignment="Center" Height="{DynamicResource UiElementHeight}" TextChanged="TextBoxTextChangedLinkPath" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" FontSize="{DynamicResource UiElementFontSize}"/>
+                    <TextBox
+                        Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbLocal, Mode=Default}"
+                        x:Name="DbLocalSave" VerticalContentAlignment="Center"
+                        Height="{DynamicResource UiElementHeight}" TextChanged="TextBoxTextChangedLinkPath"
+                        Background="{DynamicResource UiElementBackgroundColor}"
+                        Foreground="{DynamicResource UiElementForegroundColor}"
+                        BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                        FontSize="{DynamicResource UiElementFontSize}" />
                 </DockPanel>
 
-                <TextBlock Margin="5" Grid.Row="4" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}">Export Skizzen</TextBlock>
+                <TextBlock Margin="5" Grid.Row="4" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    Export Skizzen
+                </TextBlock>
                 <DockPanel Grid.Row="4" Grid.Column="1" LastChildFill="True" Margin="2">
-                    <TextBox x:Name="SkizzeLocalSave" VerticalContentAlignment="Center" Height="{DynamicResource UiElementHeight}" TextChanged="TextBoxTextChangedLinkPath" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" FontSize="{DynamicResource UiElementFontSize}"/>
+                    <TextBox x:Name="SkizzeLocalSave"
+                             Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSkizzenLocal, Mode=Default}"
+                             VerticalContentAlignment="Center" Height="{DynamicResource UiElementHeight}"
+                             TextChanged="TextBoxTextChangedLinkPath"
+                             Background="{DynamicResource UiElementBackgroundColor}"
+                             Foreground="{DynamicResource UiElementForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                             FontSize="{DynamicResource UiElementFontSize}" />
                 </DockPanel>
             </Grid>
 
-            <Label FontSize="{DynamicResource FontSizeLarger}" FontWeight="Bold" Padding="15,0,0,0" Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5" Background="{DynamicResource HighlightedButtonColor}">
+            <Label FontSize="{DynamicResource FontSizeLarger}" FontWeight="Bold" Padding="15,0,0,0"
+                   Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30"
+                   VerticalContentAlignment="Center" Margin="0,5,0,5"
+                   Background="{DynamicResource HighlightedButtonColor}">
                 Design
             </Label>
             <DockPanel Background="{DynamicResource BackgroundSecondaryColor}">
-                <TextBlock Margin="5" DockPanel.Dock="Top" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}">Theme auswählen</TextBlock>
-                <ComboBox x:Name="ThemeSelector" VerticalContentAlignment="Center" Height="{DynamicResource UiElementHeight}" Margin="2" SelectionChanged="ThemeSelector_OnSelectionChanged" Foreground="Black" Background="Red" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" FontWeight="Bold" FontSize="{DynamicResource UiElementFontSize}">
+                <TextBlock Margin="5" DockPanel.Dock="Top" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    Theme auswählen
+                </TextBlock>
+                <ComboBox x:Name="ThemeSelector" VerticalContentAlignment="Center"
+                          Height="{DynamicResource UiElementHeight}" Margin="2"
+                          SelectionChanged="ThemeSelector_OnSelectionChanged" Foreground="Black" Background="Red"
+                          BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" FontWeight="Bold"
+                          FontSize="{DynamicResource UiElementFontSize}">
                     <ComboBoxItem Tag="Light">Light Theme</ComboBoxItem>
                     <ComboBoxItem Tag="Dark">Dark Theme</ComboBoxItem>
                     <ComboBoxItem Tag="ColorLess">Colorless Theme</ComboBoxItem>
@@ -90,19 +178,27 @@
                 </ComboBox>
             </DockPanel>
 
-            <Label FontSize="{DynamicResource FontSizeLarger}" FontWeight="Bold" Padding="15,0,0,0" Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5" Background="{DynamicResource HighlightedButtonColor}">
+            <Label FontSize="{DynamicResource FontSizeLarger}" FontWeight="Bold" Padding="15,0,0,0"
+                   Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30"
+                   VerticalContentAlignment="Center" Margin="0,5,0,5"
+                   Background="{DynamicResource HighlightedButtonColor}">
                 Sprache
             </Label>
             <DockPanel Background="{DynamicResource BackgroundSecondaryColor}">
-                <TextBlock Margin="5" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}">
+                <TextBlock Margin="5" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
                     Deutsch / Englisch
                 </TextBlock>
             </DockPanel>
-            <Label FontSize="{DynamicResource FontSizeLarger}" FontWeight="Bold" Padding="15,0,0,0" Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5" Background="{DynamicResource HighlightedButtonColor}">
+            <Label FontSize="{DynamicResource FontSizeLarger}" FontWeight="Bold" Padding="15,0,0,0"
+                   Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30"
+                   VerticalContentAlignment="Center" Margin="0,5,0,5"
+                   Background="{DynamicResource HighlightedButtonColor}">
                 Lizenz
             </Label>
             <DockPanel Background="{DynamicResource BackgroundSecondaryColor}">
-                <TextBlock x:Name="LizenzTextBox" Margin="5" TextWrapping="Wrap" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}"></TextBlock>
+                <TextBlock x:Name="LizenzTextBox" Margin="5" TextWrapping="Wrap"
+                           Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}" />
             </DockPanel>
         </StackPanel>
     </ScrollViewer>
