@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GUI"
         xmlns:settings="clr-namespace:GUI.Properties"
         mc:Ignorable="d"
-        Title="Einstellungen" Height="800" Width="800" Closing="Window_Closing" Background="{DynamicResource BackgroundColor}">
+        Title="Einstellungen" Height="600" Width="800" Closing="Window_Closing" Background="{DynamicResource BackgroundColor}">
     <ScrollViewer>
         <StackPanel Margin="15,5,15,10">
             <Label FontSize="{DynamicResource FontSizeLarger}" FontWeight="Bold" Padding="15,0,0,0" Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5" Background="{DynamicResource HighlightedButtonColor}">

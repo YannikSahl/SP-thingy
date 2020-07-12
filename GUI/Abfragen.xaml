@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
         Title="Abfragen" Height="600" Width="800" Closing="Window_Closing" Background="{DynamicResource BackgroundColor}">
-    <DockPanel Margin="10,5,10,5" Background="{DynamicResource BackgroundSecondaryColor}" LastChildFill="True">
+    <DockPanel Margin="5" Background="{DynamicResource BackgroundSecondaryColor}" LastChildFill="True">
 
-        <DockPanel DockPanel.Dock="Top">
-            <TextBlock DockPanel.Dock="Left" FontSize="{DynamicResource FontSizeLarger}" Padding="5" FontWeight="Bold" Foreground="{DynamicResource ForegroundColor}" >Neue Abfrage</TextBlock>
-            <Button DockPanel.Dock="Right" IsDefault="True" Margin="5" Height="{DynamicResource UiElementHeight}" Width="120" HorizontalAlignment="Right" Click="AbfrageStartButton_Click" BorderBrush="#FF959595" Foreground="{DynamicResource HighlightedTextColor}" Background="{DynamicResource HighlightedButtonColor}" FontSize="{DynamicResource UiElementFontSize}">Abfrage Starten
+        <DockPanel DockPanel.Dock="Top" Margin="5">
+            <Label DockPanel.Dock="Left" FontSize="{DynamicResource FontSizeLarger}" Padding="5" FontWeight="Bold" Foreground="{DynamicResource ForegroundColor}" HorizontalAlignment="Center" VerticalAlignment="Center" >Neue Abfrage</Label>
+            <Button Padding="5" DockPanel.Dock="Right" IsDefault="True" Height="{DynamicResource UiElementHeight}" Width="120" HorizontalAlignment="Right" Click="AbfrageStartButton_Click" BorderBrush="#FF959595" Foreground="{DynamicResource HighlightedTextColor}" Background="{DynamicResource HighlightedButtonColor}" FontSize="{DynamicResource UiElementFontSize}">Abfrage Starten
             </Button>
         </DockPanel>
         <Grid DockPanel.Dock="Top" MinHeight="200">

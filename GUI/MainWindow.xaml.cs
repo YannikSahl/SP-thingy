@@ -54,6 +54,7 @@ namespace GUI
 
         public Settings _settingsWindow;
         public Abfragen _abfrageWindow;
+        public Export _exportWindow;
 
         BitmapImage unlockedIcon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\entsperren.png", UriKind.Relative));
         BitmapImage lockedIcon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\sperren.png", UriKind.Relative));
@@ -612,15 +613,44 @@ namespace GUI
 
         #endregion
 
+        /// <summary>
+        /// button click event, saves database
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SaveChangesButton_Click(object sender, RoutedEventArgs e)
         {
             PpTable.CommitEdit();
             UpdateDatabases();
         }
 
+        /// <summary>
+        /// window focus lost event, saves database
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainWindow_OnLostFocus(object sender, RoutedEventArgs e)
         {
             //UpdateDatabases();
+        }
+
+        /// <summary>
+        /// menu item click event, opens export window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenExportWindow(object sender, RoutedEventArgs e)
+        {
+            // bedeutet Fenster existiert schon
+            if (_exportWindow != null)
+            {
+                //_settingsWindow.Topmost = true;
+                _exportWindow.Activate();
+                return;
+            }
+
+            _exportWindow = new Export(this);
+            _exportWindow.Show();
         }
 
         #endregion

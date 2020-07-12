@@ -13,7 +13,7 @@
         <Menu DockPanel.Dock="Top" Background="{DynamicResource MenuBackgroundColor}" Foreground="{DynamicResource MenuForegroundColor}" >
             <MenuItem Header="_Datei" Foreground="{DynamicResource MenuForegroundColor}">
                 <MenuItem Header="_Im-/Export" Foreground="{DynamicResource MenuBackgroundColor}">
-                    <MenuItem Header="_Auswahl exportieren" Foreground="{DynamicResource MenuBackgroundColor}"/>
+                    <MenuItem Header="_Auswahl exportieren" Click="OpenExportWindow" Foreground="{DynamicResource MenuBackgroundColor}"/>
                     <MenuItem Header="_Importieren" Foreground="{DynamicResource MenuBackgroundColor}"/>
                 </MenuItem>
                 <Separator />

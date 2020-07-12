@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using DBHandler;
 using GUI.Properties;
 
 namespace GUI
@@ -142,7 +143,77 @@ namespace GUI
             return null;
         }
 
-        // TODO: Saving
+        /// <summary>
+        /// splits string by separator chars and returns list as hashlist
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        private HashSet<string> TextToHashSet(string text)
+        {
+            var attributeSet = new HashSet<string>();
+
+            if (string.IsNullOrWhiteSpace(text))
+                return attributeSet;
+
+            char[] separators = { ',', ';' };
+            var arr = text.Split(separators);
+            foreach (var att in arr)
+            {
+                if (!"".Equals(att))
+                {
+                    attributeSet.Add(att.Trim());
+                }
+            }
+
+            return attributeSet;
+        }
+
+        /// <summary>
+        /// creates setting property for a savedquery row
+        /// TODO: currently not working. instead of using settings file, normal xml should be used
+        /// TODO: also, in the create hash method, a separator like ";;" should be used between cells so that only the hash
+        /// TODO: can be stored in the xml settings. When loading it can be decrypted and split into an array by separator to get cell values
+        /// </summary>
+        /// <param name="hash"></param>
+        /// <param name="dr"></param>
+        private void CreateSetting(string hash, DataRow dr)
+        {
+            // https://stackoverflow.com/questions/175726/c-create-new-settings-at-run-time
+
+            //// create new setting from a base setting:
+            //var property = new SettingsProperty(hash);
+            ////property.Name = hash;
+            //property.PropertyType = typeof(DataRow);
+            //property.SerializeAs = SettingsSerializeAs.Xml;
+            //SavedQueries.Default.Properties.Add(property);
+            //SavedQueries.Default.Save();
+            //// will have the stored value:
+            ////var dynamicSetting = SavedQueries.Default[hash];
+            ///
+            ApplicationSettingsBase settings = SavedQueries.Default;
+            SettingsProvider sp = settings.Providers["LocalFileSettingsProvider"];
+            SettingsProperty p = new SettingsProperty(hash);
+            DataRow conf = null;
+            p.PropertyType = typeof(DataRow);
+            p.Attributes.Add(typeof(UserScopedSettingAttribute), new UserScopedSettingAttribute());
+            p.Provider = sp;
+            p.SerializeAs = SettingsSerializeAs.Xml;
+            SettingsPropertyValue v = new SettingsPropertyValue(p);
+            settings.Properties.Add(p);
+
+            settings.Reload();
+            conf = (DataRow)settings[hash];
+            if (conf == null)
+            {
+                settings[hash] = conf = dr;
+                settings.Save();
+            }
+        }
+
+        #endregion
+
+        #region events
+
         /// <summary>
         /// adds current query "session" to table
         /// </summary>
@@ -192,38 +263,13 @@ namespace GUI
         }
 
         /// <summary>
-        /// splits string by separator chars and returns list as hashlist
-        /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        private HashSet<string> TextToHashSet(string text)
-        {
-            var attributeSet = new HashSet<string>();
-
-            if (string.IsNullOrWhiteSpace(text))
-                return attributeSet;
-
-            char[] separators = { ',', ';' };
-            var arr = text.Split(separators);
-            foreach (var att in arr)
-            {
-                if (!"".Equals(att))
-                {
-                    attributeSet.Add(att.Trim());
-                }
-            }
-
-            return attributeSet;
-        }
-
-        /// <summary>
         /// starts query and redirects to mainwindow if query successful
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void AbfrageStartButton_Click(object sender, RoutedEventArgs e)
         {
-            DBHandler.DbHandler dbh = new DBHandler.DbHandler("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            DbHandler dbh = new DbHandler("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
             StatusCode queryExecuted = StatusCode.CommandFailed;
             bool queryByText = QueryInA.IsChecked.HasValue ? QueryInA.IsChecked.Value : false;
             if (queryByText)
@@ -343,39 +389,11 @@ namespace GUI
                 ((DataTable)SavedQueriesGrid.DataContext).Rows.Remove(sameRowReference);
         }
 
-        private void CreateSetting(string hash, DataRow dr)
-        {
-            //// create new setting from a base setting:
-            //var property = new SettingsProperty(hash);
-            ////property.Name = hash;
-            //property.PropertyType = typeof(DataRow);
-            //property.SerializeAs = SettingsSerializeAs.Xml;
-            //SavedQueries.Default.Properties.Add(property);
-            //SavedQueries.Default.Save();
-            //// will have the stored value:
-            ////var dynamicSetting = SavedQueries.Default[hash];
-            ///
-            ApplicationSettingsBase settings = SavedQueries.Default;
-            SettingsProvider sp = settings.Providers["LocalFileSettingsProvider"];
-            SettingsProperty p = new SettingsProperty(hash);
-            DataRow conf = null;
-            p.PropertyType = typeof(DataRow);
-            p.Attributes.Add(typeof(UserScopedSettingAttribute), new UserScopedSettingAttribute());
-            p.Provider = sp;
-            p.SerializeAs = SettingsSerializeAs.Xml;
-            SettingsPropertyValue v = new SettingsPropertyValue(p);
-            settings.Properties.Add(p);
-
-            settings.Reload();
-            conf = (DataRow)settings[hash];
-            if (conf == null)
-            {
-                settings[hash] = conf = dr;
-                settings.Save();
-            }
-        }
-
-
+        /// <summary>
+        /// window closing event, saves queries and resets mainwin reference
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             var dt = SavedQueriesGrid.DataContext as DataTable;
@@ -395,8 +413,7 @@ namespace GUI
                 }
             }
 
-            var sq = SavedQueries.Default;
-            //SavedQueries.Default.Save();
+            SavedQueries.Default.Save();
             _mainWindow._abfrageWindow = null;
         }
 
