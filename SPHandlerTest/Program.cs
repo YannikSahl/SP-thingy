@@ -1,64 +1,54 @@
 ﻿using System;
-using System.Net;
-using Microsoft.SharePoint.Client;
+using System.Security;
+using System.Threading.Tasks;
 
-namespace SharePointTryOut
+namespace SPHandlerTest
 {
+    /// <summary>
+    /// The SPHandlerTest is used for testing with SharePointOnline.CSOM, starting from version 16.1.
+    /// Functions are currently not in use.
+    /// </summary>
     internal class Program
     {
-        private const string rootSite = "https://htwberlinde.sharepoint.com";
-        private const string sourceSite = "/sites/SWE";
-        private const string folderSite = "/Freigegebene%20Dokumente";
-        private const string fileSite = "/04321_DB_Festp/03_Skizzen/PDF/6000/6400/6441/Arbeitspaket4.pdf";
-        private static string sourceLibrary = "Dokumente";
-        private static string destinationPath = "C:\\temp\\test.pdf";
-        private static string username;
-        private static string password;
+        private const string RootSite = "https://htwberlinde.sharepoint.com";
+        private const string SourceSite = "/sites/SWE";
+        private const string FolderSite = "/Freigegebene%20Dokumente";
+        private static string username = "";
+        private static string password = "";
 
-
-        private static void Main(string[] args)
+        
+        
+        public static async Task Main(string[] args)
         {
-            username = "";
-            password = "";
+            Uri site = new Uri(RootSite + SourceSite + FolderSite); 
+            SecureString secpassword = ToSecureString(password);
 
-            using (var ctx = new ClientContext(rootSite))
+            // Note: The PnP Sites Core AuthenticationManager class also supports this
+            using (var authenticationManager = new SPHandlerTest.AuthentificationManagerCSOM())
+            using (var context = authenticationManager.GetContext(site, username, secpassword))
             {
-                ctx.Credentials = new SharePointOnlineCredentials(username, password);
-                var web = ctx.Web;
-                ctx.Load(web);
-                ctx.ExecuteQueryAsync().Wait();
-
-
-                DownloadFile(sourceSite + folderSite + fileSite,ctx.Credentials, destinationPath);
-            }
-
-            Console.ReadLine();
-        }
-
-        private static void DownloadFile(string webUrl, ICredentials credentials, string destinationPath)
-        {
-            using (var client = new WebClient())
-            {
-                client.Headers.Add("X-FORMS_BASED_AUTH_ACCEPTED", "f");
-                client.Headers.Add("User-Agent: Other");
-                client.Credentials = credentials;
-                client.DownloadFile(webUrl, destinationPath);
+                context.Load(context.Web, p => p.Title);
+                await context.ExecuteQueryAsync();
+                Console.WriteLine($"Title: {context.Web.Title}");
             }
         }
-
-        public static string GetFileUrlFromDB(int entry, bool type)
+        
+        /// <summary>
+        /// returns SecureString 
+        /// <param name="_self">string</param>
+        /// </summary>
+        public static SecureString ToSecureString(string _self)
         {
-            string fileRelativUrl;
-
-            var thousands = entry / 1000 % 10 * 1000;
-            var hundreds  = thousands + entry / 100 % 10 * 100;
-
-            if (type)
-                fileRelativUrl = "/04321_DB_Festp/03_Skizzen/PDF/" + thousands + "/" + hundreds + "/" + entry;
-            else
-                fileRelativUrl = "/04321_DB_Festp/03_Skizzen/JPG/" + thousands + "/" + hundreds + "/" + entry;
-            
-            return fileRelativUrl;
+            SecureString knox = new SecureString();
+            char[] chars = _self.ToCharArray();
+            foreach (char c in chars)
+            {
+                knox.AppendChar(c);
+            }
+            return knox;
         }
+
+       
+       
     }
 }

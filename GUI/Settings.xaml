@@ -4,118 +4,202 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
+        xmlns:settings="clr-namespace:GUI.Properties"
         mc:Ignorable="d"
-        Title="Settings" Height="450" Width="800">
-    <StackPanel Margin="15,5,15,10">
-        <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
-            <Label.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FFFF782A" Offset="0"/>
-                    <GradientStop Color="#FFFFAD1E" Offset="1"/>
-                </LinearGradientBrush>
-            </Label.Background>
-            Sharepoint Authentification
-        </Label>
-        <Grid Background="#FFF7F7F7">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="3*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0">Name</TextBlock>
-            <DockPanel Margin="2" LastChildFill="True" Grid.Row="0" Grid.Column="1">
-                <TextBox x:Name="sp_name"></TextBox>
-            </DockPanel>
-            <DockPanel Margin="2" LastChildFill="True" Grid.Row="1" Grid.Column="1">
-                <PasswordBox x:Name="sp_pw"></PasswordBox>
-            </DockPanel>
-            <TextBlock Grid.Row="1" Grid.Column="0">Password</TextBlock>
-            <DockPanel Grid.Row="2" Grid.ColumnSpan="2" LastChildFill="True">
-                <Button DockPanel.Dock="Left" Margin="2" Click="Button_Click" BorderBrush="{x:Null}" MinHeight="25">Test Connection</Button>
-            </DockPanel>
-        </Grid>
+        Title="Einstellungen" Height="600" Width="800" Closing="Window_Closing"
+        Background="{DynamicResource BackgroundColor}">
+    <ScrollViewer>
+        <StackPanel Margin="15,5,15,10">
+            <Label FontSize="{DynamicResource FontSizeLarger}" FontWeight="Bold" Padding="15,0,0,0"
+                   Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30"
+                   VerticalContentAlignment="Center" Margin="0,5,0,5"
+                   Background="{DynamicResource HighlightedButtonColor}">
+                Sharepoint Authentifizierung
+            </Label>
+            <Grid Background="{DynamicResource BackgroundSecondaryColor}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Margin="5" Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    E-Mail
+                </TextBlock>
+                <DockPanel Margin="2" LastChildFill="True" Grid.Row="0" Grid.Column="1">
+                    <TextBox
+                        Text="{Binding Source={x:Static settings:Settings1.Default}, Path=SpUserName, Mode=Default}"
+                        x:Name="SpUserName" Height="{DynamicResource UiElementHeight}"
+                        VerticalContentAlignment="Center" Background="{DynamicResource UiElementBackgroundColor}"
+                        Foreground="{DynamicResource UiElementForegroundColor}"
+                        BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                        FontSize="{DynamicResource UiElementFontSize}" />
+                </DockPanel>
+                <DockPanel Margin="2" LastChildFill="True" Grid.Row="1" Grid.Column="1">
+                    <PasswordBox x:Name="SpUserPw" Height="{DynamicResource UiElementHeight}"
+                                 VerticalContentAlignment="Center"
+                                 Background="{DynamicResource UiElementBackgroundColor}"
+                                 Foreground="{DynamicResource UiElementForegroundColor}"
+                                 BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                                 FontSize="{DynamicResource UiElementFontSize}" />
+                </DockPanel>
+                <TextBlock Margin="5" Grid.Row="1" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    Password
+                </TextBlock>
+                <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True">
+                    <Button DockPanel.Dock="Left" Click="Button_Click" BorderBrush="{x:Null}"
+                            Height="{DynamicResource UiElementHeight}"
+                            Background="{DynamicResource BackgroundTernaryColor}"
+                            Foreground="{DynamicResource UiElementForegroundColor}"
+                            FontSize="{DynamicResource UiElementFontSize}">
+                        Verbindung Testen
+                    </Button>
+                </DockPanel>
+            </Grid>
 
-        <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
-            <Label.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="1">
-                    <GradientStop Color="#FFFF782A" Offset="0"/>
-                    <GradientStop Color="#FFFFAD1E" Offset="1"/>
-                </LinearGradientBrush>
-            </Label.Background>
-            Pfade
-        </Label>
-        <Grid Background="#FFF7F7F7">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+            <Label FontSize="{DynamicResource FontSizeLarger}" FontWeight="Bold" Padding="15,0,0,0"
+                   Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30"
+                   VerticalContentAlignment="Center" Margin="0,5,0,5"
+                   Background="{DynamicResource HighlightedButtonColor}">
+                Pfade
+            </Label>
+            <Grid Background="{DynamicResource BackgroundSecondaryColor}">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Sharepoint</TextBlock>
-            <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True" Margin="2">
-                <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
-                <TextBox VerticalContentAlignment="Center"></TextBox>
+                <TextBlock Margin="5" Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    Sharepoint Url
+                </TextBlock>
+                <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True" Margin="2">
+                    <TextBox Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSp, Mode=Default}"
+                             x:Name="SpSave" VerticalContentAlignment="Center"
+                             Height="{DynamicResource UiElementHeight}"
+                             Background="{DynamicResource UiElementBackgroundColor}"
+                             Foreground="{DynamicResource UiElementForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                             FontSize="{DynamicResource UiElementFontSize}" />
+                </DockPanel>
+
+                <TextBlock Margin="5" Grid.Row="1" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    Datenbank im Sharepoint
+                </TextBlock>
+                <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True" Margin="2">
+                    <TextBox
+                        Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbInSp, Mode=Default}"
+                        x:Name="DbSpSave" VerticalContentAlignment="Center" Height="{DynamicResource UiElementHeight}"
+                        Background="{DynamicResource UiElementBackgroundColor}"
+                        Foreground="{DynamicResource UiElementForegroundColor}"
+                        BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                        FontSize="{DynamicResource UiElementFontSize}" />
+                </DockPanel>
+
+                <TextBlock Margin="5" Grid.Row="2" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    Skizzen im Sharepoint
+                </TextBlock>
+                <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True" Margin="2">
+                    <TextBox
+                        Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSkizzenInSp, Mode=Default}"
+                        x:Name="SkizzeSpSave" VerticalContentAlignment="Center"
+                        Height="{DynamicResource UiElementHeight}"
+                        Background="{DynamicResource UiElementBackgroundColor}"
+                        Foreground="{DynamicResource UiElementForegroundColor}"
+                        BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                        FontSize="{DynamicResource UiElementFontSize}" />
+                </DockPanel>
+
+                <TextBlock Margin="5" Grid.Row="3" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    Export DB
+                </TextBlock>
+                <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="True" Margin="2">
+                    <TextBox
+                        Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbLocal, Mode=Default}"
+                        x:Name="DbLocalSave" VerticalContentAlignment="Center"
+                        Height="{DynamicResource UiElementHeight}" TextChanged="TextBoxTextChangedLinkPath"
+                        Background="{DynamicResource UiElementBackgroundColor}"
+                        Foreground="{DynamicResource UiElementForegroundColor}"
+                        BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                        FontSize="{DynamicResource UiElementFontSize}" />
+                </DockPanel>
+
+                <TextBlock Margin="5" Grid.Row="4" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    Export Skizzen
+                </TextBlock>
+                <DockPanel Grid.Row="4" Grid.Column="1" LastChildFill="True" Margin="2">
+                    <TextBox x:Name="SkizzeLocalSave"
+                             Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSkizzenLocal, Mode=Default}"
+                             VerticalContentAlignment="Center" Height="{DynamicResource UiElementHeight}"
+                             TextChanged="TextBoxTextChangedLinkPath"
+                             Background="{DynamicResource UiElementBackgroundColor}"
+                             Foreground="{DynamicResource UiElementForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                             FontSize="{DynamicResource UiElementFontSize}" />
+                </DockPanel>
+            </Grid>
+
+            <Label FontSize="{DynamicResource FontSizeLarger}" FontWeight="Bold" Padding="15,0,0,0"
+                   Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30"
+                   VerticalContentAlignment="Center" Margin="0,5,0,5"
+                   Background="{DynamicResource HighlightedButtonColor}">
+                Design
+            </Label>
+            <DockPanel Background="{DynamicResource BackgroundSecondaryColor}">
+                <TextBlock Margin="5" DockPanel.Dock="Top" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    Theme auswählen
+                </TextBlock>
+                <ComboBox x:Name="ThemeSelector" VerticalContentAlignment="Center"
+                          Height="{DynamicResource UiElementHeight}" Margin="2"
+                          SelectionChanged="ThemeSelector_OnSelectionChanged" Foreground="Black" Background="Red"
+                          BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" FontWeight="Bold"
+                          FontSize="{DynamicResource UiElementFontSize}">
+                    <ComboBoxItem Tag="Light">Light Theme</ComboBoxItem>
+                    <ComboBoxItem Tag="Dark">Dark Theme</ComboBoxItem>
+                    <ComboBoxItem Tag="ColorLess">Colorless Theme</ComboBoxItem>
+                    <ComboBoxItem Tag="Nebula">Nebula Theme</ComboBoxItem>
+                </ComboBox>
             </DockPanel>
 
-            <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Datenbank im Sharepoint</TextBlock>
-            <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True" Margin="2">
-                <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
-                <TextBox VerticalContentAlignment="Center"></TextBox>
+            <Label FontSize="{DynamicResource FontSizeLarger}" FontWeight="Bold" Padding="15,0,0,0"
+                   Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30"
+                   VerticalContentAlignment="Center" Margin="0,5,0,5"
+                   Background="{DynamicResource HighlightedButtonColor}">
+                Sprache
+            </Label>
+            <DockPanel Background="{DynamicResource BackgroundSecondaryColor}">
+                <TextBlock Margin="5" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    Deutsch / Englisch
+                </TextBlock>
             </DockPanel>
-
-            <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Skizzen im Sharepoint</TextBlock>
-            <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True" Margin="2">
-                <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
-                <TextBox VerticalContentAlignment="Center"></TextBox>
+            <Label FontSize="{DynamicResource FontSizeLarger}" FontWeight="Bold" Padding="15,0,0,0"
+                   Foreground="{DynamicResource HighlightedTextColor}" FontStyle="Normal" Height="30"
+                   VerticalContentAlignment="Center" Margin="0,5,0,5"
+                   Background="{DynamicResource HighlightedButtonColor}">
+                Lizenz
+            </Label>
+            <DockPanel Background="{DynamicResource BackgroundSecondaryColor}">
+                <TextBlock x:Name="LizenzTextBox" Margin="5" TextWrapping="Wrap"
+                           Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}" />
             </DockPanel>
-
-            <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Export DB</TextBlock>
-            <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="True" Margin="2">
-                <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
-                <TextBox x:Name="DbSave" VerticalContentAlignment="Center"/>
-            </DockPanel>
-
-            <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Export Skizzen</TextBlock>
-            <DockPanel Grid.Row="4" Grid.Column="1" LastChildFill="True" Margin="2">
-                <Button DockPanel.Dock="Right" Click="TexBoxLinkEnter">OK</Button>
-                <TextBox VerticalContentAlignment="Center"></TextBox>
-            </DockPanel>
-        </Grid>
-
-        <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
-            <Label.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FFFF782A" Offset="0"/>
-                    <GradientStop Color="#FFFFAD1E" Offset="1"/>
-                </LinearGradientBrush>
-            </Label.Background>
-            Design
-        </Label>
-        <TextBlock Background="#FFF7F7F7">
-            Darkmode / Lightmode
-        </TextBlock>
-
-        <Label FontSize="15" FontWeight="Bold" Padding="15,0,0,0" Foreground="White" FontStyle="Normal" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,5">
-            <Label.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FFFF782A" Offset="0"/>
-                    <GradientStop Color="#FFFFAD1E" Offset="1"/>
-                </LinearGradientBrush>
-            </Label.Background>
-            Sprache
-        </Label>
-        <TextBlock Background="#FFF7F7F7">
-            Deutsch / Englisch
-        </TextBlock>
-    </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
 </Window>

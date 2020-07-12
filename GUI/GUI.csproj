@@ -25,18 +25,39 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="lang_de.Designer.cs">
-      <DesignTime>True</DesignTime>
+    <Compile Update="Properties\SavedQueries.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
-      <DependentUpon>lang_de.resx</DependentUpon>
+      <DependentUpon>SavedQueries.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings1.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings1.settings</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="lang_de.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>lang_de.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <None Update="Properties\SavedQueries.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>SavedQueries.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\Settings1.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings1.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="skins\colorless.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="skins\nebula.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="skins\light.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

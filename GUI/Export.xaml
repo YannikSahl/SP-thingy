@@ -1,0 +1,268 @@
+﻿<Window x:Class="GUI.Export"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GUI"
+        mc:Ignorable="d"
+        Title="Export" Height="520" Width="800" Background="{DynamicResource BackgroundColor}" Closing="Window_Closing">
+    <DockPanel Background="{DynamicResource BackgroundSecondaryColor}" Margin="5" LastChildFill="True">
+        <DockPanel DockPanel.Dock="Top" Margin="5">
+            <Label DockPanel.Dock="Left" FontSize="{DynamicResource FontSizeLarger}" Padding="5" FontWeight="Bold"
+                   Foreground="{DynamicResource ForegroundColor}" HorizontalAlignment="Center"
+                   VerticalAlignment="Center">
+                Export
+            </Label>
+            <Button Padding="5" DockPanel.Dock="Right" IsDefault="True" Height="{DynamicResource UiElementHeight}"
+                    HorizontalAlignment="Right" BorderBrush="#FF959595"
+                    Foreground="{DynamicResource HighlightedTextColor}"
+                    Background="{DynamicResource HighlightedButtonColor}"
+                    FontSize="{DynamicResource UiElementFontSize}">
+                Exportieren
+            </Button>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="5" Background="{DynamicResource BackgroundTernaryColor}">
+
+            <DockPanel DockPanel.Dock="Left" LastChildFill="True">
+                <DockPanel DockPanel.Dock="Top" LastChildFill="True">
+                    <TextBlock DockPanel.Dock="Left" Foreground="{DynamicResource ForegroundColor}"
+                               FontSize="{DynamicResource FontSize}" HorizontalAlignment="Left"
+                               VerticalAlignment="Center" Margin="5">
+                        Dateiname
+                    </TextBlock>
+                    <TextBox DockPanel.Dock="Left" MinWidth="100" Height="{DynamicResource UiElementHeight}"
+                             Background="{DynamicResource UiElementBackgroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                             Foreground="{DynamicResource UiElementForegroundColor}" Margin="5"
+                             FontSize="{DynamicResource UiElementFontSize}"
+                             VerticalContentAlignment="Center">
+                        Testtext
+                    </TextBox>
+                    <TextBlock DockPanel.Dock="Left" Foreground="{DynamicResource ForegroundColor}"
+                               FontSize="{DynamicResource FontSize}" HorizontalAlignment="Left"
+                               VerticalAlignment="Center" Margin="5">
+                        Datei Exportpfad
+                    </TextBlock>
+                    <TextBox DockPanel.Dock="Right" Height="{DynamicResource UiElementHeight}"
+                             Background="{DynamicResource UiElementBackgroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                             Foreground="{DynamicResource UiElementForegroundColor}" Margin="5"
+                             FontSize="{DynamicResource UiElementFontSize}"
+                             VerticalContentAlignment="Center">
+                        Testtext
+                    </TextBox>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top">
+                    <TextBlock Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}"
+                               HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5">
+                        Skizzen Export
+                    </TextBlock>
+                    <RadioButton Margin="5" VerticalAlignment="Center" FontSize="{DynamicResource FontSize}"
+                                 Foreground="{DynamicResource ForegroundColor}"
+                                 BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                        Ja
+                    </RadioButton>
+                    <RadioButton Margin="5" VerticalAlignment="Center" FontSize="{DynamicResource FontSize}"
+                                 Foreground="{DynamicResource ForegroundColor}"
+                                 BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                        Nein
+                    </RadioButton>
+                    <TextBlock DockPanel.Dock="Left" Foreground="{DynamicResource ForegroundColor}"
+                               FontSize="{DynamicResource FontSize}" HorizontalAlignment="Left"
+                               VerticalAlignment="Center" Margin="5">
+                        Skizzen Exportpfad
+                    </TextBlock>
+                    <TextBox DockPanel.Dock="Right" Height="{DynamicResource UiElementHeight}"
+                             Background="{DynamicResource UiElementBackgroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                             Foreground="{DynamicResource UiElementForegroundColor}" Margin="5"
+                             FontSize="{DynamicResource UiElementFontSize}"
+                             VerticalContentAlignment="Center">
+                        Testtext
+                    </TextBox>
+                </DockPanel>
+            </DockPanel>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="5" Background="{DynamicResource BackgroundTernaryColor}">
+            <DockPanel Dock="Left" LastChildFill="False">
+                <TextBlock DockPanel.Dock="Top" Padding="3" FontWeight="Bold"
+                           Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}">
+                    Exportfomat
+                </TextBlock>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    .mdb (Datenbank)
+                </RadioButton>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    .xls (Excel)
+                </RadioButton>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    .txt (ASCII)
+                </RadioButton>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    .dbb (ASCII)
+                </RadioButton>
+            </DockPanel>
+            <TextBlock DockPanel.Dock="Left" Background="{DynamicResource BackgroundSecondaryColor}" Width="1.5"
+                       Margin="5" />
+            <DockPanel Dock="Left" LastChildFill="False">
+                <TextBlock DockPanel.Dock="Top" Padding="3" FontWeight="Bold"
+                           Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}">
+                    Lagesystem
+                </TextBlock>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    3. Streifen
+                </RadioButton>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    4. Streifen
+                </RadioButton>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    5. Streifen
+                </RadioButton>
+            </DockPanel>
+            <DockPanel Dock="Left" LastChildFill="False">
+                <TextBlock DockPanel.Dock="Top" Padding="3" FontWeight="Bold"
+                           Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}" />
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    DB Ref
+                </RadioButton>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    Sys. 42/83
+                </RadioButton>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    Sys. DB Soldner Netz88
+                </RadioButton>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    <TextBox DockPanel.Dock="Left" MinWidth="100" Height="{DynamicResource UiElementHeight}"
+                             Background="{DynamicResource UiElementBackgroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                             Foreground="{DynamicResource UiElementForegroundColor}" Margin="5"
+                             FontSize="{DynamicResource UiElementFontSize}"
+                             VerticalContentAlignment="Center">
+                        Testtext
+                    </TextBox>
+                </RadioButton>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    Alle LSys
+                </RadioButton>
+            </DockPanel>
+            <TextBlock DockPanel.Dock="Left" Background="{DynamicResource BackgroundSecondaryColor}" Width="1.5"
+                       Margin="5" />
+            <DockPanel Dock="Left" LastChildFill="False">
+                <TextBlock DockPanel.Dock="Top" Padding="3" FontWeight="Bold"
+                           Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}">
+                    Höhensystem
+                </TextBlock>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    DHHN 16
+                </RadioButton>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    DHHN92
+                </RadioButton>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    NN1912
+                </RadioButton>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    HN76
+                </RadioButton>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    <TextBox DockPanel.Dock="Left" MinWidth="100" Height="{DynamicResource UiElementHeight}"
+                             Background="{DynamicResource UiElementBackgroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                             Foreground="{DynamicResource UiElementForegroundColor}" Margin="5"
+                             FontSize="{DynamicResource UiElementFontSize}"
+                             VerticalContentAlignment="Center">
+                        Testtext
+                    </TextBox>
+                </RadioButton>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    Alle HSys
+                </RadioButton>
+            </DockPanel>
+            <TextBlock DockPanel.Dock="Left" Background="{DynamicResource BackgroundSecondaryColor}" Width="1.5"
+                       Margin="5" />
+            <DockPanel Dock="Left" LastChildFill="False">
+                <TextBlock DockPanel.Dock="Top" Padding="3" FontWeight="Bold"
+                           Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}">
+                    Was soll exportiert werden?
+                </TextBlock>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    Lage und Höhe
+                </RadioButton>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    Nur Lage
+                </RadioButton>
+                <RadioButton DockPanel.Dock="Top" Margin="5" VerticalAlignment="Center"
+                             FontSize="{DynamicResource FontSize}" Foreground="{DynamicResource ForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}">
+                    Nur Höhe
+                </RadioButton>
+            </DockPanel>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="5" Background="{DynamicResource BackgroundTernaryColor}"
+                   LastChildFill="True">
+            <TextBlock DockPanel.Dock="Top" Text="Export Vorschau" FontWeight="Bold"
+                       Foreground="{DynamicResource ForegroundTernaryColor}" FontStyle="Normal"
+                       FontSize="{DynamicResource FontSize}" />
+            <DataGrid DockPanel.Dock="Top" ItemsSource="{Binding}"
+                      Background="{DynamicResource UiElementBackgroundColor}"
+                      Foreground="{DynamicResource UiElementForegroundColor}"
+                      BorderBrush="{DynamicResource HighlightedButtonColor}"
+                      FontSize="{DynamicResource UiElementFontSize}">
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="{DynamicResource UiElementBackgroundSecondaryColor}" />
+                        <Setter Property="Foreground" Value="{DynamicResource UiElementForegroundColor}" />
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Resources>
+                    <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
+                           TargetType="{x:Type DataGridColumnHeader}">
+                        <Setter Property="Background" Value="{DynamicResource UiElementBackgroundColor}" />
+                        <Setter Property="Foreground" Value="{DynamicResource UiElementForegroundSecondaryColor}" />
+                    </Style>
+                </DataGrid.Resources>
+            </DataGrid>
+        </DockPanel>
+
+    </DockPanel>
+</Window>

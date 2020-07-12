@@ -7,8 +7,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.SharePointOnline.CSOM" Version="16.1.20211.12000" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.0" />
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
-    <PackageReference Include="TTCUE.NetCore.SharepointOnline.CSOM.16.1.8029.1200" Version="16.1.8029.1200" />
   </ItemGroup>
 
 </Project>

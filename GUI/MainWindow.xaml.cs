@@ -1,40 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using DBHandler;
 
-namespace GUI
-{
-    /*
-    Author: Oliver Tworkowski
+/*
+    Author: Oliver Tworkowski, s0568202
+
     Credit for license-free Icons:
     - sperren.png - https://www.flaticon.com/de/kostenloses-icon/sperren_483408?term=lock&page=1&position=7
     - entsperren.png - https://www.flaticon.com/de/kostenloses-icon/vorhangeschloss_126479
     - auge.png - https://www.flaticon.com/de/kostenloses-icon/auge_609494?term=view&page=1&position=67
 
-    TODO 1: DataGrid Struktur mit Liste binden, um auf Elemente einzeln zugreifen zu können und einfacher operationen durchführen zu können
-    */
+*/
 
+namespace GUI
+{
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region constructors
+
+        public MainWindow(ConnectionModus conMod = ConnectionModus.Online)
+        {
+            InitializeComponent();
+
+            SetConnectionStatus(conMod);
+            CollapseExpander();
+            SetStatusBarLastSaved();
+        }
+
+        #endregion
+
+        #region statics
+
         public enum ConnectionModus
         {
             Offline,
@@ -42,179 +47,150 @@ namespace GUI
             LostConnection
         }
 
-        private static string m_phTableName = "PH";
-        private static string m_plTableName = "PL";
+        private readonly SolidColorBrush _lostConnectionColor = new SolidColorBrush(Colors.Red);
+        private readonly SolidColorBrush _onlineColor = new SolidColorBrush(Colors.ForestGreen);
+        private readonly SolidColorBrush _offlineColor = new SolidColorBrush(Colors.DarkOrange);
 
-        private ConnectionModus m_connectionModus;
+        private const string PpTableName = "PP";
+        private const string PhTableName = "PH";
+        private const string PlTableName = "PL";
+
+        #endregion
+
+        #region members
+
+        private ConnectionModus _mConnectionMode;
+
         //ConnectionStatus
-        private DBHandler.DbHandler m_databaseConnection;
-        private bool m_isEditable = false;
-        public bool isEditable
+        private DbHandler _mDatabaseConnection;
+        private bool _mIsEditable;
+        private bool _mViewModeOnly;
+
+        public Settings SettingsWindow;
+        public Abfragen AbfrageWindow;
+        public Export ExportWindow;
+
+        private readonly BitmapImage _unlockedIcon =
+            new BitmapImage(new Uri("..\\..\\..\\gui_resources\\entsperren.png", UriKind.Relative));
+
+        private readonly BitmapImage _lockedIcon =
+            new BitmapImage(new Uri("..\\..\\..\\gui_resources\\sperren.png", UriKind.Relative));
+
+        #endregion
+
+        #region Custom Methods
+
+        private bool UpdateDatabases()
         {
-            get { return m_isEditable; }
-            set
+            if (_mDatabaseConnection == null)
+                return true;
+            var result = _mDatabaseConnection.UpdateDatabases();
+            if (result == StatusCode.CommandOk || result == StatusCode.NoDatabaseChanges)
             {
-                SetEditable(value);
+                SetStatusBarLastSaved();
+                return true;
             }
+
+            MessageBox.Show($"Status Code: {Enum.GetName(result.GetType(), result)}", "Speichern Fehlgeschlagen",
+                MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+            return false;
         }
 
-        public MainWindow(ConnectionModus conMod = ConnectionModus.Online)
+        //private DateTime _lastSaved;
+        private void SetStatusBarLastSaved()
         {
-            InitializeComponent();
-            m_connectionModus = conMod;
-            PopoutConnectionStatusBar();
-
-            if (m_connectionModus == ConnectionModus.Online)
-            {
-                SetEditable(true);
-            }
-            SetDatabase();
-            SetPPDataTable();
-
-            CollapseExpander();
-            AddFilePreview("..\\..\\..\\..\\README.md");
-            //AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
-            string pt = "\\..jpeg_test.jpeg";
-            AddFilePreview("..\\..\\..\\test_images\\png_test.png");
-            AddFilePreview("..\\..\\..\\test_images\\jpeg_test.jpeg");
-            AddFilePreview("..\\..\\..\\test_images\\pdf_test.pdf");
-            AddFilePreview("..\\..\\..\\test_images\\txt_test.txt");
-            AddFilePreview("..\\..\\..\\test_images\\pptx_test.pptx");
-            //AddFilePreview("D:/GoldSquare_N.jpg");
-            //AddFilePreview("D:/img1.png");
-        }
-
-        private void AddFilePreview(string path)
-        {
-            DocumentView.Children.Add(new FileView(path));
-        }
-
-        private void SetConnectionStatusBarStyle(string text, Color color)
-        {
-            ConnectionStatusBar.Text = text;
-            var brush = new SolidColorBrush(color);
-            ConnectionStatusBar.Background = brush;
-            ConnectionStatusBar.Visibility = Visibility.Visible;
-            StartTimer(5d);
-            m_connectionStatusBarActive = true;
-        }
-
-        private void HideConnectionStatusBar()
-        {
-            ConnectionStatusBar.Visibility = Visibility.Hidden;
-            m_connectionStatusBarActive = false;
-        }
-
-        // TODO: use this to determine whether timer should be reset when popout during popout
-        private bool m_connectionStatusBarActive;
-        private void StartTimer(double seconds)
-        {
-            DispatcherTimer timer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromSeconds(seconds)
-            };
-            timer.Tick += TimerTick;
-            timer.Start();
-        }
-
-        private void TimerTick(object sender, EventArgs e)
-        {
-            DispatcherTimer timer = (DispatcherTimer)sender;
-            timer.Stop();
-            timer.Tick -= TimerTick;
-            HideConnectionStatusBar();
-        }
-
-        private void PopoutConnectionStatusBar()
-        {
-            switch (m_connectionModus)
-            {
-                case ConnectionModus.Online:
-                {
-                    SetConnectionStatusBarStyle("Verbunden!", Colors.ForestGreen);
-                    break;
-                }
-                case ConnectionModus.Offline:
-                {
-                    SetConnectionStatusBarStyle("Offline Modus", Colors.DarkOrange);
-                    break;
-                }
-                case ConnectionModus.LostConnection:
-                {
-                    SetConnectionStatusBarStyle("Verbindung Fehlgeschlagen!", Colors.Red);
-                    break;
-                }
-                default: break;
-            }
+            SavedStatus.Text = DateTime.Now.ToLongTimeString();
         }
 
         /// <summary>
-        /// Opens Settings Window
+        ///     sets the filter by string for column PAD in the PP table
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void openSettingsWindow(object sender, RoutedEventArgs e)
+        /// <param name="filter"></param>
+        private void SetPpSearchFilter(string filter)
         {
-            Settings settingsWin = new Settings();
-            settingsWin.Show();
+            if (filter == null)
+                return;
+            var table = PpTable.DataContext as DataTable;
+            if (table == null)
+                return;
+            // index 0 sollte PAD sein
+            var padColumnName = "PAD"; //table.Columns[0].ColumnName;
+            // hier könnte man like verbinden mit "AND" expression um mehrere Zeilen zu suchen
+            try
+            {
+                table.DefaultView.RowFilter = $"{padColumnName} LIKE '%{filter}%'";
+            }
+            catch (EvaluateException e)
+            {
+                MessageBox.Show(e.ToString(), "Interner Fehler", MessageBoxButton.OK, MessageBoxImage.Error,
+                    MessageBoxResult.OK);
+            }
+
+            PpCount.Text = table.DefaultView.Count.ToString();
+            SetPlOrPhTableByPad(PlTableName, null);
+            SetPlOrPhTableByPad(PhTableName, null);
         }
 
         /// <summary>
-        /// Opens Query Window
+        ///     Sets member database variable
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void openAbfrageWindow(object sender, RoutedEventArgs e)
+        public void SetDatabase(DbHandler dbh)
         {
-            Abfragen abfrageWin = new Abfragen();
-            abfrageWin.Show();
-        }
-
-        /// <summary>
-        /// Sets member database variable
-        /// </summary>
-        private void SetDatabase()
-        {
+            SetPlOrPhTableByPad(PlTableName, null);
+            SetPlOrPhTableByPad(PhTableName, null);
             // establish connection
-            m_databaseConnection = new DBHandler.DbHandler("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            _mDatabaseConnection = dbh;
         }
 
         /// <summary>
-        /// Sets PP main table to data view
+        ///     Sets PP main table to data view
         /// </summary>
-        private void SetPPDataTable()
+        public void LoadTables()
         {
-            DataTable pp = m_databaseConnection.DbData.Tables["PP"];
+            //SetDatabase(new DBHandler.DbHandler("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb"));
+
+            var pp = _mDatabaseConnection.DbData.Tables[PpTableName];
             PpTable.DataContext = pp;
-            DataTable ph = m_databaseConnection.DbData.Tables[m_phTableName];
-            DataTable pl = m_databaseConnection.DbData.Tables[m_plTableName];
-            var phColumnsOnly = new DataTable(m_phTableName);
-            foreach (DataColumn col in ph.Columns)
-            {
-                phColumnsOnly.Columns.Add(new DataColumn(col.ColumnName));
-            }
-            var plColumnsOnly = new DataTable(m_plTableName);
-            foreach (DataColumn col in pl.Columns)
-            {
-                plColumnsOnly.Columns.Add(new DataColumn(col.ColumnName));
-            }
+            if (pp.Rows.Count == 0)
+                PpTableEmptyMessage.Visibility = Visibility.Visible;
+            else
+                PpTableEmptyMessage.Visibility = Visibility.Hidden;
+            PpCount.Text = pp.Rows.Count.ToString();
+            var ph = _mDatabaseConnection.DbData.Tables[PhTableName];
+            var pl = _mDatabaseConnection.DbData.Tables[PlTableName];
+
+            // set columns for ph and pl
+            var phColumnsOnly = new DataTable(PhTableName);
+            foreach (DataColumn col in ph.Columns) phColumnsOnly.Columns.Add(new DataColumn(col.ColumnName));
+            var plColumnsOnly = new DataTable(PlTableName);
+            foreach (DataColumn col in pl.Columns) plColumnsOnly.Columns.Add(new DataColumn(col.ColumnName));
 
             PlTable.DataContext = plColumnsOnly;
             PhTable.DataContext = phColumnsOnly;
         }
 
+        /// <summary>
+        ///     displays rows that have the input pad
+        ///     sets either PL or PH table
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="pad"></param>
         private void SetPlOrPhTableByPad(string tableName, string pad)
         {
             DataGrid dg;
             TextBlock emptyMessageBlock;
-            if (tableName == m_plTableName)
+            TextBlock counter;
+            if (tableName == PlTableName)
             {
                 emptyMessageBlock = PlTableEmptyMessage;
                 dg = PlTable;
-            }else if (tableName == m_phTableName)
+                counter = PlCount;
+            }
+            else if (tableName == PhTableName)
             {
                 emptyMessageBlock = PhTableEmptyMessage;
                 dg = PhTable;
+                counter = PhCount;
             }
             else
             {
@@ -226,69 +202,114 @@ namespace GUI
             if (pad == null)
             {
                 emptyMessageBlock.Visibility = Visibility.Visible;
+                counter.Text = "0";
                 return;
             }
-            var rows = m_databaseConnection.RetrieveRowByPad(tableName, pad);
+
+            var rows = _mDatabaseConnection.RetrieveRowByPad(tableName, pad);
             if (rows.Length == 0)
             {
                 emptyMessageBlock.Visibility = Visibility.Visible;
+                counter.Text = "0";
                 return;
             }
+
             emptyMessageBlock.Visibility = Visibility.Hidden;
 
-            DataTable dt = (DataTable)dg.DataContext;
+            var dt = (DataTable) dg.DataContext;
             dt.Rows.Clear();
 
-            foreach (var row in rows)
-            {
-                dt.ImportRow(row);
-            }
+            foreach (var row in rows) dt.ImportRow(row);
             dg.DataContext = dt;
             dg.ItemsSource = dt.DefaultView;
+            counter.Text = rows.Length.ToString();
         }
 
         /// <summary>
-        /// Do something after row editing
+        ///     adds FileView class elements as child of file preview frame
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void PP_TABELLE_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        /// <param name="path"></param>
+        private void AddFilePreview(string path)
         {
-            // update after row was edited
-            m_databaseConnection.UpdateDatabases();
+            DocumentView.Children.Add(new FileView(path));
         }
 
         /// <summary>
-        /// Row selection changed
+        ///     sets style parameters for connection status bar popout
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void PP_TABELLE_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        /// <param name="text"></param>
+        /// <param name="color"></param>
+        private void SetConnectionStatusBarStyle(string text, SolidColorBrush color)
         {
-            // get RowView
-            var dataRowView = e.AddedItems[0] as DataRowView;
-            if (dataRowView == null)
-                return;
-            // get PAD from DataRow
-            var pad = (string)dataRowView.Row["PAD"];
-            SelectedPad.Text = pad; //(DataGrid)sender;
-            SetPlOrPhTableByPad(m_phTableName, pad);
-            SetPlOrPhTableByPad(m_plTableName, pad);
+            ConnectionStatusBar.Text = text;
+            ConnectionStatusBar.Background = color;
+            ConnectionStatusBar.Visibility = Visibility.Visible;
+            StartTimer(5d);
+            m_connectionStatusBarActive = true;
         }
 
         /// <summary>
-        /// Close Application
+        ///     hides connection status bar popout
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void CloseApplication(object sender, RoutedEventArgs e)
+        private void HideConnectionStatusBar()
+        {
+            ConnectionStatusBar.Visibility = Visibility.Collapsed;
+            m_connectionStatusBarActive = false;
+        }
+
+        // TODO: use this to determine whether timer should be reset when popout during popout
+        private bool m_connectionStatusBarActive;
+
+        /// <summary>
+        ///     starts time for popout visibility
+        /// </summary>
+        /// <param name="seconds"></param>
+        private void StartTimer(double seconds)
+        {
+            var timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(seconds)
+            };
+            timer.Tick += TimerTick;
+            timer.Start();
+        }
+
+        /// <summary>
+        ///     pops out connection status bar according to connection mode
+        /// </summary>
+        private void PopoutConnectionStatusBar()
+        {
+            switch (_mConnectionMode)
+            {
+                case ConnectionModus.Online:
+                {
+                    SetConnectionStatusBarStyle("Verbunden!", _onlineColor);
+                    break;
+                }
+                case ConnectionModus.Offline:
+                {
+                    SetConnectionStatusBarStyle("Offline Modus", _offlineColor);
+                    break;
+                }
+                case ConnectionModus.LostConnection:
+                {
+                    SetConnectionStatusBarStyle("Verbindung Fehlgeschlagen!", _lostConnectionColor);
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Close Application
+        /// </summary>
+        private void CloseApplication()
         {
             System.Windows.Application.Current.Shutdown();
         }
 
         /// <summary>
-        /// wird aufgerufen wenn Expander kollabiert
-        /// Anpassung anderer Elemente auf kollabierten Expander
+        ///     wird aufgerufen wenn Expander kollabiert
+        ///     Anpassung anderer Elemente auf kollabierten Expander
         /// </summary>
         private void CollapseExpander()
         {
@@ -297,14 +318,175 @@ namespace GUI
         }
 
         /// <summary>
-        /// wird aufgerufen wenn Expander expandiert
-        /// Anpassung anderer Elemente auf expandierten Expander
+        ///     wird aufgerufen wenn Expander expandiert
+        ///     Anpassung anderer Elemente auf expandierten Expander
         /// </summary>
         private void ExpandExpander()
         {
             DocumentViewContainer.Width = new GridLength(200);
             ViewSplitter.Visibility = Visibility.Visible;
         }
+
+        /// <summary>
+        ///     set whether tables should be editable or not
+        /// </summary>
+        /// <param name="editable"></param>
+        private void SetEditable(bool editable)
+        {
+            _mIsEditable = editable;
+            PhTable.IsReadOnly = !editable;
+            PpTable.IsReadOnly = !editable;
+            PlTable.IsReadOnly = !editable;
+            BitmapImage icon;
+            if (editable)
+                icon = _unlockedIcon;
+            else
+                icon = _lockedIcon;
+            var ib = new ImageBrush(icon);
+            ib.Stretch = Stretch.Uniform;
+            EditModeIcon.Background = ib;
+
+            // Statusanzeige (unten)
+            EditStatus.Text = editable ? "AN" : "AUS";
+        }
+
+        /// <summary>
+        ///     sets status bar connection mode
+        /// </summary>
+        private void SetConnectionStatusTextInStatusBar()
+        {
+            ConnectionStatus.Text = Enum.GetName(typeof(ConnectionModus), _mConnectionMode);
+        }
+
+        /// <summary>
+        ///     modify basic parameters based on connection mode
+        ///     accessible from outside so connection status can be modified
+        /// </summary>
+        /// <param name="mode"></param>
+        public void SetConnectionStatus(ConnectionModus mode)
+        {
+            _mConnectionMode = mode;
+            // Statusanzeige (unten)
+            SetConnectionStatusTextInStatusBar();
+            PopoutConnectionStatusBar();
+            switch (mode)
+            {
+                case ConnectionModus.LostConnection:
+                    _mViewModeOnly = true;
+                    SetEditable(false);
+                    ConnectionStatus.Background = _lostConnectionColor;
+                    break;
+                case ConnectionModus.Offline:
+                    _mViewModeOnly = true;
+                    SetEditable(false);
+                    ConnectionStatus.Background = _offlineColor;
+                    break;
+                case ConnectionModus.Online:
+                    _mViewModeOnly = false;
+                    SetEditable(true);
+                    ConnectionStatus.Background = _onlineColor;
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        ///     stops the currently running timer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TimerTick(object sender, EventArgs e)
+        {
+            var timer = (DispatcherTimer) sender;
+            timer.Stop();
+            timer.Tick -= TimerTick;
+            HideConnectionStatusBar();
+        }
+
+        /// <summary>
+        ///     Opens Settings Window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenSettingsWindow(object sender, RoutedEventArgs e)
+        {
+            // bedeutet Fenster existiert schon
+            if (SettingsWindow != null)
+            {
+                //SettingsWindow.Topmost = true;
+                SettingsWindow.Activate();
+                return;
+            }
+
+            SettingsWindow = new Settings(this);
+            SettingsWindow.Show();
+        }
+
+        /// <summary>
+        ///     Opens Query Window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenAbfrageWindow(object sender, RoutedEventArgs e)
+        {
+            // bedeutet Fenster existiert schon
+            if (AbfrageWindow != null)
+            {
+                //SettingsWindow.Topmost = true;
+                AbfrageWindow.Activate();
+                return;
+            }
+
+            AbfrageWindow = new Abfragen(this);
+            AbfrageWindow.Show();
+        }
+
+        /// <summary>
+        ///     Row selection changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PpTable_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // get RowView
+            DataRowView dataRowView = null;
+            try
+            {
+                dataRowView = e.AddedItems[0] as DataRowView;
+            }
+            catch (IndexOutOfRangeException E)
+            {
+                // bedeutet dass zeile gelöscht ist
+                return;
+            }
+
+            if (dataRowView == null)
+                return;
+            // get PAD from DataRow
+            var pad = dataRowView.Row["PAD"] as string;
+            // pad == null falls PAD nicht string ist (z.B. wenn leere Zeile ausgewählt)
+            if (pad == null)
+                return;
+            SelectedPad.Text = pad; //(DataGrid)sender;
+            SetPlOrPhTableByPad(PhTableName, pad);
+            SetPlOrPhTableByPad(PlTableName, pad);
+
+            // Dokumente anzeigen
+            // Nur testdokumente soweit
+            DocumentView.Children.Clear();
+            AddFilePreview("..\\..\\..\\..\\README.md");
+            AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            AddFilePreview("..\\..\\..\\test_images\\png_test.png");
+            AddFilePreview("..\\..\\..\\test_images\\jpeg_test.jpeg");
+            AddFilePreview("..\\..\\..\\test_images\\pdf_test.pdf");
+            AddFilePreview("..\\..\\..\\test_images\\txt_test.txt");
+            AddFilePreview("..\\..\\..\\test_images\\pptx_test.pptx");
+        }
+
+        #region expander events
 
         private void Expander_Collapsed(object sender, RoutedEventArgs e)
         {
@@ -318,7 +500,7 @@ namespace GUI
 
         private void Expander_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Expander ex = (Expander) sender;
+            var ex = (Expander) sender;
             // Automatisches Collapsen vom Expander auslösen
             if (ex.ActualWidth < 35)
             {
@@ -333,25 +515,134 @@ namespace GUI
             }
         }
 
-        private void SetEditable(bool editable)
+        #endregion
+
+        /// <summary>
+        ///     editmode button clicked event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EditModeButton_Click(object sender, RoutedEventArgs e)
         {
-            m_isEditable = editable;
-            PhTable.IsReadOnly = !editable;
-            PpTable.IsReadOnly = !editable;
-            PlTable.IsReadOnly = !editable;
-            BitmapImage icon;
-            if (editable)
-                icon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\entsperren.png", UriKind.Relative));
-            else
-                icon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\sperren.png", UriKind.Relative));
-            ImageBrush ib = new ImageBrush(icon);
-            ib.Stretch = Stretch.Uniform;
-            EditModeIcon.Background = ib;
+            if (_mViewModeOnly)
+            {
+                PopoutConnectionStatusBar();
+                return;
+            }
+
+            SetEditable(!_mIsEditable);
         }
 
-        private void Bearbeiten_ButtonClick(object sender, RoutedEventArgs e)
+        /// <summary>
+        ///     window closing event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
-            SetEditable(!m_isEditable);
+            var updated = UpdateDatabases();
+            if (!updated)
+            {
+                var result = MessageBox.Show(
+                    "Es sind noch ungespeicherte Änderungen vorhanden\nMöchten Sie die App trotzdem schließen?",
+                    "Schließen wird verhindert",
+                    MessageBoxButton.OKCancel,
+                    MessageBoxImage.Exclamation,
+                    MessageBoxResult.Cancel
+                );
+                if (result == MessageBoxResult.Cancel)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
+
+            CloseApplication();
         }
+
+        /// <summary>
+        ///     menu exit app click event closes the entire app
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuCloseApp_Click(object sender, RoutedEventArgs e)
+        {
+            var updated = UpdateDatabases();
+            if (!updated)
+            {
+                var result = MessageBox.Show(
+                    "Es sind noch ungespeicherte Änderungen vorhanden\nMöchten Sie die App trotzdem schließen?",
+                    "Schließen wird verhindert",
+                    MessageBoxButton.OKCancel,
+                    MessageBoxImage.Exclamation,
+                    MessageBoxResult.Cancel
+                );
+                if (result == MessageBoxResult.Cancel)
+                    return;
+            }
+
+            CloseApplication();
+        }
+
+        #region search table events
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (SearchPpTextfield.Text == "")
+                return;
+            SetPpSearchFilter(SearchPpTextfield.Text);
+        }
+
+        private void ClearPpSearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (SearchPpTextfield.Text == "")
+                return;
+            SetPpSearchFilter("");
+            SearchPpTextfield.Text = "";
+        }
+
+        #endregion
+
+        /// <summary>
+        ///     button click event, saves database
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SaveChangesButton_Click(object sender, RoutedEventArgs e)
+        {
+            PpTable.CommitEdit();
+            UpdateDatabases();
+        }
+
+        /// <summary>
+        ///     window focus lost event, saves database
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainWindow_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            //UpdateDatabases();
+        }
+
+        /// <summary>
+        ///     menu item click event, opens export window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenExportWindow(object sender, RoutedEventArgs e)
+        {
+            // bedeutet Fenster existiert schon
+            if (ExportWindow != null)
+            {
+                //SettingsWindow.Topmost = true;
+                ExportWindow.Activate();
+                return;
+            }
+
+            ExportWindow = new Export(this);
+            ExportWindow.Show();
+        }
+
+        #endregion
     }
 }
