@@ -41,6 +41,7 @@
                     <sys1:Double x:Key="FontSize">12</sys1:Double>
                     <sys1:Double x:Key="FontSizeSmaller">11</sys1:Double>
                     <sys1:Double x:Key="FontSizeLarger">14</sys1:Double>
+                    <sys1:Double x:Key="IconSize">20</sys1:Double>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

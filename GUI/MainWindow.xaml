@@ -60,12 +60,15 @@
                         <TextBox x:Name="SearchPpTextfield" Width="200" DockPanel.Dock="Left" VerticalContentAlignment="Center" BorderBrush="{x:Null}" Background="{DynamicResource UiElementBackgroundColor}" Foreground="{DynamicResource UiElementForegroundColor}" Height="{DynamicResource UiElementHeight}" FontSize="{DynamicResource UiElementFontSize}"/>
                         <Button DockPanel.Dock="Left" Padding="5" BorderBrush="{x:Null}" Click="SearchButton_Click" Background="{DynamicResource BackgroundTernaryColor}" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource UiElementFontSize}">PAD Suchen</Button>
                         <Button DockPanel.Dock="Left" Padding="8,4,8,4" BorderBrush="{x:Null}" Background="{DynamicResource BackgroundTernaryColor}" FontWeight="Bold" Click="ClearPpSearchButton_Click" Foreground="{DynamicResource HighlightedButtonColor}" Width="{DynamicResource UiElementHeight}" Height="{DynamicResource UiElementHeight}" FontSize="{DynamicResource UiElementFontSize}">X</Button>
-                        <Button x:Name="EditModeIcon" IsHitTestVisible="False" DockPanel.Dock="Right" HorizontalAlignment="Right" Width="20"  Padding="5" BorderBrush="{x:Null}">
-                            <Button.Background>
-                                <ImageBrush ImageSource="/gui_resources/sperren.png" Stretch="Uniform" TileMode="None"/>
-                            </Button.Background>
-                        </Button>
-                        <Button x:Name="EditModeButton" DockPanel.Dock="Right" HorizontalAlignment="Right" Padding="5" BorderBrush="{x:Null}" Click="EditModeButton_Click" Background="{DynamicResource BackgroundTernaryColor}" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource UiElementFontSize}">Bearbeitungsansicht</Button>
+                        <DockPanel DockPanel.Dock="Right" Background="{DynamicResource BackgroundTernaryColor}">
+                            <Button DockPanel.Dock="Right" x:Name="EditModeIcon" IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" Width="{DynamicResource IconSize}" Height="{DynamicResource IconSize}" BorderBrush="{x:Null}">
+                                <Button.Background>
+                                    <ImageBrush ImageSource="/gui_resources/sperren.png" Stretch="Uniform">
+                                    </ImageBrush>
+                                </Button.Background>
+                            </Button>
+                            <Button x:Name="EditModeButton" DockPanel.Dock="Right" HorizontalAlignment="Right" Padding="5" BorderBrush="{x:Null}" Click="EditModeButton_Click" Background="{DynamicResource BackgroundTernaryColor}" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource UiElementFontSize}">Bearbeitungsansicht</Button>
+                        </DockPanel>
                         <TextBlock DockPanel.Dock="Right" Background="{DynamicResource BackgroundTernaryColor}" Width="1.5" Margin="5,0,5,0"></TextBlock>
                         <Button DockPanel.Dock="Right" Padding="5" Foreground="{DynamicResource HighlightedTextColor}" BorderBrush="{x:Null}" Click="SaveChangesButton_Click" Background="{DynamicResource HighlightedButtonColor}" FontSize="{DynamicResource UiElementFontSize}">Änderungen Speichern</Button>
                     </DockPanel>
