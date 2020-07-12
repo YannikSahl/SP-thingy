@@ -1,10 +1,12 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Threading.Tasks;
+using System.Windows;
+using GUI.Properties;
+using SPHandler;
 
 namespace GUI
 {
     /// <summary>
-    /// Interaction logic for AuthWindow.xaml
+    ///     Interaction logic for AuthWindow.xaml
     /// </summary>
     public partial class AuthWindow : Window
     {
@@ -27,46 +29,75 @@ namespace GUI
         #endregion
 
         #region methods
-        
+
         /// <summary>
-        /// redirect to mainwin
+        ///     redirect to mainwin
         /// </summary>
         /// <param name="connectionStatus"></param>
         private void RedirectToMainWindow(MainWindow.ConnectionModus connectionStatus)
         {
-            MainWindow settingsWin = new MainWindow(connectionStatus);
+            var settingsWin = new MainWindow(connectionStatus);
             settingsWin.Show();
-            this.Close();
+            Close();
         }
 
         /// <summary>
-        /// buttonclick event redirect to mainwin in offline mode
+        /// redirect to filepathwin
+        /// </summary>
+        private void RedirectToFilePathWindow()
+        {
+            FilePathWindow filePathWin = new FilePathWindow();
+            filePathWin.Show();
+            this.Close();
+        }
+
+
+        /// <summary>
+        ///     set SP Credidentials
+        /// </summary>
+        private void SetCredidentials()
+        {
+            Handler.SetPassword(PasswordBox.Password);
+            Handler.SetUsername(NameBox.Text);
+        }
+
+        #endregion
+
+        #region events
+
+        /// <summary>
+        ///     buttonclick event redirect to mainwin in offline mode
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OfflineMode_ButtonClick(object sender, RoutedEventArgs e)
         {
-            RedirectToMainWindow(MainWindow.ConnectionModus.Offline);
+            RedirectToFilePathWindow();
         }
 
+        private bool _userLoginInProgress;
+
         /// <summary>
-        /// buttonclick event try to connect
+        ///     buttonclick event try to connect
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Connect_ButtonClick(object sender, RoutedEventArgs e)
+        private async void Connect_ButtonClick(object sender, RoutedEventArgs e)
         {
-            SPHandler.Handler.SetPassword(PasswordBox.Password);
-            SPHandler.Handler.SetUsername(NameBox.Text);
-            string errorMessage = SPHandler.Handler.TestConnection(out var hasConnection);
+            if (_userLoginInProgress)
+                return;
+            _userLoginInProgress = true;
+            SetCredidentials();
+            var errorMessage = await Task.Run(() => { return Handler.TryUserLogin(); });
 
+            var hasConnection = errorMessage == null;
             if (hasConnection)
             {
                 // redirect to mainwindow
                 RedirectToMainWindow(MainWindow.ConnectionModus.Online);
                 // store and save username
-                Properties.Settings1.Default.SpUserName = NameBox.Text;
-                Properties.Settings1.Default.Save();
+                Settings1.Default.SpUserName = NameBox.Text;
+                Settings1.Default.Save();
             }
             else
             {
@@ -78,11 +109,12 @@ namespace GUI
                 ////ErrorMessageContainer.Visibility = Visibility.Visible;
                 ////ErrorMessage.Text = errorMessage;
             }
-                
+
+            _userLoginInProgress = true;
         }
 
         /// <summary>
-        /// close error message button click event
+        ///     close error message button click event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

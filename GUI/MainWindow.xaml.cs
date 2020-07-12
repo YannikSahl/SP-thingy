@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,10 +21,23 @@ using DBHandler;
 namespace GUI
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region constructors
+
+        public MainWindow(ConnectionModus conMod = ConnectionModus.Online)
+        {
+            InitializeComponent();
+
+            SetConnectionStatus(conMod);
+            CollapseExpander();
+            SetStatusBarLastSaved();
+        }
+
+        #endregion
+
         #region statics
 
         public enum ConnectionModus
@@ -37,53 +51,30 @@ namespace GUI
         private readonly SolidColorBrush _onlineColor = new SolidColorBrush(Colors.ForestGreen);
         private readonly SolidColorBrush _offlineColor = new SolidColorBrush(Colors.DarkOrange);
 
-        private static readonly string m_ppTableName = "PP";
-        private static readonly string m_phTableName = "PH";
-        private static readonly string m_plTableName = "PL";
+        private const string PpTableName = "PP";
+        private const string PhTableName = "PH";
+        private const string PlTableName = "PL";
 
         #endregion
 
         #region members
 
-        private ConnectionModus m_connectionModus;
-        
+        private ConnectionModus _mConnectionMode;
+
         //ConnectionStatus
-        private DbHandler m_databaseConnection;
-        private bool m_isEditable;
-        private bool m_viewModeOnly;
+        private DbHandler _mDatabaseConnection;
+        private bool _mIsEditable;
+        private bool _mViewModeOnly;
 
-        public Settings _settingsWindow;
-        public Abfragen _abfrageWindow;
+        public Settings SettingsWindow;
+        public Abfragen AbfrageWindow;
+        public Export ExportWindow;
 
-        BitmapImage unlockedIcon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\entsperren.png", UriKind.Relative));
-        BitmapImage lockedIcon = new BitmapImage(new Uri("..\\..\\..\\gui_resources\\sperren.png", UriKind.Relative));
+        private readonly BitmapImage _unlockedIcon =
+            new BitmapImage(new Uri("..\\..\\..\\gui_resources\\entsperren.png", UriKind.Relative));
 
-        #endregion
-
-        #region constructors
-
-        public MainWindow(ConnectionModus conMod = ConnectionModus.Online)
-        {
-            InitializeComponent();
-            SetConnectionStatus(conMod);
-
-            //LoadTables();
-            //_abfrageWindow = new Abfragen(this);
-            //_abfrageWindow.Show();
-            //_abfrageWindow.Activate();
-            //_abfrageWindow.Focus();
-
-            CollapseExpander();
-            AddFilePreview("..\\..\\..\\..\\README.md");
-            AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
-            AddFilePreview("..\\..\\..\\test_images\\png_test.png");
-            AddFilePreview("..\\..\\..\\test_images\\jpeg_test.jpeg");
-            AddFilePreview("..\\..\\..\\test_images\\pdf_test.pdf");
-            AddFilePreview("..\\..\\..\\test_images\\txt_test.txt");
-            AddFilePreview("..\\..\\..\\test_images\\pptx_test.pptx");
-
-            SetStatusBarLastSaved();
-        }
+        private readonly BitmapImage _lockedIcon =
+            new BitmapImage(new Uri("..\\..\\..\\gui_resources\\sperren.png", UriKind.Relative));
 
         #endregion
 
@@ -91,19 +82,18 @@ namespace GUI
 
         private bool UpdateDatabases()
         {
-            if (m_databaseConnection == null)
+            if (_mDatabaseConnection == null)
                 return true;
-            var result = m_databaseConnection.UpdateDatabases();
+            var result = _mDatabaseConnection.UpdateDatabases();
             if (result == StatusCode.CommandOk || result == StatusCode.NoDatabaseChanges)
             {
                 SetStatusBarLastSaved();
                 return true;
             }
-            else
-            {
-                MessageBox.Show($"Status Code: {Enum.GetName(result.GetType(), result)}", "Speichern Fehlgeschlagen", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
-                return false;
-            }
+
+            MessageBox.Show($"Status Code: {Enum.GetName(result.GetType(), result)}", "Speichern Fehlgeschlagen",
+                MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+            return false;
         }
 
         //private DateTime _lastSaved;
@@ -113,7 +103,7 @@ namespace GUI
         }
 
         /// <summary>
-        /// sets the filter by string for column PAD in the PP table
+        ///     sets the filter by string for column PAD in the PP table
         /// </summary>
         /// <param name="filter"></param>
         private void SetPpSearchFilter(string filter)
@@ -124,7 +114,7 @@ namespace GUI
             if (table == null)
                 return;
             // index 0 sollte PAD sein
-            string padColumnName = "PAD"; //table.Columns[0].ColumnName;
+            var padColumnName = "PAD"; //table.Columns[0].ColumnName;
             // hier könnte man like verbinden mit "AND" expression um mehrere Zeilen zu suchen
             try
             {
@@ -132,61 +122,56 @@ namespace GUI
             }
             catch (EvaluateException e)
             {
-                MessageBox.Show(e.ToString(), $"Interner Fehler", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                MessageBox.Show(e.ToString(), "Interner Fehler", MessageBoxButton.OK, MessageBoxImage.Error,
+                    MessageBoxResult.OK);
             }
 
             PpCount.Text = table.DefaultView.Count.ToString();
-            SetPlOrPhTableByPad(m_plTableName, null);
-            SetPlOrPhTableByPad(m_phTableName, null);
+            SetPlOrPhTableByPad(PlTableName, null);
+            SetPlOrPhTableByPad(PhTableName, null);
         }
 
         /// <summary>
-        /// Sets member database variable
+        ///     Sets member database variable
         /// </summary>
-        public void SetDatabase(DBHandler.DbHandler dbh)
+        public void SetDatabase(DbHandler dbh)
         {
-            SetPlOrPhTableByPad(m_plTableName, null);
-            SetPlOrPhTableByPad(m_phTableName, null);
+            SetPlOrPhTableByPad(PlTableName, null);
+            SetPlOrPhTableByPad(PhTableName, null);
             // establish connection
-            m_databaseConnection = dbh;
+            _mDatabaseConnection = dbh;
         }
 
         /// <summary>
-        /// Sets PP main table to data view
+        ///     Sets PP main table to data view
         /// </summary>
         public void LoadTables()
         {
             //SetDatabase(new DBHandler.DbHandler("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb"));
 
-            DataTable pp = m_databaseConnection.DbData.Tables[m_ppTableName];
+            var pp = _mDatabaseConnection.DbData.Tables[PpTableName];
             PpTable.DataContext = pp;
             if (pp.Rows.Count == 0)
                 PpTableEmptyMessage.Visibility = Visibility.Visible;
             else
                 PpTableEmptyMessage.Visibility = Visibility.Hidden;
             PpCount.Text = pp.Rows.Count.ToString();
-            DataTable ph = m_databaseConnection.DbData.Tables[m_phTableName];
-            DataTable pl = m_databaseConnection.DbData.Tables[m_plTableName];
+            var ph = _mDatabaseConnection.DbData.Tables[PhTableName];
+            var pl = _mDatabaseConnection.DbData.Tables[PlTableName];
 
             // set columns for ph and pl
-            var phColumnsOnly = new DataTable(m_phTableName);
-            foreach (DataColumn col in ph.Columns)
-            {
-                phColumnsOnly.Columns.Add(new DataColumn(col.ColumnName));
-            }
-            var plColumnsOnly = new DataTable(m_plTableName);
-            foreach (DataColumn col in pl.Columns)
-            {
-                plColumnsOnly.Columns.Add(new DataColumn(col.ColumnName));
-            }
+            var phColumnsOnly = new DataTable(PhTableName);
+            foreach (DataColumn col in ph.Columns) phColumnsOnly.Columns.Add(new DataColumn(col.ColumnName));
+            var plColumnsOnly = new DataTable(PlTableName);
+            foreach (DataColumn col in pl.Columns) plColumnsOnly.Columns.Add(new DataColumn(col.ColumnName));
 
             PlTable.DataContext = plColumnsOnly;
             PhTable.DataContext = phColumnsOnly;
         }
 
         /// <summary>
-        /// displays rows that have the input pad
-        /// sets either PL or PH table
+        ///     displays rows that have the input pad
+        ///     sets either PL or PH table
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="pad"></param>
@@ -195,13 +180,13 @@ namespace GUI
             DataGrid dg;
             TextBlock emptyMessageBlock;
             TextBlock counter;
-            if (tableName == m_plTableName)
+            if (tableName == PlTableName)
             {
                 emptyMessageBlock = PlTableEmptyMessage;
                 dg = PlTable;
                 counter = PlCount;
             }
-            else if (tableName == m_phTableName)
+            else if (tableName == PhTableName)
             {
                 emptyMessageBlock = PhTableEmptyMessage;
                 dg = PhTable;
@@ -220,29 +205,28 @@ namespace GUI
                 counter.Text = "0";
                 return;
             }
-            var rows = m_databaseConnection.RetrieveRowByPad(tableName, pad);
+
+            var rows = _mDatabaseConnection.RetrieveRowByPad(tableName, pad);
             if (rows.Length == 0)
             {
                 emptyMessageBlock.Visibility = Visibility.Visible;
                 counter.Text = "0";
                 return;
             }
+
             emptyMessageBlock.Visibility = Visibility.Hidden;
 
-            DataTable dt = (DataTable)dg.DataContext;
+            var dt = (DataTable) dg.DataContext;
             dt.Rows.Clear();
 
-            foreach (var row in rows)
-            {
-                dt.ImportRow(row);
-            }
+            foreach (var row in rows) dt.ImportRow(row);
             dg.DataContext = dt;
             dg.ItemsSource = dt.DefaultView;
             counter.Text = rows.Length.ToString();
         }
 
         /// <summary>
-        /// adds FileView class elements as child of file preview frame
+        ///     adds FileView class elements as child of file preview frame
         /// </summary>
         /// <param name="path"></param>
         private void AddFilePreview(string path)
@@ -251,7 +235,7 @@ namespace GUI
         }
 
         /// <summary>
-        /// sets style parameters for connection status bar popout
+        ///     sets style parameters for connection status bar popout
         /// </summary>
         /// <param name="text"></param>
         /// <param name="color"></param>
@@ -265,7 +249,7 @@ namespace GUI
         }
 
         /// <summary>
-        /// hides connection status bar popout
+        ///     hides connection status bar popout
         /// </summary>
         private void HideConnectionStatusBar()
         {
@@ -275,13 +259,14 @@ namespace GUI
 
         // TODO: use this to determine whether timer should be reset when popout during popout
         private bool m_connectionStatusBarActive;
+
         /// <summary>
-        /// starts time for popout visibility
+        ///     starts time for popout visibility
         /// </summary>
         /// <param name="seconds"></param>
         private void StartTimer(double seconds)
         {
-            DispatcherTimer timer = new DispatcherTimer
+            var timer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(seconds)
             };
@@ -290,11 +275,11 @@ namespace GUI
         }
 
         /// <summary>
-        /// pops out connection status bar according to connection mode
+        ///     pops out connection status bar according to connection mode
         /// </summary>
         private void PopoutConnectionStatusBar()
         {
-            switch (m_connectionModus)
+            switch (_mConnectionMode)
             {
                 case ConnectionModus.Online:
                 {
@@ -311,12 +296,11 @@ namespace GUI
                     SetConnectionStatusBarStyle("Verbindung Fehlgeschlagen!", _lostConnectionColor);
                     break;
                 }
-                default: break;
             }
         }
 
         /// <summary>
-        /// Close Application
+        ///     Close Application
         /// </summary>
         private void CloseApplication()
         {
@@ -324,8 +308,8 @@ namespace GUI
         }
 
         /// <summary>
-        /// wird aufgerufen wenn Expander kollabiert
-        /// Anpassung anderer Elemente auf kollabierten Expander
+        ///     wird aufgerufen wenn Expander kollabiert
+        ///     Anpassung anderer Elemente auf kollabierten Expander
         /// </summary>
         private void CollapseExpander()
         {
@@ -334,8 +318,8 @@ namespace GUI
         }
 
         /// <summary>
-        /// wird aufgerufen wenn Expander expandiert
-        /// Anpassung anderer Elemente auf expandierten Expander
+        ///     wird aufgerufen wenn Expander expandiert
+        ///     Anpassung anderer Elemente auf expandierten Expander
         /// </summary>
         private void ExpandExpander()
         {
@@ -344,25 +328,21 @@ namespace GUI
         }
 
         /// <summary>
-        /// set whether tables should be editable or not
+        ///     set whether tables should be editable or not
         /// </summary>
         /// <param name="editable"></param>
         private void SetEditable(bool editable)
         {
-            m_isEditable = editable;
+            _mIsEditable = editable;
             PhTable.IsReadOnly = !editable;
             PpTable.IsReadOnly = !editable;
             PlTable.IsReadOnly = !editable;
             BitmapImage icon;
             if (editable)
-            {
-                icon = unlockedIcon;
-            }
+                icon = _unlockedIcon;
             else
-            {
-                icon = lockedIcon;
-            }
-            ImageBrush ib = new ImageBrush(icon);
+                icon = _lockedIcon;
+            var ib = new ImageBrush(icon);
             ib.Stretch = Stretch.Uniform;
             EditModeIcon.Background = ib;
 
@@ -371,38 +351,38 @@ namespace GUI
         }
 
         /// <summary>
-        /// sets status bar connection mode
+        ///     sets status bar connection mode
         /// </summary>
         private void SetConnectionStatusTextInStatusBar()
         {
-            ConnectionStatus.Text = Enum.GetName(typeof(ConnectionModus), m_connectionModus);
+            ConnectionStatus.Text = Enum.GetName(typeof(ConnectionModus), _mConnectionMode);
         }
 
         /// <summary>
-        /// modify basic parameters based on connection mode
-        /// accessible from outside so connection status can be modified
+        ///     modify basic parameters based on connection mode
+        ///     accessible from outside so connection status can be modified
         /// </summary>
         /// <param name="mode"></param>
         public void SetConnectionStatus(ConnectionModus mode)
         {
-            this.m_connectionModus = mode;
+            _mConnectionMode = mode;
             // Statusanzeige (unten)
             SetConnectionStatusTextInStatusBar();
             PopoutConnectionStatusBar();
             switch (mode)
             {
                 case ConnectionModus.LostConnection:
-                    m_viewModeOnly = true;
+                    _mViewModeOnly = true;
                     SetEditable(false);
                     ConnectionStatus.Background = _lostConnectionColor;
                     break;
                 case ConnectionModus.Offline:
-                    m_viewModeOnly = true;
+                    _mViewModeOnly = true;
                     SetEditable(false);
                     ConnectionStatus.Background = _offlineColor;
                     break;
                 case ConnectionModus.Online:
-                    m_viewModeOnly = false;
+                    _mViewModeOnly = false;
                     SetEditable(true);
                     ConnectionStatus.Background = _onlineColor;
                     break;
@@ -414,58 +394,58 @@ namespace GUI
         #region Events
 
         /// <summary>
-        /// stops the currently running timer
+        ///     stops the currently running timer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void TimerTick(object sender, EventArgs e)
         {
-            DispatcherTimer timer = (DispatcherTimer)sender;
+            var timer = (DispatcherTimer) sender;
             timer.Stop();
             timer.Tick -= TimerTick;
             HideConnectionStatusBar();
         }
 
         /// <summary>
-        /// Opens Settings Window
+        ///     Opens Settings Window
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OpenSettingsWindow(object sender, RoutedEventArgs e)
         {
             // bedeutet Fenster existiert schon
-            if (_settingsWindow != null)
+            if (SettingsWindow != null)
             {
-                //_settingsWindow.Topmost = true;
-                _settingsWindow.Activate();
+                //SettingsWindow.Topmost = true;
+                SettingsWindow.Activate();
                 return;
             }
 
-            _settingsWindow = new Settings(this);
-            _settingsWindow.Show();
+            SettingsWindow = new Settings(this);
+            SettingsWindow.Show();
         }
 
         /// <summary>
-        /// Opens Query Window
+        ///     Opens Query Window
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OpenAbfrageWindow(object sender, RoutedEventArgs e)
         {
             // bedeutet Fenster existiert schon
-            if (_abfrageWindow != null)
+            if (AbfrageWindow != null)
             {
-                //_settingsWindow.Topmost = true;
-                _abfrageWindow.Activate();
+                //SettingsWindow.Topmost = true;
+                AbfrageWindow.Activate();
                 return;
             }
 
-            _abfrageWindow = new Abfragen(this);
-            _abfrageWindow.Show();
+            AbfrageWindow = new Abfragen(this);
+            AbfrageWindow.Show();
         }
 
         /// <summary>
-        /// Row selection changed
+        ///     Row selection changed
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -491,8 +471,19 @@ namespace GUI
             if (pad == null)
                 return;
             SelectedPad.Text = pad; //(DataGrid)sender;
-            SetPlOrPhTableByPad(m_phTableName, pad);
-            SetPlOrPhTableByPad(m_plTableName, pad);
+            SetPlOrPhTableByPad(PhTableName, pad);
+            SetPlOrPhTableByPad(PlTableName, pad);
+
+            // Dokumente anzeigen
+            // Nur testdokumente soweit
+            DocumentView.Children.Clear();
+            AddFilePreview("..\\..\\..\\..\\README.md");
+            AddFilePreview("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            AddFilePreview("..\\..\\..\\test_images\\png_test.png");
+            AddFilePreview("..\\..\\..\\test_images\\jpeg_test.jpeg");
+            AddFilePreview("..\\..\\..\\test_images\\pdf_test.pdf");
+            AddFilePreview("..\\..\\..\\test_images\\txt_test.txt");
+            AddFilePreview("..\\..\\..\\test_images\\pptx_test.pptx");
         }
 
         #region expander events
@@ -509,7 +500,7 @@ namespace GUI
 
         private void Expander_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Expander ex = (Expander) sender;
+            var ex = (Expander) sender;
             // Automatisches Collapsen vom Expander auslösen
             if (ex.ActualWidth < 35)
             {
@@ -527,48 +518,50 @@ namespace GUI
         #endregion
 
         /// <summary>
-        /// editmode button clicked event
+        ///     editmode button clicked event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EditModeButton_Click(object sender, RoutedEventArgs e)
         {
-            if (m_viewModeOnly)
+            if (_mViewModeOnly)
             {
                 PopoutConnectionStatusBar();
                 return;
             }
-            SetEditable(!m_isEditable);
+
+            SetEditable(!_mIsEditable);
         }
 
         /// <summary>
-        /// window closing event
+        ///     window closing event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             var updated = UpdateDatabases();
             if (!updated)
             {
-                MessageBoxResult result = MessageBox.Show(
+                var result = MessageBox.Show(
                     "Es sind noch ungespeicherte Änderungen vorhanden\nMöchten Sie die App trotzdem schließen?",
                     "Schließen wird verhindert",
                     MessageBoxButton.OKCancel,
                     MessageBoxImage.Exclamation,
                     MessageBoxResult.Cancel
-                    );
+                );
                 if (result == MessageBoxResult.Cancel)
                 {
                     e.Cancel = true;
                     return;
                 }
             }
+
             CloseApplication();
         }
 
         /// <summary>
-        /// menu exit app click event closes the entire app
+        ///     menu exit app click event closes the entire app
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -577,7 +570,7 @@ namespace GUI
             var updated = UpdateDatabases();
             if (!updated)
             {
-                MessageBoxResult result = MessageBox.Show(
+                var result = MessageBox.Show(
                     "Es sind noch ungespeicherte Änderungen vorhanden\nMöchten Sie die App trotzdem schließen?",
                     "Schließen wird verhindert",
                     MessageBoxButton.OKCancel,
@@ -587,6 +580,7 @@ namespace GUI
                 if (result == MessageBoxResult.Cancel)
                     return;
             }
+
             CloseApplication();
         }
 
@@ -609,15 +603,44 @@ namespace GUI
 
         #endregion
 
+        /// <summary>
+        ///     button click event, saves database
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SaveChangesButton_Click(object sender, RoutedEventArgs e)
         {
             PpTable.CommitEdit();
             UpdateDatabases();
         }
 
+        /// <summary>
+        ///     window focus lost event, saves database
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainWindow_OnLostFocus(object sender, RoutedEventArgs e)
         {
             //UpdateDatabases();
+        }
+
+        /// <summary>
+        ///     menu item click event, opens export window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenExportWindow(object sender, RoutedEventArgs e)
+        {
+            // bedeutet Fenster existiert schon
+            if (ExportWindow != null)
+            {
+                //SettingsWindow.Topmost = true;
+                ExportWindow.Activate();
+                return;
+            }
+
+            ExportWindow = new Export(this);
+            ExportWindow.Show();
         }
 
         #endregion

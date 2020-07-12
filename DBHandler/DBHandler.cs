@@ -223,12 +223,13 @@ namespace DBHandler
                 QuoteSuffix = "]"
             };
 
-            // Acquire built commands
+            // Open connection
             if (connection.State != ConnectionState.Open)
             {
                 connection.Open();
             }
 
+            // Acquire built commands
             adapter.UpdateCommand = commandBuilder.GetUpdateCommand();
             adapter.DeleteCommand = commandBuilder.GetDeleteCommand();
             adapter.InsertCommand = commandBuilder.GetInsertCommand();

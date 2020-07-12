@@ -26,11 +26,7 @@ namespace SPHandler
             password = pw;
         }
 
-        /// <summary>
-        ///     testing connection to the SharePoint
-        /// </summary>
-        /// <param name="success">used for displaying the result</param>
-        public static Task<string> TestConnection(out bool success) //async 
+        public static string TryUserLogin()
         {
             try
             {
@@ -50,20 +46,46 @@ namespace SPHandler
             }
             catch (Exception e)
             {
-                success = false;
-                return Task.FromResult(e.Message);
+                return e.Message;
             }
-
-            success = true;
             return null;
         }
 
         /// <summary>
-        ///     Async Method to test the connection, while the programm is already displaying the database
+        /// testing connection to the SharePoint 
         /// </summary>
-        public async Task<string> TestConnectionAsync()
+        /// <param name="success">used for displaying the result</param>
+        public static Task<string> TestConnection() //async 
         {
-            var ret = await TestConnection(out var success);
+            try
+            {
+                var Credentials = new SharePointOnlineCredentials(username, password);
+
+                var context = new ClientContext(sourceSite); //create context
+                context.Credentials = Credentials;
+
+                var list = context.Web.Lists.GetByTitle(sourceLibrary); //retrieve list
+                context.Load(list);
+                context.ExecuteQueryAsync().Wait();
+
+                var query = new CamlQuery(); //retrieve all items
+                var ListItems = list.GetItems(query);
+                context.Load(ListItems);
+                context.ExecuteQueryAsync().Wait();
+            }
+            catch (Exception e)
+            {
+                return Task.FromResult(e.Message);
+            }
+            return Task.FromResult("");
+        }
+
+        /// <summary>
+        /// Async Method to test the connection, while the programm is already displaying the database
+        /// </summary>
+        public async Task<String> TestConnectionAsync()
+        {
+            string ret = await TestConnection();
 
             return ret;
         }

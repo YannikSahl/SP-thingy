@@ -6,29 +6,35 @@ using GUI.Properties;
 namespace GUI
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    ///     Interaction logic for App.xaml
     /// </summary>
     public partial class Application : System.Windows.Application
     {
+        // alle vorhandenen skins/themes
         public enum Skins
         {
             ColorLess,
             Light,
-            Dark
+            Dark,
+            Nebula
         }
-        public Skins Skin { get; set; } = Skins.Light;
+
+        // Pfade zu allen themes
         private readonly Dictionary<Skins, string> skinReferencesDictionary = new Dictionary<Skins, string>
         {
             {Skins.ColorLess, "./skins/colorless.xaml"},
             {Skins.Light, "./skins/light.xaml"},
             {Skins.Dark, "./skins/dark.xaml"},
+            {Skins.Nebula, "./skins/nebula.xaml"}
         };
 
-        private void App_OnExit(object sender, ExitEventArgs e)
-        {
-            //Settings1.Default.Save();
-        }
+        // derzeitiges theme
+        public Skins Skin { get; set; } = Skins.Light;
 
+        /// <summary>
+        ///     loads theme from settings
+        /// </summary>
+        /// <returns></returns>
         private Skins GetSkinFromSaveFile()
         {
             var skinIndexFromSettings = Settings1.Default.SkinId;
@@ -38,23 +44,29 @@ namespace GUI
             }
             catch (Exception e)
             {
-                return (Skins)0;
+                return 0;
             }
 
-            return (Skins)skinIndexFromSettings;
+            return (Skins) skinIndexFromSettings;
         }
 
+        /// <summary>
+        ///     on startup event, load theme
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
             ChangeSkin(GetSkinFromSaveFile());
         }
 
+        /// <summary>
+        ///     change theme
+        /// </summary>
+        /// <param name="newSkin"></param>
         public void ChangeSkin(Skins newSkin)
         {
             Skin = newSkin;
-            //Resources.Clear();
-            //Resources.MergedDictionaries.Clear();
             try
             {
                 ApplyResources(skinReferencesDictionary[newSkin]);
@@ -68,13 +80,17 @@ namespace GUI
             }
         }
 
+        /// <summary>
+        ///     applies theme selection
+        /// </summary>
+        /// <param name="src"></param>
         private void ApplyResources(string src)
         {
-            var skinDict = new ResourceDictionary() { Source = new Uri(src, UriKind.Relative) };
+            var skinDict = new ResourceDictionary {Source = new Uri(src, UriKind.Relative)};
             var correctlyLoaded = true;
 
-            foreach (var key in Resources.Keys)
-            {
+            // iterate through every visual resource entry and replace
+            foreach (var key in Resources.MergedDictionaries[0].Keys)
                 try
                 {
                     var value = skinDict[key];
@@ -85,10 +101,9 @@ namespace GUI
                 catch (KeyNotFoundException e)
                 {
                     correctlyLoaded = false;
-                    continue;
                 }
-            }
 
+            // errormessage
             if (!correctlyLoaded)
                 MessageBox.Show(
                     "Der ausgewählte Skin wurde nicht richtig geladen. Die Resource Namen des Skins müssen mit den Resourcen Namen der App übereinstimmen.",
@@ -96,18 +111,7 @@ namespace GUI
                     MessageBoxButton.OK,
                     MessageBoxImage.Warning,
                     MessageBoxResult.OK
-                    );
-
-
-            //foreach (var mergeDict in dict.MergedDictionaries)
-            //{
-            //    Resources.MergedDictionaries.Add(mergeDict);
-            //}
-
-            //foreach (var key in dict.Keys)
-            //{
-            //    Resources[key] = dict[key];
-            //}
+                );
         }
     }
 }

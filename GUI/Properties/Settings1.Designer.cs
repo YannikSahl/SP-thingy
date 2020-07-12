@@ -85,18 +85,6 @@ namespace GUI.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string PathSkizzenLocal {
-            get {
-                return ((string)(this["PathSkizzenLocal"]));
-            }
-            set {
-                this["PathSkizzenLocal"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int SkinId {
             get {
@@ -104,6 +92,18 @@ namespace GUI.Properties {
             }
             set {
                 this["SkinId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:")]
+        public string PathSkizzenLocal {
+            get {
+                return ((string)(this["PathSkizzenLocal"]));
+            }
+            set {
+                this["PathSkizzenLocal"] = value;
             }
         }
     }
