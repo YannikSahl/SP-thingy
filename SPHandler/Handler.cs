@@ -1,18 +1,12 @@
 ﻿using System;
-using Microsoft.SharePoint.Client;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.SharePoint.Client.WorkflowServices;
-using System.Globalization;
+using Microsoft.SharePoint.Client;
 
 namespace SPHandler
 {
     /// <summary>
-    /// The SPHandler namespace contains functions for the current GUI version.
-    /// Only working with TTCUE.NetCore.SharePointCSOM
+    ///     The SPHandler namespace contains functions for the current GUI version.
+    ///     Only working with TTCUE.NetCore.SharePointCSOM
     /// </summary>
     public class Handler
     {
@@ -96,9 +90,10 @@ namespace SPHandler
             return ret;
         }
 
-        /// <summary>Returns FileRelativUrl for Files on SharePoint
-        /// <param name="pad">PAD</param>
-        /// <param name="type">true=PDF, false=JPG</param>
+        /// <summary>
+        ///     Returns FileRelativUrl for Files on SharePoint
+        ///     <param name="pad">PAD</param>
+        ///     <param name="type">true=PDF, false=JPG</param>
         /// </summary>
         public static string GetFileUrlFromPad(string pad, bool type)
         {
@@ -109,15 +104,18 @@ namespace SPHandler
             var hundreds = thousands + entry / 100 % 10 * 100;
 
             if (type)
-                fileRelativUrl = "/04321_DB_Festp/03_Skizzen/PDF/" + thousands + "/" + hundreds + "/" + entry + "/" + pad + ".pdf";
+                fileRelativUrl = "/04321_DB_Festp/03_Skizzen/PDF/" + thousands + "/" + hundreds + "/" + entry + "/" +
+                                 pad + ".pdf";
             else
-                fileRelativUrl = "/04321_DB_Festp/03_Skizzen/JPG/" + thousands + "/" + hundreds + "/" + entry + "/" + pad + ".jpg";
+                fileRelativUrl = "/04321_DB_Festp/03_Skizzen/JPG/" + thousands + "/" + hundreds + "/" + entry + "/" +
+                                 pad + ".jpg";
 
             return fileRelativUrl;
         }
 
-        /// <summary>Returns Int to handle PAD
-        /// <param name="pad">PAD</param>
+        /// <summary>
+        ///     Returns Int to handle PAD
+        ///     <param name="pad">PAD</param>
         /// </summary>
         public static int GetIntfromPad(string pad)
         {

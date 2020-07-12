@@ -20,9 +20,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock FontWeight="Bold" FontSize="{DynamicResource FontSizeLarger}" TextAlignment="Center" Margin="5" Foreground="{DynamicResource ForegroundColor}" Text="Verwendung lokaler Dateien"/>
-        <TextBlock Grid.Row="3" TextAlignment="Center" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}" Text="Dateipfad"/>
-        <TextBox Grid.Row="4" x:Name="FilePathBox" Height="40" Margin="5" Padding="10" FontSize="14" VerticalAlignment="Center" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" Background="{DynamicResource UiElementBackgroundColor}"/>
+        <TextBlock FontWeight="Bold" FontSize="{DynamicResource FontSizeLarger}" TextAlignment="Center" Margin="5" Foreground="{DynamicResource ForegroundColor}" Text="Bitte wählen Sie einen Pfad aus"/>
+        <TextBlock Grid.Row="3" TextAlignment="Center" Foreground="{DynamicResource ForegroundColor}" FontSize="{DynamicResource FontSize}" Text="Datenbank Dateipfad(lokal)"/>
+        <DockPanel Grid.Row="4">
+            <Button DockPanel.Dock="Right" Margin="0,5,5,5" Height="40" Click="OpenDataButton_Click" BorderBrush="{DynamicResource ButtonColor}" Foreground="{DynamicResource HighlightedTextColor}" FontWeight="Normal" FontSize="{DynamicResource UiElementFontSize}" Background="{DynamicResource ButtonColor}" Content="Öffnen"/>
+            <TextBox DockPanel.Dock="Left" x:Name="FilePathBox" Height="40" Margin="5,5,0,5" Padding="10" FontSize="{DynamicResource UiElementFontSize}" VerticalAlignment="Center" Foreground="{DynamicResource UiElementForegroundColor}" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" Background="{DynamicResource UiElementBackgroundColor}" Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbLocalFile, Mode=Default}"/>
+        </DockPanel>
         <Button Grid.Row="5" Margin="5" Height="40" Click="Confirm_ButtonClick" BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}" Foreground="{DynamicResource HighlightedTextColor}" FontWeight="Bold" FontSize="{DynamicResource FontSizeLarger}" IsDefault="True" Background="{DynamicResource HighlightedButtonColor}" Content="Bestätigen"/>
     </Grid>
 

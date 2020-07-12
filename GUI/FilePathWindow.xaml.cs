@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using GUI.Properties;
+using Microsoft.Win32;
 using SPHandler;
 
 namespace GUI
@@ -38,7 +39,7 @@ namespace GUI
         /// redirect to mainwin
         /// </summary>
         /// <param name="connectionStatus"></param>
-        private void RedirectToMainWindow(MainWindow.ConnectionModus connectionStatus, string filePath)
+        private void RedirectToMainWindow(MainWindow.ConnectionModus connectionStatus)
         {
 
             // Show main window
@@ -78,7 +79,8 @@ namespace GUI
                 {
 
                     // Show main window
-                    RedirectToMainWindow(MainWindow.ConnectionModus.Offline, filePath);
+                    RedirectToMainWindow(MainWindow.ConnectionModus.Offline);
+                    Settings1.Default.PathDbLocal = Path.GetDirectoryName(filePath);
 
                 }
             }
@@ -94,8 +96,25 @@ namespace GUI
 
         }
 
+
         #endregion
 
-
+        private void OpenDataButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Datei öffnen Dialog
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = "Access DB Dateien (*.accdb)|*.accdb"
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                var path = openFileDialog.FileName;
+                FilePathBox.Text = path;
+                if (File.Exists(path))
+                {
+                    Settings1.Default.PathDbLocalFile = path;
+                }
+            }
+        }
     }
 }

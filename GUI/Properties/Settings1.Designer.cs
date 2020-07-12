@@ -106,5 +106,17 @@ namespace GUI.Properties {
                 this["PathSkizzenLocal"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PathDbLocalFile {
+            get {
+                return ((string)(this["PathDbLocalFile"]));
+            }
+            set {
+                this["PathDbLocalFile"] = value;
+            }
+        }
     }
 }
