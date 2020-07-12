@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
@@ -244,7 +245,29 @@ namespace GUI
         /// <param name="e"></param>
         private void AbfrageStartButton_Click(object sender, RoutedEventArgs e)
         {
-            var dbh = new DbHandler("..\\..\\..\\..\\DBHandler\\Datenmodell.accdb");
+            var dbPath = Settings1.Default.PathDbLocalFile;
+            if (!File.Exists(dbPath))
+            {
+                MessageBox.Show(
+                    "Der Pfad für die Datenbank ist ungültig. Bitte geben Sie in den Settings einen gültigen Pfad an",
+                    "ungültiger Pfad",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error,
+                    MessageBoxResult.OK
+                );
+                return;
+            }
+
+            DbHandler dbh;
+            try
+            {
+                dbh = new DbHandler(dbPath);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                return;
+            }
             var queryExecuted = StatusCode.CommandFailed;
             var queryByText = QueryInA.IsChecked.HasValue ? QueryInA.IsChecked.Value : false;
             if (queryByText)

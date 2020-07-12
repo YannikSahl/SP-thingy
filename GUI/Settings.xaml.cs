@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using GUI.Properties;
+using Microsoft.Win32;
 using SPHandler;
 
 namespace GUI
@@ -159,7 +160,7 @@ namespace GUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void TrySpLogin_Click(object sender, RoutedEventArgs e)
         {
             if (_userLoginInProgress)
                 return;
@@ -232,11 +233,12 @@ namespace GUI
             Settings1.Default.PathDbLocal = DbLocalSave.Text;
             Settings1.Default.PathSkizzenInSp = SkizzeSpSave.Text;
             Settings1.Default.PathSkizzenLocal = SkizzeLocalSave.Text;
+            Settings1.Default.PathDbLocalFile = DbLocalSaveFile.Text;
             Settings1.Default.Save();
             _mainWindow.SettingsWindow = null;
         }
 
-        private bool skipInitialSelection = true;
+        private bool _skipInitialSelection = true;
 
         /// <summary>
         ///     Skin/Theme Combobox selection changed event, sets selected skin
@@ -245,9 +247,9 @@ namespace GUI
         /// <param name="e"></param>
         private void ThemeSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (skipInitialSelection)
+            if (_skipInitialSelection)
             {
-                skipInitialSelection = false;
+                _skipInitialSelection = false;
                 return;
             }
 
@@ -256,6 +258,29 @@ namespace GUI
                 return;
             Enum.TryParse(typeof(Application.Skins), (string) selected.Tag, out var index);
             ((Application) System.Windows.Application.Current).ChangeSkin((Application.Skins) index);
+        }
+
+        /// <summary>
+        /// open file dialog
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenFileDialogButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Datei öffnen Dialog
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = "Access DB Dateien (*.accdb)|*.accdb"
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                var path = openFileDialog.FileName;
+                DbLocalSaveFile.Text = path;
+                if (File.Exists(path))
+                {
+                    Settings1.Default.PathDbLocalFile = path;
+                }
+            }
         }
 
         #endregion

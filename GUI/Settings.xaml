@@ -52,7 +52,7 @@
                     Password
                 </TextBlock>
                 <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True">
-                    <Button DockPanel.Dock="Left" Click="Button_Click" BorderBrush="{x:Null}"
+                    <Button DockPanel.Dock="Left" Click="TrySpLogin_Click" BorderBrush="{x:Null}"
                             Height="{DynamicResource UiElementHeight}"
                             Background="{DynamicResource BackgroundTernaryColor}"
                             Foreground="{DynamicResource UiElementForegroundColor}"
@@ -70,6 +70,7 @@
             </Label>
             <Grid Background="{DynamicResource BackgroundSecondaryColor}">
                 <Grid.RowDefinitions>
+                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
@@ -141,9 +142,24 @@
 
                 <TextBlock Margin="5" Grid.Row="4" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}"
                            FontSize="{DynamicResource FontSize}">
-                    Export Skizzen
+                    DB Speicherort (Datei)
                 </TextBlock>
                 <DockPanel Grid.Row="4" Grid.Column="1" LastChildFill="True" Margin="2">
+                    <Button DockPanel.Dock="Right" Background="{DynamicResource ButtonColor}" BorderBrush="{DynamicResource ButtonColor}" Foreground="{DynamicResource HighlightedTextColor}" Click="OpenFileDialogButtonClick">öffnen</Button>
+                    <TextBox x:Name="DbLocalSaveFile" DockPanel.Dock="Left"
+                             Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathDbLocalFile, Mode=Default}"
+                             VerticalContentAlignment="Center" Height="{DynamicResource UiElementHeight}"
+                             Background="{DynamicResource UiElementBackgroundColor}"
+                             Foreground="{DynamicResource UiElementForegroundColor}"
+                             BorderBrush="{DynamicResource UiElementBackgroundSecondaryColor}"
+                             FontSize="{DynamicResource UiElementFontSize}" />
+                </DockPanel>
+
+                <TextBlock Margin="5" Grid.Row="5" Grid.Column="0" Foreground="{DynamicResource ForegroundColor}"
+                           FontSize="{DynamicResource FontSize}">
+                    Export Skizzen
+                </TextBlock>
+                <DockPanel Grid.Row="5" Grid.Column="1" LastChildFill="True" Margin="2">
                     <TextBox x:Name="SkizzeLocalSave"
                              Text="{Binding Source={x:Static settings:Settings1.Default}, Path=PathSkizzenLocal, Mode=Default}"
                              VerticalContentAlignment="Center" Height="{DynamicResource UiElementHeight}"

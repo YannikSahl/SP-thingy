@@ -355,7 +355,7 @@ namespace GUI
         /// </summary>
         private void SetConnectionStatusTextInStatusBar()
         {
-            ConnectionStatus.Text = Enum.GetName(typeof(ConnectionModus), _mConnectionMode);
+            ConnectionStatus.Text = $"{Enum.GetName(typeof(ConnectionModus), _mConnectionMode)} (Bearbeitung {(_mViewModeOnly ? "nicht" : "")} möglich)";
         }
 
         /// <summary>
@@ -366,19 +366,21 @@ namespace GUI
         public void SetConnectionStatus(ConnectionModus mode)
         {
             _mConnectionMode = mode;
-            // Statusanzeige (unten)
-            SetConnectionStatusTextInStatusBar();
-            PopoutConnectionStatusBar();
             switch (mode)
             {
                 case ConnectionModus.LostConnection:
-                    _mViewModeOnly = true;
-                    SetEditable(false);
+                    //_mViewModeOnly = true;
+                    //SetEditable(false);
+                    _mViewModeOnly = false;
+                    SetEditable(true);
                     ConnectionStatus.Background = _lostConnectionColor;
                     break;
                 case ConnectionModus.Offline:
-                    _mViewModeOnly = true;
-                    SetEditable(false);
+                    //_mViewModeOnly = true;
+                    //SetEditable(false);
+                    _mViewModeOnly = false;
+                    SetEditable(true);
+                    // TODO: da SP nicht ganz funktioniert, ist die Bearbeitung im Offline Modus auch aktiv
                     ConnectionStatus.Background = _offlineColor;
                     break;
                 case ConnectionModus.Online:
@@ -387,6 +389,9 @@ namespace GUI
                     ConnectionStatus.Background = _onlineColor;
                     break;
             }
+            // Statusanzeige (unten)
+            SetConnectionStatusTextInStatusBar();
+            PopoutConnectionStatusBar();
         }
 
         #endregion

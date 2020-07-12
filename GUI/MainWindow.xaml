@@ -12,7 +12,7 @@
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top" Background="{DynamicResource MenuBackgroundColor}"
               Foreground="{DynamicResource MenuForegroundColor}">
-            <MenuItem Header="_Datei" Foreground="{DynamicResource MenuForegroundColor}">
+            <MenuItem Header="_Datei" Foreground="{DynamicResource MenuForegroundColor}" Margin="4,4,0,4">
                 <MenuItem Header="_Im-/Export" Foreground="{DynamicResource MenuBackgroundColor}">
                     <MenuItem Header="_Auswahl exportieren" Click="OpenExportWindow"
                               Foreground="{DynamicResource MenuBackgroundColor}" />
@@ -22,45 +22,48 @@
                 <MenuItem Header="_Schließen" Click="MenuCloseApp_Click"
                           Foreground="{DynamicResource MenuBackgroundColor}" />
             </MenuItem>
-            <MenuItem Header="_Datenbank" Foreground="{DynamicResource MenuForegroundColor}">
+            <MenuItem Header="_Datenbank" Foreground="{DynamicResource MenuForegroundColor}" Margin="0,4,0,4">
                 <MenuItem Header="_DB Pflege" Foreground="{DynamicResource MenuBackgroundColor}" />
                 <MenuItem Header="_Pfade" Foreground="{DynamicResource MenuBackgroundColor}" />
                 <MenuItem Header="_Neue Abfrage" Click="OpenAbfrageWindow"
                           Foreground="{DynamicResource MenuBackgroundColor}" />
                 <MenuItem Header="_Aktualisieren" Foreground="{DynamicResource MenuBackgroundColor}" />
             </MenuItem>
-            <MenuItem Header="Extras">
+            <MenuItem Header="Extras" Margin="0,4,0,4">
                 <MenuItem Header="Einstellungen" Click="OpenSettingsWindow"
                           Foreground="{DynamicResource MenuBackgroundColor}" />
             </MenuItem>
         </Menu>
-        <DockPanel DockPanel.Dock="Bottom" Background="{DynamicResource MenuBackgroundColor}" Height="16"
+        <DockPanel DockPanel.Dock="Bottom" Background="{DynamicResource MenuBackgroundColor}"
                    LastChildFill="False">
             <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left"
-                       Foreground="{DynamicResource ForegroundSecondaryColor}" Margin="2,0,2,0"
+                       Foreground="{DynamicResource ForegroundSecondaryColor}" Margin="4"
                        FontSize="{DynamicResource FontSize}">
                 Verbindung:
             </TextBlock>
             <Border CornerRadius="10" BorderThickness="1">
                 <TextBlock VerticalAlignment="Center" x:Name="ConnectionStatus" DockPanel.Dock="Left"
-                           Foreground="{DynamicResource HighlightedTextColor}" Margin="2,0,2,0" Padding="2,0,2,0"
+                           Foreground="{DynamicResource HighlightedTextColor}" Margin="4"
                            FontWeight="Bold" FontSize="{DynamicResource FontSize}" />
             </Border>
 
+            <TextBlock Background="{DynamicResource BackgroundTernaryColor}"
+                       Width="1" Margin="3" />
+
             <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left"
-                       Foreground="{DynamicResource ForegroundSecondaryColor}" Margin="2,0,2,0"
+                       Foreground="{DynamicResource ForegroundSecondaryColor}" Margin="4"
                        FontSize="{DynamicResource FontSize}">
-                | Bearbeitung:
+                Bearbeitung:
             </TextBlock>
             <TextBlock VerticalAlignment="Center" x:Name="EditStatus" DockPanel.Dock="Left"
-                       Foreground="{DynamicResource HighlightedTextSecondaryColor}" Margin="2,0,2,0" FontWeight="Bold"
+                       Foreground="{DynamicResource HighlightedTextSecondaryColor}" Margin="4" FontWeight="Bold"
                        FontSize="{DynamicResource FontSize}" />
 
             <TextBlock VerticalAlignment="Center" x:Name="SavedStatus" DockPanel.Dock="Right"
-                       Foreground="{DynamicResource HighlightedTextSecondaryColor}" Margin="2,0,2,0" FontWeight="Bold"
+                       Foreground="{DynamicResource HighlightedTextSecondaryColor}" Margin="4" FontWeight="Bold"
                        FontSize="{DynamicResource FontSize}" />
             <TextBlock VerticalAlignment="Center" DockPanel.Dock="Right"
-                       Foreground="{DynamicResource ForegroundSecondaryColor}" Margin="2,0,2,0"
+                       Foreground="{DynamicResource ForegroundSecondaryColor}" Margin="4"
                        FontSize="{DynamicResource FontSize}">
                 gespeichert um
             </TextBlock>
