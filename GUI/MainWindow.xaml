@@ -12,17 +12,19 @@
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top" Background="{DynamicResource MenuBackgroundColor}"
               Foreground="{DynamicResource MenuForegroundColor}">
-            <MenuItem Header="_Datei" Foreground="{DynamicResource MenuForegroundColor}" Margin="4,4,0,4">
-                <MenuItem Header="_Im-/Export" Foreground="{DynamicResource MenuBackgroundColor}">
-                    <MenuItem Header="_Auswahl exportieren" Click="OpenExportWindow"
-                              Foreground="{DynamicResource MenuBackgroundColor}" />
-                    <MenuItem Header="_Importieren" Foreground="{DynamicResource MenuBackgroundColor}" />
-                </MenuItem>
+            <MenuItem Header="_App" Foreground="{DynamicResource MenuForegroundColor}" Margin="4,4,0,4">
+                <MenuItem Header="_Speichern" 
+                          Foreground="{DynamicResource MenuBackgroundColor}" />
                 <Separator />
                 <MenuItem Header="_Schließen" Click="MenuCloseApp_Click"
                           Foreground="{DynamicResource MenuBackgroundColor}" />
             </MenuItem>
             <MenuItem Header="_Datenbank" Foreground="{DynamicResource MenuForegroundColor}" Margin="0,4,0,4">
+                <MenuItem Header="_Im-/Export" Foreground="{DynamicResource MenuBackgroundColor}">
+                    <MenuItem Header="_Auswahl exportieren" Click="OpenExportWindow"
+                              Foreground="{DynamicResource MenuBackgroundColor}" />
+                    <MenuItem Header="_Importieren" Foreground="{DynamicResource MenuBackgroundColor}" />
+                </MenuItem>
                 <MenuItem Header="_DB Pflege" Foreground="{DynamicResource MenuBackgroundColor}" />
                 <MenuItem Header="_Pfade" Foreground="{DynamicResource MenuBackgroundColor}" />
                 <MenuItem Header="_Neue Abfrage" Click="OpenAbfrageWindow"
