@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using GUI.Properties;
 
 namespace GUI
 {
@@ -57,6 +59,16 @@ namespace GUI
             dt.Columns.Add(new DataColumn("AbfrageTyp", typeof(string)));
             dt.Columns.Add(new DataColumn("erstellt", typeof(DateTime)));
             dt.Columns.Add(new DataColumn("Hash", typeof(string)));
+
+            foreach (SettingsPropertyValue s in SavedQueries.Default.PropertyValues)
+            {
+                //dt.Rows.Add((DataRow)s.PropertyValue);
+                var row = s.PropertyValue as DataRow;
+                if (row == null)
+                    continue;
+                dt.ImportRow(row);
+            }
+
             SavedQueriesGrid.DataContext = dt;
             SavedQueriesGrid.ItemsSource = dt.DefaultView;
         }
@@ -331,9 +343,60 @@ namespace GUI
                 ((DataTable)SavedQueriesGrid.DataContext).Rows.Remove(sameRowReference);
         }
 
+        private void CreateSetting(string hash, DataRow dr)
+        {
+            //// create new setting from a base setting:
+            //var property = new SettingsProperty(hash);
+            ////property.Name = hash;
+            //property.PropertyType = typeof(DataRow);
+            //property.SerializeAs = SettingsSerializeAs.Xml;
+            //SavedQueries.Default.Properties.Add(property);
+            //SavedQueries.Default.Save();
+            //// will have the stored value:
+            ////var dynamicSetting = SavedQueries.Default[hash];
+            ///
+            ApplicationSettingsBase settings = SavedQueries.Default;
+            SettingsProvider sp = settings.Providers["LocalFileSettingsProvider"];
+            SettingsProperty p = new SettingsProperty(hash);
+            DataRow conf = null;
+            p.PropertyType = typeof(DataRow);
+            p.Attributes.Add(typeof(UserScopedSettingAttribute), new UserScopedSettingAttribute());
+            p.Provider = sp;
+            p.SerializeAs = SettingsSerializeAs.Xml;
+            SettingsPropertyValue v = new SettingsPropertyValue(p);
+            settings.Properties.Add(p);
+
+            settings.Reload();
+            conf = (DataRow)settings[hash];
+            if (conf == null)
+            {
+                settings[hash] = conf = dr;
+                settings.Save();
+            }
+        }
+
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            var dt = SavedQueriesGrid.DataContext as DataTable;
+            if (dt == null)
+                return;
+            foreach (DataRow row in dt.Rows)
+            {
+                var hash = (string)row["Hash"];
+                try
+                {
+                    SavedQueries.Default[hash] = row;
+                }
+                catch (SettingsPropertyNotFoundException E)
+                {
+                    CreateSetting(hash, row);
+                    //SavedQueries.Default.Properties[hash].DefaultValue = row;
+                }
+            }
+
+            var sq = SavedQueries.Default;
+            //SavedQueries.Default.Save();
             _mainWindow._abfrageWindow = null;
         }
 
