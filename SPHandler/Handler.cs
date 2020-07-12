@@ -1,18 +1,12 @@
 ﻿using System;
-using Microsoft.SharePoint.Client;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.SharePoint.Client.WorkflowServices;
-using System.Globalization;
+using Microsoft.SharePoint.Client;
 
 namespace SPHandler
 {
     /// <summary>
-    /// The SPHandler namespace contains functions for the current GUI version.
-    /// Only working with TTCUE.NetCore.SharePointCSOM
+    ///     The SPHandler namespace contains functions for the current GUI version.
+    ///     Only working with TTCUE.NetCore.SharePointCSOM
     /// </summary>
     public class Handler
     {
@@ -31,11 +25,12 @@ namespace SPHandler
         {
             password = pw;
         }
-/// <summary>
-/// testing connection to the SharePoint 
-/// </summary>
-/// <param name="success">used for displaying the result</param>
-public static Task<string> TestConnection(out bool success) //async 
+
+        /// <summary>
+        ///     testing connection to the SharePoint
+        /// </summary>
+        /// <param name="success">used for displaying the result</param>
+        public static Task<string> TestConnection(out bool success) //async 
         {
             try
             {
@@ -56,25 +51,27 @@ public static Task<string> TestConnection(out bool success) //async
             catch (Exception e)
             {
                 success = false;
-                return Task.FromResult<String>(e.Message);
+                return Task.FromResult(e.Message);
             }
+
             success = true;
             return null;
         }
 
-/// <summary>
-/// Async Method to test the connection, while the programm is already displaying the database
-/// </summary>
-public async Task<String> TestConnectionAsync()
+        /// <summary>
+        ///     Async Method to test the connection, while the programm is already displaying the database
+        /// </summary>
+        public async Task<string> TestConnectionAsync()
         {
-            string ret = await TestConnection(out bool success);
+            var ret = await TestConnection(out var success);
 
             return ret;
         }
 
-        /// <summary>Returns FileRelativUrl for Files on SharePoint
-        /// <param name="pad">PAD</param>
-        /// <param name="type">true=PDF, false=JPG</param>
+        /// <summary>
+        ///     Returns FileRelativUrl for Files on SharePoint
+        ///     <param name="pad">PAD</param>
+        ///     <param name="type">true=PDF, false=JPG</param>
         /// </summary>
         public static string GetFileUrlFromPad(string pad, bool type)
         {
@@ -85,15 +82,18 @@ public async Task<String> TestConnectionAsync()
             var hundreds = thousands + entry / 100 % 10 * 100;
 
             if (type)
-                fileRelativUrl = "/04321_DB_Festp/03_Skizzen/PDF/" + thousands + "/" + hundreds + "/" + entry + "/" + pad + ".pdf";
+                fileRelativUrl = "/04321_DB_Festp/03_Skizzen/PDF/" + thousands + "/" + hundreds + "/" + entry + "/" +
+                                 pad + ".pdf";
             else
-                fileRelativUrl = "/04321_DB_Festp/03_Skizzen/JPG/" + thousands + "/" + hundreds + "/" + entry + "/" + pad + ".jpg";
+                fileRelativUrl = "/04321_DB_Festp/03_Skizzen/JPG/" + thousands + "/" + hundreds + "/" + entry + "/" +
+                                 pad + ".jpg";
 
             return fileRelativUrl;
         }
 
-        /// <summary>Returns Int to handle PAD
-        /// <param name="pad">PAD</param>
+        /// <summary>
+        ///     Returns Int to handle PAD
+        ///     <param name="pad">PAD</param>
         /// </summary>
         public static int GetIntfromPad(string pad)
         {
