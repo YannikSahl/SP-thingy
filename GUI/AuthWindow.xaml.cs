@@ -42,6 +42,17 @@ namespace GUI
         }
 
         /// <summary>
+        /// redirect to filepathwin
+        /// </summary>
+        private void RedirectToFilePathWindow()
+        {
+            FilePathWindow filePathWin = new FilePathWindow();
+            filePathWin.Show();
+            this.Close();
+        }
+
+
+        /// <summary>
         ///     set SP Credidentials
         /// </summary>
         private void SetCredidentials()
@@ -61,7 +72,7 @@ namespace GUI
         /// <param name="e"></param>
         private void OfflineMode_ButtonClick(object sender, RoutedEventArgs e)
         {
-            RedirectToMainWindow(MainWindow.ConnectionModus.Offline);
+            RedirectToFilePathWindow();
         }
 
         private bool _userLoginInProgress;
