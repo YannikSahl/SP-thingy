@@ -3,7 +3,7 @@
   DB-Querier
 </h1>
 <p align="center">
-  An application for a team of the Deutsche Bahn that queries a Database, a DB-Querier. Hah, get it.
+  An application for a team of Deutsche Bahn that queries a Database, a DB-Querier. Hah, get it.
 </p>
 
 # Overview
