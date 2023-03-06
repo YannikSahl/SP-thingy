@@ -1,9 +1,9 @@
 
 <h1 align="center">
-  DB-Querier
+  Sharepoint-Wrapper
 </h1>
 <p align="center">
-  An application for a team at Deutsche Bahn that queries a Database, a DB-Querier. Hah, get it.
+  An application that provides a better user experience when working with database files located on a SharePoint.
 </p>
 
 # Overview
